@@ -1,1 +1,1 @@
-include: "./rules/sofia.smk"
+include: "rules/sofia.smk"
