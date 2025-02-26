@@ -1,10 +1,11 @@
 FASTA_FILE = "resources/dragon_radii_updated.fasta"
-PI_CSV = "results/pI_results.csv"
-HYDROPHOBICITY_CSV = "results/hydrophobicity_results.csv"
+PI_CSV = "pI_results.csv"
+HYDROPHOBICITY_CSV = "hydrophobicity_results.csv"
 
 rule all:
-input: PI_CSV
-
+    input:
+        PI_CSV,
+        HYDROPHOBICITY_CSV
 
 rule compute_pI:
     input:
