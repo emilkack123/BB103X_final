@@ -1,0 +1,12 @@
+rule all:
+    input:
+        "results/test_output.txt"
+
+rule test_rule:
+    input:
+        "resources/raw_data.txt"
+    output:
+        "results/test_output.txt"
+    shell:
+        "cat {input} > {output}"
+
