@@ -1,0 +1,4 @@
+WorkflowError in file /home/sofia/BB103X_final/snakefile, line 2:
+Failed to open source file /home/sofia/BB103X_final/./rules/sofia.smk
+FileNotFoundError: [Errno 2] No such file or directory: '/home/sofia/BB103X_final/./rules/sofia.smk'
+  File "/home/sofia/BB103X_final/snakefile", line 2, in <module>
