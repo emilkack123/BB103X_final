@@ -27,7 +27,7 @@ def run_dmpfold_for_sequence(seq, index):
         print(f"Model saved in {pdb_filename}")
 
 def main():
-    input_file = "z1_resources/extracted_target.aln"
+    input_file = "z1_resources/test.aln"
     # Read in each non-empty line (assume each line is a properly formatted sequence)
     with open(input_file, "r") as f:
         sequences = [line.strip() for line in f if line.strip()]
