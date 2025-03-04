@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 import subprocess
+import os
 
 def run_dmpfold_for_sequence(seq, index):
     # Name the files
-    aln_filename = f"target_{index}.aln"
-    pdb_filename = f"model_{index}.pdb"
+    aln_filename = os.path.join("z2_targets", f"target_{index}.aln") 
+    pdb_filename = os.path.join("z3_models", f"model_{index}.pdb")
     
     # Write the sequence to its own aln file
     with open(aln_filename, "w") as f:
@@ -26,7 +27,7 @@ def run_dmpfold_for_sequence(seq, index):
         print(f"Model saved in {pdb_filename}")
 
 def main():
-    input_file = "test.aln"
+    input_file = "z1_resources/extracted_target.aln"
     # Read in each non-empty line (assume each line is a properly formatted sequence)
     with open(input_file, "r") as f:
         sequences = [line.strip() for line in f if line.strip()]
