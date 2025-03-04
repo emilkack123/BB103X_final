@@ -2,36 +2,36 @@
 import subprocess
 
 def run_dmpfold_for_sequence(seq, index):
-    # Namnge filerna
+    # Name the files
     aln_filename = f"target_{index}.aln"
     pdb_filename = f"model_{index}.pdb"
     
-    # Skriv sekvensen till en egen aln-fil
+    # Write the sequence to its own aln file
     with open(aln_filename, "w") as f:
         f.write(seq + "\n")
     
-    print(f"Kör dmpfold på {aln_filename}...")
+    print(f"Running dmpfold on {aln_filename}...")
     
-    # Kör dmpfold via subprocess
+    # Run dmpfold via subprocess
     result = subprocess.run(["dmpfold", "-i", aln_filename],
                             capture_output=True, text=True)
     
     if result.returncode != 0:
-        print(f"Fel vid körning av dmpfold på {aln_filename}:")
+        print(f"Error running dmpfold on {aln_filename}:")
         print(result.stderr)
     else:
-        # Spara dmpfold-utdata i en pdb-fil
+        # Save dmpfold output to a pdb file
         with open(pdb_filename, "w") as f:
             f.write(result.stdout)
-        print(f"Modell sparad i {pdb_filename}")
+        print(f"Model saved in {pdb_filename}")
 
 def main():
     input_file = "test.aln"
-    # Läs in varje icke-tom rad (antag att varje rad är en korrekt formaterad sekvens)
+    # Read in each non-empty line (assume each line is a properly formatted sequence)
     with open(input_file, "r") as f:
         sequences = [line.strip() for line in f if line.strip()]
     
-    # Kör dmpfold för varje sekvens
+    # Run dmpfold for each sequence
     for idx, seq in enumerate(sequences, start=1):
         run_dmpfold_for_sequence(seq, idx)
 

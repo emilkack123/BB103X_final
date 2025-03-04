@@ -6,15 +6,15 @@ output_file = "dragon_radii_aligned.aln"
 
 with open(output_file, "w") as out_handle:
     for record in SeqIO.parse(input_file, "fasta"):
-        # Konvertera sekvensen till en sträng
+        # Convert the sequence to a string
         seq_str = str(record.seq).strip()
-        # Ta bort små bokstäver (vilket tar bort eventuella insertionsbokstäver)
+        # Remove lowercase letters (which removes any insertion letters)
         seq_str = re.sub(r'[a-z]', '', seq_str)
-        # Om det är den första sekvensen och du vill ta bort eventuella gap ('-'),
-        # kan du avkommentera nästa rad.
+        # If it is the first sequence and you want to remove any gaps ('-'),
+        # you can uncomment the following line.
         # if out_handle.tell() == 0:
         #     seq_str = seq_str.replace("-", "")
-        # Skriv ut sekvensen på en rad
+        # Write the sequence on one line
         out_handle.write(seq_str + "\n")
 
-print(f"Konverterad fil sparad som {output_file}")
+print(f"Converted file saved as {output_file}")

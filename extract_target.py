@@ -1,19 +1,19 @@
 input_file = "dragon_radii_aligned.aln"
 output_file = "extracted_target.aln"
 
-# Läs in alla icke-tomma rader från input-filen
+# Read all non-empty lines from the input file
 with open(input_file, "r") as infile:
     sequences = [line.strip() for line in infile if line.strip()]
 
-# Kontrollera att det finns minst en sekvens
+# Check that at least one sequence exists
 if not sequences:
-    raise ValueError("Ingen sekvens hittades i filen.")
+    raise ValueError("No sequence found in the file.")
 
-# Extrahera den första sekvensen (target-sekvensen)
+# Extract the first sequence (the target sequence)
 target_sequence = sequences[0]
 
-# Skriv target-sekvensen till en ny fil
+# Write the target sequence to a new file
 with open(output_file, "w") as outfile:
     outfile.write(target_sequence + "\n")
 
-print(f"Target-sekvensen har sparats i {output_file}")
+print(f"The target sequence has been saved in {output_file}")
