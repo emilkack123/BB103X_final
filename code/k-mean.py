@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.cluster import KMeans
 from sklearn.preprocessing import StandardScaler
+from sklearn.decomposition import PCA  # Import PCA for dimensionality reduction
 from Bio import SeqIO
 import matplotlib.lines as mlines
 
@@ -35,39 +36,49 @@ max_length = max(len(seq) for seq in sequence_vectors)
 # Pad shorter sequences with zeros to make all sequences the same length
 padded_sequences = [seq + [0] * (max_length - len(seq)) if len(seq) < max_length else seq for seq in sequence_vectors]
 
+# Ensure padded_sequences is a numpy array
+padded_sequences = np.array(padded_sequences)
+
 # Standardize the data (optional but recommended)
 scaler = StandardScaler()
 scaled_sequences = scaler.fit_transform(padded_sequences)
 
-# Perform K-means clustering
+# Perform K-means clustering with 2 clusters (changed from 3 to 2)
 kmeans = KMeans(n_clusters=2, random_state=42)
 kmeans.fit(scaled_sequences)
 
-# Define labels for coloring (0 for generated sequences, 1 for natural sequences)
-labels = ['gen'] * len(sequences_gen) + ['nat'] * len(sequences_nat)
+# Get K-means cluster labels
+labels = kmeans.labels_
 
-# Create a color map for the labels
-colors = ['red' if label == 'gen' else 'blue' for label in labels]
+# Apply PCA to reduce dimensionality to 2 for visualization
+pca = PCA(n_components=2)
+pca_result = pca.fit_transform(scaled_sequences)
 
-# Create the plot
+# Define colors for the clusters manually
+# Light red for Cluster 1 and Blue for Cluster 2
+colors = ['lightcoral' if label == 0 else 'blue' for label in labels]
+
+# Create the plot using PCA result and K-means labels
 plt.figure(figsize=(8, 6))
-plt.scatter(scaled_sequences[:, 0], scaled_sequences[:, 1], c=colors, marker='o', s=50, edgecolors='k', alpha=0.7)
+plt.scatter(pca_result[:, 0], pca_result[:, 1], c=colors, marker='o', s=50, edgecolors='k', alpha=0.7)
 
 # Add title and labels
-plt.title("K-means Clustering of Amino Acid Sequences", fontsize=16, fontweight='bold')
-plt.xlabel("Feature 1", fontsize=14)
-plt.ylabel("Feature 2", fontsize=14)
+plt.title("K-means Clustering of Amino Acid Sequences (PCA)", fontsize=16, fontweight='bold')
+plt.xlabel("PCA Feature 1", fontsize=14)
+plt.ylabel("PCA Feature 2", fontsize=14)
 
 # Add gridlines
 plt.grid(True, linestyle='--', alpha=0.5)
 
-# Add legend
-gen_legend = mlines.Line2D([], [], marker='o', color='w', markerfacecolor='red', markersize=10, label='Generated Sequences')
-nat_legend = mlines.Line2D([], [], marker='o', color='w', markerfacecolor='blue', markersize=10, label='Natural Sequences')
-plt.legend(handles=[gen_legend, nat_legend], loc='best')
+# Add legend (optional)
+handles = [
+    mlines.Line2D([], [], marker='o', color='w', markerfacecolor='lightcoral', markersize=10, label='Cluster 1 (Light Red)'),
+    mlines.Line2D([], [], marker='o', color='w', markerfacecolor='blue', markersize=10, label='Cluster 2 (Blue)')
+]
+plt.legend(handles=handles, loc='best')
 
-# Save the plot to a file (e.g., 'kmeans_plot.png')
-output_file = "/home/moa/BB103X_final/results/kmeans_plot.png"
+# Save the plot to a file
+output_file = "/home/moa/BB103X_final/results/kmeans_plot_pca_with_clusters.png"
 plt.savefig(output_file, dpi=300)
 
 # Optional: Print confirmation message
