@@ -1,4 +1,4 @@
-FASTA_FILE = "resources/dragon_radii_updated.fasta"
+FASTA_FILE = "resources/gen+nat.fasta"
 PI_CSV = "results/pI_results.csv"
 HYDROPHOBICITY_CSV = "results/hydrophobicity_results.csv"
 
