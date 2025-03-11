@@ -9,7 +9,7 @@ bz = 20  # Box size in z direction (in Å)
 
 v = Vina(sf_name='vina')
 
-v.set_receptor('input_rubisco.pdbqt')
-v.set_ligand_from_file('input_co2.pdbqt')
+v.set_receptor('/home/moa/BB103X_final/enzyme.pdbqt')
+v.set_ligand_from_file('/home/moa/BB103X_final/results/docking/co2.pdbqt')
 v.compute_vina_maps(center=[cx, cy, cz], box_size=[bx, by, bz])
 
