@@ -1,0 +1,8 @@
+rule pca_analysis:
+    input:
+        fasta1="/home/moa/BB103X_final/resources/gen.fa",
+        fasta2="/home/moa/BB103X_final/resources/nat.fa"
+    output:
+        "/home/moa/BB103X_final/results/pca_plot.png"
+    script:
+        "/home/moa/BB103X_final/code/PCA_and_K-mean/PCA.py"

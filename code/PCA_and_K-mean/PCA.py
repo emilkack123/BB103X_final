@@ -73,4 +73,4 @@ plt.savefig(output_file, dpi=300)
 print(f"PCA plot saved to {output_file}")
 
 # Close the plot
-plt.close()
+plt.close() 

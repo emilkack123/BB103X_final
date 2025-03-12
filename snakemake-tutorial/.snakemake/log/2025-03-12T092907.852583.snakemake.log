@@ -1,0 +1,8 @@
+host: freya
+Building DAG of jobs...
+MissingInputException in rule pca_analysis in file /home/moa/BB103X_final/snakemake-tutorial/Snakefile, line 1:
+Missing input files for rule pca_analysis:
+    output: /home/moa/BB103X_final/results/pca_plot.png
+    affected files:
+        /home/moa/BB103X_final/resources/nat.fa
+        /home/moa/BB103X_final/resources/gen.fa
