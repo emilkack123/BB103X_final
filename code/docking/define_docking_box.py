@@ -1,8 +1,8 @@
 from vina import Vina
 
-cx = 50  # Center x-coordinate
-cy = 50  # Center y-coordinate
-cz = 50  # Center z-coordinate
+cx = 0  # Center x-coordinate
+cy = 0  # Center y-coordinate
+cz = 0  # Center z-coordinate
 bx = 20  # Box size in x direction (in Å)
 by = 20  # Box size in y direction (in Å)
 bz = 20  # Box size in z direction (in Å)

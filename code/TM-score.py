@@ -2,12 +2,12 @@ import os
 import csv
 
 # Path to the directory containing PDB files
-pdb_folder = "/home/moa/BB103X_final/results/gen_structures/"
+pdb_folder = "/home/moa/BB103X_final/test_natural_structure"
 # Path to the reference PDB file
 reference_pdb = "/home/moa/BB103X_final/results/nat_structures/model_natural4.pdb"
 
 # Define the output CSV file where TM-score results will be saved
-output_csv = "/home/moa/BB103X_final/results/tm_score_results.csv"
+output_csv = "/home/moa/BB103X_final/results/tm_score_results_test.csv"
 
 # Get all PDB files in the directory (assuming files end with .pdb)
 pdb_files = [f for f in os.listdir(pdb_folder) if f.endswith('.pdb')]
@@ -45,3 +45,4 @@ with open(output_csv, 'w', newline='') as csvfile:
             print(f"TM-score not found for {pdb_file}")
 
 print(f"TM-score results have been written to {output_csv}")
+

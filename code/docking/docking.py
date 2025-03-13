@@ -1,18 +1,18 @@
 from vina import Vina
 
 # Coordinates and box size for the docking
-cx = 50  # Center x-coordinate
-cy = 50  # Center y-coordinate
-cz = 50  # Center z-coordinate
-bx = 20  # Box size in x direction (in Å)
-by = 20  # Box size in y direction (in Å)
-bz = 20  # Box size in z direction (in Å)
+cx = 0  # Center x-coordinate
+cy = 0  # Center y-coordinate
+cz = 0  # Center z-coordinate
+bx = 20  # Box size in x direction 
+by = 20  # Box size in y direction 
+bz = 20  # Box size in z direction 
 
 # Initialize Vina object
 v = Vina(sf_name='vina')
 
 # Set receptor and ligand files
-v.set_receptor('/home/moa/BB103X_final/results/gen_structures/model_1.pdbqt')
+v.set_receptor('/home/moa/BB103X_final/model_0.pdbqt')
 v.set_ligand_from_file('/home/moa/BB103X_final/results/docking/co2.pdbqt')
 
 # Compute maps for docking
