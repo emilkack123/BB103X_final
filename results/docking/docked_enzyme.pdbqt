@@ -1,7 +1,7 @@
 MODEL 1
-REMARK VINA RESULT:    -1.827      0.000      0.000
-REMARK INTER + INTRA:          -1.827
-REMARK INTER:                  -1.827
+REMARK VINA RESULT:    -1.898      0.000      0.000
+REMARK INTER + INTRA:          -1.898
+REMARK INTER:                  -1.898
 REMARK INTRA:                   0.000
 REMARK UNBOUND:                 0.000
 REMARK  Name = CT1001562328
@@ -10,16 +10,16 @@ REMARK  status: ('A' for Active; 'I' for Inactive)
 REMARK                            x       y       z     vdW  Elec       q    Type
 REMARK                         _______ _______ _______ _____ _____    ______ ____
 ROOT
-ATOM      1  C   UNL     1      -0.519   7.801  -3.898  0.00  0.00    +0.000 C 
-ATOM      2  O   UNL     1      -0.384   6.692  -3.440  0.00  0.00    +0.000 OA
-ATOM      3  O   UNL     1      -0.655   8.912  -4.355  0.00  0.00    +0.000 OA
+ATOM      1  C   UNL     1      -6.986   2.885   8.523  0.00  0.00    +0.000 C 
+ATOM      2  O   UNL     1      -6.831   2.644   7.349  0.00  0.00    +0.000 OA
+ATOM      3  O   UNL     1      -7.142   3.127   9.696  0.00  0.00    +0.000 OA
 ENDROOT
 TORSDOF 0
 ENDMDL
 MODEL 2
-REMARK VINA RESULT:    -1.827      0.014      1.973
-REMARK INTER + INTRA:          -1.827
-REMARK INTER:                  -1.827
+REMARK VINA RESULT:    -1.898      0.000      1.973
+REMARK INTER + INTRA:          -1.898
+REMARK INTER:                  -1.898
 REMARK INTRA:                   0.000
 REMARK UNBOUND:                 0.000
 REMARK  Name = CT1001562328
@@ -28,16 +28,16 @@ REMARK  status: ('A' for Active; 'I' for Inactive)
 REMARK                            x       y       z     vdW  Elec       q    Type
 REMARK                         _______ _______ _______ _____ _____    ______ ____
 ROOT
-ATOM      1  C   UNL     1      -0.513   7.793  -3.891  0.00  0.00    +0.000 C 
-ATOM      2  O   UNL     1      -0.656   8.901  -4.352  0.00  0.00    +0.000 OA
-ATOM      3  O   UNL     1      -0.368   6.685  -3.432  0.00  0.00    +0.000 OA
+ATOM      1  C   UNL     1      -6.986   2.885   8.523  0.00  0.00    +0.000 C 
+ATOM      2  O   UNL     1      -7.142   3.126   9.696  0.00  0.00    +0.000 OA
+ATOM      3  O   UNL     1      -6.831   2.644   7.349  0.00  0.00    +0.000 OA
 ENDROOT
 TORSDOF 0
 ENDMDL
 MODEL 3
-REMARK VINA RESULT:    -1.827      1.398      1.398
-REMARK INTER + INTRA:          -1.827
-REMARK INTER:                  -1.827
+REMARK VINA RESULT:    -1.848      9.116      9.597
+REMARK INTER + INTRA:          -1.848
+REMARK INTER:                  -1.848
 REMARK INTRA:                   0.000
 REMARK UNBOUND:                 0.000
 REMARK  Name = CT1001562328
@@ -46,16 +46,16 @@ REMARK  status: ('A' for Active; 'I' for Inactive)
 REMARK                            x       y       z     vdW  Elec       q    Type
 REMARK                         _______ _______ _______ _____ _____    ______ ____
 ROOT
-ATOM      1  C   UNL     1      -1.078   8.026  -3.611  0.00  0.00    +0.000 C 
-ATOM      2  O   UNL     1      -1.558   8.127  -2.507  0.00  0.00    +0.000 OA
-ATOM      3  O   UNL     1      -0.598   7.923  -4.715  0.00  0.00    +0.000 OA
+ATOM      1  C   UNL     1      -2.347   9.005   3.073  0.00  0.00    +0.000 C 
+ATOM      2  O   UNL     1      -2.104   8.519   4.152  0.00  0.00    +0.000 OA
+ATOM      3  O   UNL     1      -2.590   9.491   1.994  0.00  0.00    +0.000 OA
 ENDROOT
 TORSDOF 0
 ENDMDL
 MODEL 4
-REMARK VINA RESULT:    -1.716     17.267     17.715
-REMARK INTER + INTRA:          -1.716
-REMARK INTER:                  -1.716
+REMARK VINA RESULT:    -1.848      9.091      9.413
+REMARK INTER + INTRA:          -1.848
+REMARK INTER:                  -1.848
 REMARK INTRA:                   0.000
 REMARK UNBOUND:                 0.000
 REMARK  Name = CT1001562328
@@ -64,16 +64,16 @@ REMARK  status: ('A' for Active; 'I' for Inactive)
 REMARK                            x       y       z     vdW  Elec       q    Type
 REMARK                         _______ _______ _______ _____ _____    ______ ____
 ROOT
-ATOM      1  C   UNL     1      -9.360  -6.590   1.085  0.00  0.00    +0.000 C 
-ATOM      2  O   UNL     1      -9.959  -5.676   0.569  0.00  0.00    +0.000 OA
-ATOM      3  O   UNL     1      -8.761  -7.505   1.599  0.00  0.00    +0.000 OA
+ATOM      1  C   UNL     1      -2.346   8.998   3.114  0.00  0.00    +0.000 C 
+ATOM      2  O   UNL     1      -2.519   9.508   2.032  0.00  0.00    +0.000 OA
+ATOM      3  O   UNL     1      -2.172   8.489   4.196  0.00  0.00    +0.000 OA
 ENDROOT
 TORSDOF 0
 ENDMDL
 MODEL 5
-REMARK VINA RESULT:    -1.713      1.018      1.996
-REMARK INTER + INTRA:          -1.713
-REMARK INTER:                  -1.713
+REMARK VINA RESULT:    -1.795      8.443      8.831
+REMARK INTER + INTRA:          -1.795
+REMARK INTER:                  -1.795
 REMARK INTRA:                   0.000
 REMARK UNBOUND:                 0.000
 REMARK  Name = CT1001562328
@@ -82,9 +82,9 @@ REMARK  status: ('A' for Active; 'I' for Inactive)
 REMARK                            x       y       z     vdW  Elec       q    Type
 REMARK                         _______ _______ _______ _____ _____    ______ ____
 ROOT
-ATOM      1  C   UNL     1       0.139   8.104  -3.698  0.00  0.00    +0.000 C 
-ATOM      2  O   UNL     1      -0.689   8.755  -4.289  0.00  0.00    +0.000 OA
-ATOM      3  O   UNL     1       0.967   7.453  -3.106  0.00  0.00    +0.000 OA
+ATOM      1  C   UNL     1      -1.951   8.629   4.516  0.00  0.00    +0.000 C 
+ATOM      2  O   UNL     1      -1.595   8.453   5.657  0.00  0.00    +0.000 OA
+ATOM      3  O   UNL     1      -2.308   8.804   3.375  0.00  0.00    +0.000 OA
 ENDROOT
 TORSDOF 0
 ENDMDL
