@@ -1,0 +1,15 @@
+# Define the paths for the input and output files
+input_fasta_1 = "/home/moa/BB103X_final/resources/predicted_structures/gen.fa"
+input_fasta_2 = "/home/moa/BB103X_final/resources/predicted_structures/nat.fa"
+output_plot = "/home/moa/BB103X_final/results/PCA_and_K-mean/pca_plot1.png"
+
+# Rule to run the PCA script
+rule run_pca:
+    input:
+        input_fasta_1,
+        input_fasta_2
+    output:
+        output_plot
+    shell:
+        "python /home/moa/BB103X_final/code/PCA_and_K-mean/PCA.py {input} {output}"
+ 
