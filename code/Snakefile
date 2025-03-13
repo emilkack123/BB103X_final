@@ -5,7 +5,7 @@ pca_output_plot = "/home/moa/BB103X_final/results/PCA_and_K-mean/pca_plot.png"
 kmeans_output_plot = "/home/moa/BB103X_final/results/PCA_and_K-mean/kmeans_plot_pca_with_clusters.png"
 
 # Path to the new K-means and PCA script
-kmeans_script = "/home/moa/BB103X_final/code/PCA_and_K-mean/k-mean_argparse.py"
+kmeans_script = "/home/moa/BB103X_final/code/PCA_and_K-mean/k-mean.py"
 
 # Define paths for TM-score files
 pdb_folder = "/home/moa/BB103X_final/results/gen_structures"
