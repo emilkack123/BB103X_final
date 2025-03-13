@@ -8,16 +8,25 @@ kmeans_output_plot = "/home/moa/BB103X_final/results/PCA_and_K-mean/kmeans_plot_
 kmeans_script = "/home/moa/BB103X_final/code/PCA_and_K-mean/k-mean.py"
 
 # Define paths for TM-score files
-pdb_folder = "/home/moa/BB103X_final/results/gen_structures"
+pdb_folder_gen = "/home/moa/BB103X_final/results/gen_structures"
+pdb_folder_nat = "/home/moa/BB103X_final/results/nat_structures"
 reference_pdb = "/home/moa/BB103X_final/results/nat_structures/model_natural4.pdb"
 output_csv = "/home/moa/BB103X_final/results/tm_score_results.csv"
 
-# Rule to generate final outputs (PCA, K-means, and TM-score results)
+# Path for extracting confidence scores from PDB files
+confidence_score_script = "/home/moa/BB103X_final/code/get_confidence_score.py"
+confidence_output_gen_file = "/home/moa/BB103X_final/results/tm_score_gen.csv"
+confidence_output_nat_file = "/home/moa/BB103X_final/results/tm_score_nat.csv"
+
+# Rule to generate final outputs (PCA, K-means, TM-score results, and confidence scores)
 rule all:
     input:
         pca_output_plot,            # Output from run_pca
         kmeans_output_plot,         # Output from run_kmeans_pca
-        output_csv                  # Output from run_tm_score
+        output_csv,                 # Output from run_tm_score
+        confidence_output_gen_file, # Output from get_confidence_score for gen_structures
+        confidence_output_nat_file  # Output from get_confidence_score for nat_structures
+        
 
 # Rule to run the PCA script
 rule run_pca:
@@ -44,7 +53,7 @@ rule run_kmeans_pca:
 # New rule to run TM-score calculation for PDB files
 rule run_tm_score:
     input:
-        pdb_folder=pdb_folder,
+        pdb_folder=pdb_folder_gen,
         reference_pdb=reference_pdb
     output:
         output_csv=output_csv
@@ -53,3 +62,21 @@ rule run_tm_score:
         "--pdb_folder {input.pdb_folder} "
         "--reference_pdb {input.reference_pdb} "
         "--output_csv {output.output_csv}"
+
+# New rule to run the confidence score extraction script for the gen_structures folder
+rule run_confidence_scores_gen:
+    input:
+        pdb_folder=pdb_folder_gen
+    output:
+        confidence_output_gen_file
+    shell:
+        "python {confidence_score_script} {input.pdb_folder} {output}"
+
+# New rule to run the confidence score extraction script for the nat_structures folder
+rule run_confidence_scores_nat:
+    input:
+        pdb_folder=pdb_folder_nat
+    output:
+        confidence_output_nat_file
+    shell:
+        "python {confidence_score_script} {input.pdb_folder} {output}"

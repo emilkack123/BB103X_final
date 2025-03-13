@@ -1,4 +1,5 @@
 import os
+import argparse
 
 def extract_confidence_score(pdb_file):
     """
@@ -37,8 +38,19 @@ def process_pdb_files(input_directory, output_file):
 
     print(f"Processed files and saved the results in {output_file}")
 
-# Example usage
-input_directory = "/home/moa/BB103X_final/results/nat_structures"  # Specify your directory containing PDB files
-output_file = "/home/moa/BB103X_final/results/nat_confidence_scores.txt"  # Output file to save the results
+def main():
+    # Set up the argument parser
+    parser = argparse.ArgumentParser(description="Process PDB files and extract their confidence scores.")
+    
+    # Add arguments
+    parser.add_argument('input_directory', type=str, help="Directory containing PDB files.")
+    parser.add_argument('output_file', type=str, help="Output file to save the results.")
+    
+    # Parse the arguments
+    args = parser.parse_args()
+    
+    # Process the PDB files based on the input directory and output file provided by the user
+    process_pdb_files(args.input_directory, args.output_file)
 
-process_pdb_files(input_directory, output_file)
+if __name__ == "__main__":
+    main()
