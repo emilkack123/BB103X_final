@@ -1,7 +1,8 @@
-name: myenv
+name: bb103x_final
 channels:
-  - defaults
+  - bioconda
   - conda-forge
+  - defaults
 dependencies:
   - python=3.8  
   - numpy
@@ -12,4 +13,4 @@ dependencies:
   - pip
   - pip:
       - snakemake
-      - TMscore  
+      - TMscore
