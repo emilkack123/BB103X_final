@@ -1,15 +1,24 @@
 import os
 import csv
+import argparse
 
-# Path to the directory containing PDB files
-pdb_folder = "/home/moa/BB103X_final/results/gen_structures"
-# Path to the reference PDB file
-reference_pdb = "/home/moa/BB103X_final/results/nat_structures/model_natural4.pdb"
+# Set up argument parsing
+parser = argparse.ArgumentParser(description="Calculate TM-scores for PDB files and save results in CSV")
+parser.add_argument('--pdb_folder', type=str, required=True, help="Path to the directory containing PDB files")
+parser.add_argument('--reference_pdb', type=str, required=True, help="Path to the reference PDB file")
+parser.add_argument('--output_csv', type=str, required=True, help="Path to the output CSV file")
 
-# Define the output CSV file where TM-score results will be saved
-output_csv = "/home/moa/BB103X_final/results/tm_score_results_test.csv"
+args = parser.parse_args()
 
-# Get all PDB files in the directory (assuming files end with .pdb)
+# Get PDB files in the specified directory
+pdb_folder = args.pdb_folder
+reference_pdb = args.reference_pdb
+output_csv = args.output_csv
+
+# Specify the full path to the TMscore executable
+tm_score_path = "/home/moa/BB103X_final/TMscore"
+
+# Get a list of all PDB files in the directory
 pdb_files = [f for f in os.listdir(pdb_folder) if f.endswith('.pdb')]
 
 # Open the CSV file for writing the results
@@ -23,7 +32,7 @@ with open(output_csv, 'w', newline='') as csvfile:
         pdb_path = os.path.join(pdb_folder, pdb_file)  # Get full path to PDB file
         
         # Run TM-score via command line and capture the output
-        output = os.popen(f"./TMscore {pdb_path} {reference_pdb}").read()
+        output = os.popen(f"{tm_score_path} {pdb_path} {reference_pdb}").read()
 
         # Debugging: Print the full output of TMscore for inspection
         print(f"Output for {pdb_file}:\n{output}\n")
@@ -45,4 +54,3 @@ with open(output_csv, 'w', newline='') as csvfile:
             print(f"TM-score not found for {pdb_file}")
 
 print(f"TM-score results have been written to {output_csv}")
-

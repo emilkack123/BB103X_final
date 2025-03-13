@@ -1,11 +1,23 @@
 # Define the paths for the input and output files
 input_fasta_1 = "/home/moa/BB103X_final/resources/predicted_structures/gen.fa"
 input_fasta_2 = "/home/moa/BB103X_final/resources/predicted_structures/nat.fa"
-pca_output_plot = "/home/moa/BB103X_final/results/PCA_and_K-mean/pca_plot1.png"
-kmeans_output_plot = "/home/moa/BB103X_final/results/PCA_and_K-mean/kmeans_plot_pca_with_clusters_test.png"
+pca_output_plot = "/home/moa/BB103X_final/results/PCA_and_K-mean/pca_plot.png"
+kmeans_output_plot = "/home/moa/BB103X_final/results/PCA_and_K-mean/kmeans_plot_pca_with_clusters.png"
 
 # Path to the new K-means and PCA script
 kmeans_script = "/home/moa/BB103X_final/code/PCA_and_K-mean/k-mean_argparse.py"
+
+# Define paths for TM-score files
+pdb_folder = "/home/moa/BB103X_final/results/gen_structures"
+reference_pdb = "/home/moa/BB103X_final/results/nat_structures/model_natural4.pdb"
+output_csv = "/home/moa/BB103X_final/results/tm_score_results.csv"
+
+# Rule to generate final outputs (PCA, K-means, and TM-score results)
+rule all:
+    input:
+        pca_output_plot,            # Output from run_pca
+        kmeans_output_plot,         # Output from run_kmeans_pca
+        output_csv                  # Output from run_tm_score
 
 # Rule to run the PCA script
 rule run_pca:
@@ -28,3 +40,16 @@ rule run_kmeans_pca:
         script=kmeans_script
     shell:
         "python {params.script} '{input[0]}' '{input[1]}' {output}"
+
+# New rule to run TM-score calculation for PDB files
+rule run_tm_score:
+    input:
+        pdb_folder=pdb_folder,
+        reference_pdb=reference_pdb
+    output:
+        output_csv=output_csv
+    shell:
+        "python /home/moa/BB103X_final/code/TM-score.py "
+        "--pdb_folder {input.pdb_folder} "
+        "--reference_pdb {input.reference_pdb} "
+        "--output_csv {output.output_csv}"
