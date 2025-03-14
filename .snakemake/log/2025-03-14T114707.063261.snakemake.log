@@ -1,0 +1,13 @@
+Building DAG of jobs...
+AmbiguousRuleException:
+Rules run_tm_score and fasta_to_csv are ambiguous for the file results/rubisco.csv.
+Consider starting rule output with a unique prefix, constrain your wildcards, or use the ruleorder directive.
+Wildcards:
+	run_tm_score: 
+	fasta_to_csv: 
+Expected input files:
+	run_tm_score: results/gen_structures results/nat_structures/model_natural4.pdb
+	fasta_to_csv: results/rubisco_cleaned.fasta
+Expected output files:
+	run_tm_score: results/rubisco.csv
+	fasta_to_csv: results/rubisco.csv

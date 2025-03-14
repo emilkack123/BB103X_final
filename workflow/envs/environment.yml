@@ -5,12 +5,15 @@ channels:
   - defaults
 dependencies:
   - python=3.8  
+  - ipykernel
+  - pandas
   - numpy
   - matplotlib
+  - seaborn
   - scikit-learn
   - biopython
+  - clustalo
   - snakemake
   - pip
   - pip:
-      - snakemake
-      - TMscore
+      - tmscoring  # Optional: Python wrapper for TM-score if available
