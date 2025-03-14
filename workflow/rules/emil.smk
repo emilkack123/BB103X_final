@@ -1,6 +1,6 @@
 # Define input and output files
-gen_seqs = "resources/dragon_radii_updated.fasta"
-nat_seqs = "results//uniprot_rubisco.fasta"
+gen_seqs = "resources/rubisco_sequences/gen.fa"
+nat_seqs = "results/rubisco_sequences/nat.fa"
 all_seqs = "results//rubisco.fasta"
 cleaned_seqs = "results//rubisco_cleaned.fasta"
 filtering_log = "results//rubisco_filtering.log"
@@ -21,10 +21,6 @@ rule all:
         msa,
         dist_mat,
         cluster_plot
-
-rule download_natural_sequences:
-    output: nat_seqs
-    shell: "curl -s 'https://rest.uniprot.org/uniprotkb/search?query=rubisco&format=fasta&size=500' -o {output}"
 
 rule combine_sequences:
     input: gen_seqs, nat_seqs
