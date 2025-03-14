@@ -62,8 +62,9 @@ rule run_pca:
         input_fasta_2
     output:
         pca_output_plot
+        pca_output_scree
     shell:
-        "python workflow/scripts/PCA.py {input} {output}"
+        "python workflow/scripts/PCA.py {input[0]} {input[1]} {output[0]}"
 
 # Rule to run the K-means clustering and PCA visualization script
 rule run_kmeans_pca:
