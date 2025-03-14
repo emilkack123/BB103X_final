@@ -1,0 +1,46 @@
+Building DAG of jobs...
+Using shell: /usr/bin/bash
+Provided cores: 32
+Rules claiming more threads will be scaled down.
+Job stats:
+job                       count
+----------------------  -------
+all                           1
+boxplot_pI                    1
+hydrophobicity_boxplot        1
+total                         3
+
+Select jobs to execute...
+
+[Wed Mar 12 14:27:20 2025]
+rule boxplot_pI:
+    input: results/pI_results.csv
+    output: results/boxplot.png
+    jobid: 1
+    reason: Missing output files: results/boxplot.png
+    resources: tmpdir=/tmp
+
+
+[Wed Mar 12 14:27:20 2025]
+rule hydrophobicity_boxplot:
+    input: results/hydrophobicity_results.csv
+    output: results/hydrophobicity_boxplot.png
+    jobid: 2
+    reason: Missing output files: results/hydrophobicity_boxplot.png
+    resources: tmpdir=/tmp
+
+[Wed Mar 12 14:27:20 2025]
+Error in rule hydrophobicity_boxplot:
+    jobid: 2
+    input: results/hydrophobicity_results.csv
+    output: results/hydrophobicity_boxplot.png
+    shell:
+        python workflow/scripts/boxplot_hydrophobicity.py --csv results/hydrophobicity_results.csv --output results/hydrophobicity_boxplot.png
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+
+[Wed Mar 12 14:27:21 2025]
+Finished job 1.
+1 of 3 steps (33%) done
+Shutting down, this might take some time.
+Exiting because a job execution failed. Look above for error message
+Complete log: .snakemake/log/2025-03-12T142720.121409.snakemake.log
