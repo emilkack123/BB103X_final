@@ -1,10 +1,9 @@
-rule process_data:
-    input:
-        "resources/cleaned.fasta.txt"
-    output:
-        "results/cleaned.fasta.txt"
-    shell:
-        "cut -d' ' -f1,2 {input} > {output}"
-
-
+# Load Ahmad's pipeline
 include: "workflow/rules/ahmad.smk"
+
+# Define the final target (end result)
+rule all:
+    input:
+        "results/nat_cleaned.fa",
+        "results/gen_cleaned.fa",
+      

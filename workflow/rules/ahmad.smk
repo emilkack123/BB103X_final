@@ -1,33 +1,23 @@
-rule predict_structures_ahmad:
-    input:
-        "resources/cleaned.fasta"
-    output:
-        expand("results/structures/{seq}.pdb", seq=[rec.id for rec in SeqIO.parse("resources/cleaned.fasta", "fasta")])
-    script:
-        "workflow/scripts/predict_structures.py"
-
-rule compare_structures_ahmad:
-    input:
-        expand("results/structures/{seq}.pdb", seq=[rec.id for rec in SeqIO.parse("resources/cleaned.fasta", "fasta")])
-    output:
-        "results/comparisons/rmsd_results_ahmad.txt"
-    script:
-        "workflow/scripts/compare_structures.py"
 
 
-rule clone_external_tool:
-    output:
-        "workflow/external_tool_installed.txt"
-    shell:
-        """
-        git clone https://github.com/example/external-tool.git workflow/external_tool
-        touch workflow/external_tool_installed.txt
-        """
+##############################
+# 📌 SECTION 1: INPUT FILES
+##############################
+NAT_FA = "resources/nat.fa"
+GEN_FA = "resources/gen.fa"
 
-rule normalize_data:
-    input:
-        "results/comparisons/rmsd_results_ahmad.txt"
-    output:
-        "results/normalized_data_ahmad.txt"
-    script:
-        "workflow/scripts/normalize_data.py"
+##############################
+# 📌 SECTION 2: RULES
+##############################
+
+# ✅ RULE: Clean Natural Sequences
+rule clean_natural_fasta:
+    input: NAT_FA
+    output: "results/nat_cleaned.fa"
+    script: "scripts/clean_fasta.py"
+
+# ✅ RULE: Clean Generated Sequences
+rule clean_generated_fasta:
+    input: GEN_FA
+    output: "results/gen_cleaned.fa"
+    script: "scripts/clean_fasta.py"
