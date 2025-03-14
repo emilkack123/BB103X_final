@@ -1,0 +1,16 @@
+name: bb103x_final
+channels:
+  - bioconda
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.8  
+  - numpy
+  - matplotlib
+  - scikit-learn
+  - biopython
+  - snakemake
+  - pip
+  - pip:
+      - snakemake
+      - TMscore
