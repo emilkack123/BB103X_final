@@ -1,23 +1,23 @@
 # Define the paths for the input and output files
-input_fasta_1 = "../../resources/rubisco_sequences/gen.fa"
-input_fasta_2 = "../../resources/rubisco_sequences/nat.fa"
-pca_output_plot = "../../results/PCA_and_K-mean/pca_plot.png"
-kmeans_output_plot = "../../results/PCA_and_K-mean/kmeans_plot_pca_with_clusters.png"
+input_fasta_1 = "resources/rubisco_sequences/gen.fa"
+input_fasta_2 = "resources/rubisco_sequences/nat.fa"
+pca_output_plot = "results/PCA_and_K-mean/pca_plot.png"
+kmeans_output_plot = "results/PCA_and_K-mean/kmeans_plot_pca_with_clusters.png"
 
 # Path to the new K-means and PCA script
-kmeans_script = "../../code/PCA_and_K-mean/k-mean.py"
+kmeans_script = "workflow/scripts/k-mean.py"
 
 # Define paths for TM-score files (ONLY for generated sequences)
-pdb_folder_gen = "../../results/gen_structures"
-reference_pdb = "../../results/nat_structures/model_natural4.pdb"
-output_csv = "../../results/tm_scores/tm_score_results.csv"
+pdb_folder_gen = "results/gen_structures"
+reference_pdb = "results/nat_structures/model_natural4.pdb"
+output_csv = "results/tm_scores/tm_score_results.csv"
 
 # Define paths for extracting confidence scores (BOTH generated and natural)
-confidence_score_script = "../../code/get_confidence_score.py"
-pdb_folder_nat = "../../results/nat_structures"
+confidence_score_script = "workflow/scripts/get_confidence_score.py"
+pdb_folder_nat = "results/nat_structures"
 
-confidence_output_gen_file = "../../results/confidence_scores/gen_confidence_scores.csv"
-confidence_output_nat_file = "../../results/confidence_scores/nat_confidence_scores.csv"
+confidence_output_gen_file = "results/confidence_scores/gen_confidence_scores.csv"
+confidence_output_nat_file = "results/confidence_scores/nat_confidence_scores.csv"
 
 # Rule to generate final outputs (PCA, K-means, TM-score results, and confidence scores)
 rule all:
@@ -36,7 +36,7 @@ rule run_pca:
     output:
         pca_output_plot
     shell:
-        "python /home/moa/BB103X_final/code/PCA_and_K-mean/PCA.py {input} {output}"
+        "python workflow/scripts/PCA.py {input} {output}"
 
 # Rule to run the K-means clustering and PCA visualization script
 rule run_kmeans_pca:
@@ -58,7 +58,7 @@ rule run_tm_score:
     output:
         output_csv=output_csv
     shell:
-        "python /home/moa/BB103X_final/code/TM-score.py "
+        "python workflow/scripts/TM-score.py "
         "--pdb_folder {input.pdb_folder} "
         "--reference_pdb {input.reference_pdb} "
         "--output_csv {output.output_csv}"
