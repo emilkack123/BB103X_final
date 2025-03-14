@@ -1,12 +1,10 @@
-rule all:
+rule process_data:
     input:
-        "results/test_output.txt"
-
-rule test_rule:
-    input:
-        "resources/raw_data.txt"
+        "resources/cleaned.fasta.txt"
     output:
-        "results/test_output.txt"
+        "results/cleaned.fasta.txt"
     shell:
-        "cat {input} > {output}"
+        "cut -d' ' -f1,2 {input} > {output}"
 
+
+include: "workflow/rules/ahmad.smk"
