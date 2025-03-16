@@ -190,7 +190,7 @@ rule add_closest_column:
 rule plot_clustering:
     input: dist_mat, csv_final
     output: cluster_plot
-    shell: "workflow/scripts/plot_clustering.py {input[0]} {output} --metadata {input[1]}"
+    shell: ""python workflow/scripts/plot_clustering.py {input[0]} {output} --metadata {input[1]}"
 =======
         "python workflow/scripts/run_dmpfold2.py {input} --target_dir results/z2_targets_gen --model_dir results/z3_models_gen"
 >>>>>>> 3f47dbe (creating a dmpfold2 rule and inserting an extra line in sofia.smk)
