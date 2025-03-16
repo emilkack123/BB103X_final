@@ -1,0 +1,49 @@
+Building DAG of jobs...
+Using shell: /usr/bin/bash
+Provided cores: 32
+Rules claiming more threads will be scaled down.
+Job stats:
+job                    count
+-------------------  -------
+all                        1
+convert_fasta_upper        1
+fasta_to_aln               1
+run_dmpfold                1
+total                      4
+
+Select jobs to execute...
+
+[Sun Mar 16 16:42:55 2025]
+rule convert_fasta_upper:
+    input: resources/rubisco_sequences/gen.fa
+    output: results/gen_upper.fa
+    jobid: 3
+    reason: Missing output files: results/gen_upper.fa
+    resources: tmpdir=/tmp
+
+[Sun Mar 16 16:42:55 2025]
+Finished job 3.
+1 of 4 steps (25%) done
+Select jobs to execute...
+
+[Sun Mar 16 16:42:55 2025]
+rule fasta_to_aln:
+    input: results/gen_upper.fa
+    output: results/gen_aln_file.aln
+    jobid: 2
+    reason: Missing output files: results/gen_aln_file.aln; Input files updated by another job: results/gen_upper.fa
+    resources: tmpdir=/tmp
+
+[Sun Mar 16 16:42:55 2025]
+Finished job 2.
+2 of 4 steps (50%) done
+Select jobs to execute...
+
+[Sun Mar 16 16:42:55 2025]
+rule run_dmpfold:
+    input: results/gen_aln_file.aln
+    output: z3_models_gen/model_1.pdb
+    jobid: 1
+    reason: Missing output files: z3_models_gen/model_1.pdb; Input files updated by another job: results/gen_aln_file.aln
+    resources: tmpdir=/tmp
+

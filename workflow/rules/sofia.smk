@@ -1,18 +1,23 @@
-FASTA_FILE = "resources/gen+nat.fasta"
-PI_CSV = "results/pI_results.csv"
-HYDROPHOBICITY_CSV = "results/hydrophobicity_results.csv"
 
 rule all:
     input:
         "results/boxplot.png","results/hydrophobicity_boxplot.png"
         
 
+rule concat_rubisco:
+    input:
+        "resources/rubisco_sequences/gen.fa",
+        "resources/rubisco_sequences/nat.fa"
+    output:
+        "results/gen+nat.fasta"
+    shell:
+        "cat {input} > {output}"
 
 rule compute_pI:
     input:
-        FASTA_FILE
+        "results/gen+nat.fasta"
     output:
-        PI_CSV
+        "results/pI_results.csv"
     shell:
         "set -e; echo 'Starting compute_pI'; python workflow/scripts/pI.py -i {input} -o {output}; echo 'Finished compute_pI'"
 
@@ -20,9 +25,9 @@ rule compute_pI:
 
 rule compute_hydrophobicity:
     input:
-        FASTA_FILE
+        "results/gen+nat.fasta"
     output:
-        HYDROPHOBICITY_CSV
+        "results/hydrophobicity_results.csv"
     shell:
         "python workflow/scripts/hydrophobicity.py -i {input} -o {output}"
 

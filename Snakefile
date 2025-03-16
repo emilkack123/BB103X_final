@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Define the paths for the input and output files
 input_fasta_1 = "resources/rubisco_sequences/gen.fa"
 input_fasta_2 = "resources/rubisco_sequences/nat.fa"
@@ -57,38 +58,42 @@ rule all:
         dist_mat,
         cluster_plot,
         length
-
-# Rule to run the PCA script
-rule run_pca:
+=======
+rule all:
     input:
-        input_fasta_1,
-        input_fasta_2
+        "results/z3_models_gen/model_1.pdb"
+>>>>>>> 3f47dbe (creating a dmpfold2 rule and inserting an extra line in sofia.smk)
+
+rule convert_fasta_upper:
+    input:
+        "resources/rubisco_sequences/gen.fa"
     output:
+<<<<<<< HEAD
         pca_output_plot,
         pca_output_scree
     shell:
         "python workflow/scripts/PCA.py {input[0]} {input[1]} {output[0]}"
-
-# Rule to run the K-means clustering and PCA visualization script
-rule run_kmeans_pca:
-    input:
-        input_fasta_1,
-        input_fasta_2
-    output:
-        kmeans_output_plot
-    params:
-        script=kmeans_script
+=======
+        "results/gen_upper.fa"
     shell:
-        "python {params.script} '{input[0]}' '{input[1]}' {output}"
+        "python workflow/scripts/convert_fasta_upper.py {input} {output}"
+>>>>>>> 3f47dbe (creating a dmpfold2 rule and inserting an extra line in sofia.smk)
 
-# Rule to run TM-score calculation (ONLY for generated structures)
-rule run_tm_score:
+rule fasta_to_aln:
     input:
-        pdb_folder=pdb_folder_gen,
-        reference_pdb=reference_pdb
+        "results/gen_upper.fa"
     output:
-        output_csv=tm_score_output_csv  # FIXED: Updated output path
+        "results/gen_aln_file.aln"
     shell:
+        "python workflow/scripts/fasta_to_aln.py {input} {output}"
+
+rule run_dmpfold:
+    input:
+        "results/gen_aln_file.aln"
+    output:
+        "results/z3_models_gen/model_1.pdb"
+    shell:
+<<<<<<< HEAD
         """
         python workflow/scripts/TM-score.py \
         --pdb_folder {input.pdb_folder} \
@@ -186,3 +191,6 @@ rule plot_clustering:
     input: dist_mat, csv_final
     output: cluster_plot
     shell: "workflow/scripts/plot_clustering.py {input[0]} {output} --metadata {input[1]}"
+=======
+        "python workflow/scripts/run_dmpfold2.py {input} --target_dir results/z2_targets_gen --model_dir results/z3_models_gen"
+>>>>>>> 3f47dbe (creating a dmpfold2 rule and inserting an extra line in sofia.smk)
