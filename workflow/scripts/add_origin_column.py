@@ -4,7 +4,7 @@ import argparse
 import pandas as pd
 
 def determine_origin(sequence_id):
-    if sequence_id.startswith('sp|'):
+    if "." in sequence_id:
         return 'natural'
     else:
         return 'generated'
