@@ -1,0 +1,24 @@
+Building DAG of jobs...
+Using shell: /usr/bin/bash
+Provided cores: 1 (use --cores to define parallelism)
+Rules claiming more threads will be scaled down.
+Conda environments: ignored
+Job stats:
+job                count
+---------------  -------
+all                    1
+run_dmpfold_nat        1
+total                  2
+
+Select jobs to execute...
+
+[Mon Mar 17 14:56:37 2025]
+rule run_dmpfold_nat:
+    input: results/nat_aln_file.aln
+    output: results/z5_models_natural/model_1.pdb
+    jobid: 1
+    reason: Missing output files: results/z5_models_natural/model_1.pdb
+    resources: tmpdir=/tmp
+
+Terminating processes on user request, this might take some time.
+Complete log: .snakemake/log/2025-03-17T145637.539192.snakemake.log

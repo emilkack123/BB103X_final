@@ -1,0 +1,60 @@
+Building DAG of jobs...
+Using shell: /usr/bin/bash
+Provided cores: 1 (use --cores to define parallelism)
+Rules claiming more threads will be scaled down.
+Job stats:
+job                        count
+-----------------------  -------
+all                            1
+convert_fasta_upper_nat        1
+fasta_to_aln_nat               1
+run_dmpfold_nat                1
+total                          4
+
+Select jobs to execute...
+
+[Mon Mar 17 13:58:55 2025]
+rule convert_fasta_upper_nat:
+    input: resources/rubisco_sequences/nat.fa
+    output: results/nat_upper.fa
+    jobid: 3
+    reason: Missing output files: results/nat_upper.fa
+    resources: tmpdir=/tmp
+
+[Mon Mar 17 13:58:55 2025]
+Finished job 3.
+1 of 4 steps (25%) done
+Select jobs to execute...
+
+[Mon Mar 17 13:58:55 2025]
+rule fasta_to_aln_nat:
+    input: results/nat_upper.fa
+    output: results/nat_aln_file.aln
+    jobid: 2
+    reason: Missing output files: results/nat_aln_file.aln; Input files updated by another job: results/nat_upper.fa
+    resources: tmpdir=/tmp
+
+[Mon Mar 17 13:58:55 2025]
+Finished job 2.
+2 of 4 steps (50%) done
+Select jobs to execute...
+
+[Mon Mar 17 13:58:55 2025]
+rule run_dmpfold_nat:
+    input: results/nat_aln_file.aln
+    output: results/z5_models_natural/model_1.pdb
+    jobid: 1
+    reason: Missing output files: results/z5_models_natural/model_1.pdb; Input files updated by another job: results/nat_aln_file.aln
+    resources: tmpdir=/tmp
+
+Terminating processes on user request, this might take some time.
+[Mon Mar 17 14:05:57 2025]
+Error in rule run_dmpfold_nat:
+    jobid: 1
+    input: results/nat_aln_file.aln
+    output: results/z5_models_natural/model_1.pdb
+    shell:
+        mkdir -p results/z4_targets_natural results/z5_models_natural && python workflow/scripts/run_dmpfold2.py results/nat_aln_file.aln --target_dir results/z4_targets_natural --model_dir results/z5_models_natural
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+
+Complete log: .snakemake/log/2025-03-17T135855.602519.snakemake.log
