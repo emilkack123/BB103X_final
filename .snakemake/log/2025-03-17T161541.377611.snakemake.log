@@ -1,0 +1,65 @@
+Building DAG of jobs...
+Using shell: /usr/bin/bash
+Provided cores: 1 (use --cores to define parallelism)
+Rules claiming more threads will be scaled down.
+Conda environments: ignored
+Job stats:
+job                    count
+-------------------  -------
+all                        1
+convert_fasta_upper        1
+fasta_to_aln               1
+run_dmpfold                2
+total                      5
+
+Select jobs to execute...
+
+[Mon Mar 17 16:15:41 2025]
+rule convert_fasta_upper:
+    input: resources/rubisco_sequences/gen.fa
+    output: results/gen_upper.fa
+    jobid: 6
+    reason: Code has changed since last execution
+    wildcards: sample=gen
+    resources: tmpdir=/tmp
+
+[Mon Mar 17 16:15:41 2025]
+Finished job 6.
+1 of 5 steps (20%) done
+Select jobs to execute...
+
+[Mon Mar 17 16:15:41 2025]
+rule fasta_to_aln:
+    input: results/gen_upper.fa
+    output: results/gen_aln_file.aln
+    jobid: 5
+    reason: Input files updated by another job: results/gen_upper.fa
+    wildcards: sample=gen
+    resources: tmpdir=/tmp
+
+[Mon Mar 17 16:15:41 2025]
+Finished job 5.
+2 of 5 steps (40%) done
+Select jobs to execute...
+
+[Mon Mar 17 16:15:41 2025]
+rule run_dmpfold:
+    input: results/nat_aln_file.aln
+    output: results/nat_model_1.pdb
+    jobid: 1
+    reason: Missing output files: results/nat_model_1.pdb
+    wildcards: sample=nat
+    resources: tmpdir=/tmp
+
+Terminating processes on user request, this might take some time.
+[Mon Mar 17 16:16:41 2025]
+Error in rule run_dmpfold:
+    jobid: 1
+    input: results/nat_aln_file.aln
+    output: results/nat_model_1.pdb
+    conda-env: /home/sofia/BB103X_final/.snakemake/conda/09a639b5f9bee9e791252218c33b780a_
+    shell:
+        mkdir -p results/z4_targets_natural results/z5_models_natural && python workflow/scripts/run_dmpfold2.py results/nat_aln_file.aln --target_dir results/z4_targets_natural --model_dir results/z5_models_natural && mv results/z5_models_natural/model_1.pdb results/nat_model_1.pdb
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+
+Complete log: .snakemake/log/2025-03-17T161541.377611.snakemake.log
