@@ -1,18 +1,9 @@
 SAMPLES = ["nat", "gen"]
-
-# Dictionaries med målmappar beroende på sample
-TARGET_DIRS = {
-    "nat": "results/z4_targets_natural",
-    "gen": "results/z2_targets_gen"
-}
-MODEL_DIRS = {
-    "nat": "results/z5_models_natural",
-    "gen": "results/z3_models_gen"
-}
+SEQS = range(1, 11)  # Antal sekvenser i varje aln-fil
 
 rule all:
     input:
-        expand("results/{sample}_model_1.pdb", sample=SAMPLES)
+        expand("results/{sample}_models/model_{sample}_seq{seq}.pdb", sample=SAMPLES, seq=SEQS)
 
 rule convert_fasta_upper:
     input:
@@ -30,18 +21,25 @@ rule fasta_to_aln:
     shell:
         "python workflow/scripts/fasta_to_aln.py {input} {output}"
 
-rule run_dmpfold:
+rule split_aln:
     input:
         "results/{sample}_aln_file.aln"
-    # Output: En fil med namnet results/{sample}_model_1.pdb (vi kommer senare flytta dit filen som dmpfold skapar)
     output:
-        "results/{sample}_model_1.pdb"
-    params:
-        target_dir = lambda wc: TARGET_DIRS[wc.sample],
-        model_dir  = lambda wc: MODEL_DIRS[wc.sample]
-    conda:
-        "workflow/envs/bioenv.yml"
+        "results/{sample}_targets/seq{seq}.aln"
     shell:
-        "mkdir -p {params.target_dir} {params.model_dir} && "
-        "python workflow/scripts/run_dmpfold2.py {input} --target_dir {params.target_dir} --model_dir {params.model_dir} && "
-        "mv {params.model_dir}/model_1.pdb {output}"
+        """
+        mkdir -p results/{wildcards.sample}_targets
+        awk '{{print $0 > "results/{wildcards.sample}_targets/seq" NR ".aln"}}' {input}
+        """
+
+rule run_dmpfold_per_seq:
+    input:
+        "results/{sample}_targets/seq{seq}.aln"
+    output:
+        "results/{sample}_models/model_{sample}_seq{seq}.pdb"
+    shell:
+        """
+        mkdir -p results/{wildcards.sample}_models
+        echo "🚀 Running dmpfold for {wildcards.sample}, sequence {wildcards.seq}..."
+        python workflow/scripts/run_dmpfold2.py {input} {output}
+        """

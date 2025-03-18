@@ -1,0 +1,3 @@
+SyntaxError:
+Only input files can be specified as functions
+  File "/home/sofia/BB103X_final/Snakefile", line 51, in <module>
