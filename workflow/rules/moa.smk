@@ -8,13 +8,13 @@ kmeans_output_plot = "results/PCA_and_K-mean/kmeans_plot_pca_with_clusters.png"
 kmeans_script = "workflow/scripts/k-mean.py"
 
 # Define paths for TM-score files (ONLY for generated sequences)
-pdb_folder_gen = "results/gen_structures"
-reference_pdb = "results/nat_structures/model_natural4.pdb"
+pdb_folder_gen = "results/gen_models"
+reference_pdb = "results/nat_models/model_natural4.pdb"
 output_csv = "results/tm_scores/tm_score_results.csv"
 
 # Define paths for extracting confidence scores (BOTH generated and natural)
 confidence_score_script = "workflow/scripts/get_confidence_score.py"
-pdb_folder_nat = "results/nat_structures"
+pdb_folder_nat = "results/nat_models"
 
 confidence_output_gen_file = "results/confidence_scores/gen_confidence_scores.csv"
 confidence_output_nat_file = "results/confidence_scores/nat_confidence_scores.csv"
@@ -35,8 +35,9 @@ rule run_pca:
         input_fasta_2
     output:
         pca_output_plot
+        pca_output_scree
     shell:
-        "python workflow/scripts/PCA.py {input} {output}"
+        "python workflow/scripts/PCA.py {input[0]} {input[1]} {output[0]}"
 
 # Rule to run the K-means clustering and PCA visualization script
 rule run_kmeans_pca:
