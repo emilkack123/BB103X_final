@@ -36,7 +36,6 @@ rule plot_molecular_weight_length:
 ### Final rule to run everything ###
 rule all:
     input:
-
         MOLECULAR_WEIGHT_CSV,
         MOLECULAR_WEIGHT_BOXPLOT,
         MOLECULAR_WEIGHT_HISTOGRAM,
