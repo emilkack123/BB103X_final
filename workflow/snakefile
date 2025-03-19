@@ -1,9 +1,0 @@
-# Load Ahmad's pipeline
-include: "workflow/rules/ahmad.smk"
-
-# Define the final target (end result)
-rule all:
-    input:
-        "results/nat_cleaned.fa",
-        "results/gen_cleaned.fa",
-      
