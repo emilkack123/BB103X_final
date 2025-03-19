@@ -24,7 +24,7 @@ FASTA_FILE = "resources/gen+nat.fasta"
 PI_CSV = "results/pI_results.csv"
 HYDROPHOBICITY_CSV = "results/hydrophobicity_results.csv"
 
-# Define input and output files
+# Define input and output files for t-sne plot
 gen_seqs = "resources/rubisco_sequences/gen.fa"
 nat_seqs = "resources/rubisco_sequences/nat.fa"
 all_seqs = "results/rubisco.fasta"
@@ -36,6 +36,7 @@ output_csv = "results/rubisco.csv"
 csv_wNewCol = "results/rubisco_updated.csv"
 csv_final = "results/rubisco_final.csv"
 cluster_plot = "results/rubisco_clusters.png"
+length = "results/length_histogram.png"
 
 # Rule to generate final outputs (PCA, K-means, TM-score results, and confidence scores)
 rule all:
@@ -53,6 +54,7 @@ rule all:
         cleaned_seqs,
         filtering_log,
         output_csv,
+        length,
         msa,
         dist_mat,
         cluster_plot
@@ -166,6 +168,11 @@ rule add_origin_column:
     output: csv_wNewCol  # modifies in place
     shell: "workflow/scripts/add_origin_column.py {input} {output}"
 
+rule length_histogram:
+    input: csv_wNewCol
+    output: length
+    shell: "python workflow/scripts/sequence_histogram.py {input} {output}"
+
 rule multiple_sequence_alignment:
     input: cleaned_seqs
     output: msa, dist_mat
@@ -179,4 +186,4 @@ rule add_closest_column:
 rule plot_clustering:
     input: dist_mat, csv_final
     output: cluster_plot
-    shell: "workflow/scripts/plot_clustering.py {input[0]} {output} --metadata {input[1]}"
+    shell: "python workflow/scripts/plot_clustering.py {input[0]} {output} --metadata {input[1]}"
