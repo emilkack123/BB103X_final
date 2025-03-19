@@ -1,0 +1,7 @@
+host: freya
+Building DAG of jobs...
+MissingInputException in rule test_rule in file /home/ahmad/BB103X_final/workflow/snakefile, line 5:
+Missing input files for rule test_rule:
+    output: results/test_output.txt
+    affected files:
+        resources/raw_data.txt
