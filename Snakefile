@@ -3,10 +3,10 @@ input_fasta_1 = "resources/rubisco_sequences/gen.fa"
 input_fasta_2 = "resources/rubisco_sequences/nat.fa"
 pca_output_plot = "results/PCA_and_K-mean/pca_plot.png"
 kmeans_output_plot = "results/PCA_and_K-mean/kmeans_plot_pca_with_clusters.png"
+pca_output_scree = "results/PCA_and_K-mean/pca_plot_scree.png"
 
 # Path to the new K-means and PCA script
 kmeans_script = "workflow/scripts/k-mean.py"
-pca_output_scree = "results/PCA_and_K-mean/pca_scree_plot.png"
 
 # Define paths for TM-score files (ONLY for generated sequences)
 pdb_folder_gen = "results/gen_models"
@@ -40,7 +40,8 @@ cluster_plot = "results/rubisco_clusters.png"
 # Rule to generate final outputs (PCA, K-means, TM-score results, and confidence scores)
 rule all:
     input:
-        pca_output_plot,           
+        pca_output_plot,
+        pca_output_scree,           
         kmeans_output_plot,        
         tm_score_output_csv,       # FIXED: Updated to new TM-score file path
         confidence_output_gen_file,
@@ -65,7 +66,7 @@ rule run_pca:
         pca_output_plot,
         pca_output_scree
     shell:
-        "python workflow/scripts/PCA.py {input[0]} {input[1]} {output[0]} {output[1]}"
+        "python workflow/scripts/PCA.py {input[0]} {input[1]} {output[0]}"
 
 # Rule to run the K-means clustering and PCA visualization script
 rule run_kmeans_pca:
