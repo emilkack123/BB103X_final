@@ -6,6 +6,7 @@ kmeans_output_plot = "results/PCA_and_K-mean/kmeans_plot_pca_with_clusters.png"
 
 # Path to the new K-means and PCA script
 kmeans_script = "workflow/scripts/k-mean.py"
+pca_output_scree = "results/PCA_and_K-mean/pca_scree_plot.png"
 
 # Define paths for TM-score files (ONLY for generated sequences)
 pdb_folder_gen = "results/gen_models"
@@ -34,10 +35,10 @@ rule run_pca:
         input_fasta_1,
         input_fasta_2
     output:
-        pca_output_plot
+        pca_output_plot,
         pca_output_scree
     shell:
-        "python workflow/scripts/PCA.py {input[0]} {input[1]} {output[0]}"
+        "python workflow/scripts/PCA.py {input[0]} {input[1]} {output[0]} {output[1]}"
 
 # Rule to run the K-means clustering and PCA visualization script
 rule run_kmeans_pca:
