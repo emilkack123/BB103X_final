@@ -1,0 +1,65 @@
+Building DAG of jobs...
+Using shell: /usr/bin/bash
+Provided cores: 4
+Rules claiming more threads will be scaled down.
+Job stats:
+job                            count
+---------------------------  -------
+add_closest_column                 1
+all                                1
+multiple_sequence_alignment        1
+plot_clustering                    1
+total                              4
+
+Select jobs to execute...
+
+[Thu Mar 20 12:38:54 2025]
+rule multiple_sequence_alignment:
+    input: results/rubisco_cleaned.fasta
+    output: results/rubisco_msa.fasta, results/rubisco_dist_mat.tsv
+    jobid: 12
+    reason: Missing output files: results/rubisco_dist_mat.tsv
+    resources: tmpdir=/tmp
+
+[Thu Mar 20 12:38:54 2025]
+Finished job 12.
+1 of 4 steps (25%) done
+Select jobs to execute...
+
+[Thu Mar 20 12:38:54 2025]
+rule add_closest_column:
+    input: results/rubisco_dist_mat.tsv, results/rubisco_updated.csv
+    output: results/rubisco_final.csv
+    jobid: 14
+    reason: Input files updated by another job: results/rubisco_dist_mat.tsv
+    resources: tmpdir=/tmp
+
+[Thu Mar 20 12:38:54 2025]
+Finished job 14.
+2 of 4 steps (50%) done
+Select jobs to execute...
+
+[Thu Mar 20 12:38:54 2025]
+rule plot_clustering:
+    input: results/rubisco_dist_mat.tsv, results/rubisco_final.csv
+    output: results/rubisco_clusters.png
+    jobid: 13
+    reason: Input files updated by another job: results/rubisco_final.csv, results/rubisco_dist_mat.tsv
+    resources: tmpdir=/tmp
+
+[Thu Mar 20 12:38:56 2025]
+Finished job 13.
+3 of 4 steps (75%) done
+Select jobs to execute...
+
+[Thu Mar 20 12:38:56 2025]
+localrule all:
+    input: results/PCA_and_K-mean/pca_plot.png, results/PCA_and_K-mean/pca_plot_scree.png, results/PCA_and_K-mean/kmeans_plot_pca_with_clusters.png, results/tm_scores/tm_score_results.csv, results/confidence_scores/gen_confidence_scores.csv, results/confidence_scores/nat_confidence_scores.csv, results/boxplot.png, results/hydrophobicity_boxplot.png, resources/rubisco_sequences/nat.fa, results/rubisco.fasta, results/rubisco_cleaned.fasta, results/rubisco_filtering.log, results/rubisco.csv, results/length_histogram.png, results/rubisco_msa.fasta, results/rubisco_dist_mat.tsv, results/rubisco_clusters.png
+    jobid: 0
+    reason: Input files updated by another job: results/rubisco_dist_mat.tsv, results/rubisco_msa.fasta, results/rubisco_clusters.png
+    resources: tmpdir=/tmp
+
+[Thu Mar 20 12:38:56 2025]
+Finished job 0.
+4 of 4 steps (100%) done
+Complete log: .snakemake/log/2025-03-20T123853.895378.snakemake.log

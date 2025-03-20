@@ -37,6 +37,11 @@ csv_wNewCol = "results/rubisco_updated.csv"
 csv_final = "results/rubisco_final.csv"
 cluster_plot = "results/rubisco_clusters.png"
 length = "results/length_histogram.png"
+MOLECULAR_WEIGHT_CSV = "results/molecular_weight.csv"
+MOLECULAR_WEIGHT_BOXPLOT = "results/molecular_weight_boxplot.png"
+MOLECULAR_WEIGHT_HISTOGRAM = "results/molecular_weight_histogram.png"
+SEQUENCE_LENGTH_BOXPLOT = "results/sequence_length_boxplot.png"
+SCATTER_PLOT = "results/scatterplot.png"
 
 # Rule to generate final outputs (PCA, K-means, TM-score results, and confidence scores)
 rule all:
@@ -57,7 +62,12 @@ rule all:
         length,
         msa,
         dist_mat,
-        cluster_plot
+        cluster_plot,
+        MOLECULAR_WEIGHT_CSV,
+        MOLECULAR_WEIGHT_BOXPLOT,
+        MOLECULAR_WEIGHT_HISTOGRAM,
+        SEQUENCE_LENGTH_BOXPLOT,
+        SCATTER_PLOT,
 
 # Rule to run the PCA script
 rule run_pca:
@@ -187,3 +197,23 @@ rule plot_clustering:
     input: dist_mat, csv_final
     output: cluster_plot
     shell: "python workflow/scripts/plot_clustering.py {input[0]} {output} --metadata {input[1]}"
+
+rule compute_molecular_weight:
+    input:
+        gen_seqs,
+        nat_seqs
+    output:
+        MOLECULAR_WEIGHT_CSV
+    shell: "python workflow/scripts/compute_molecular_weight.py {input[0]} {input[1]} {output}"
+
+### Rule to generate molecular weight & sequence length plots ###
+rule plot_molecular_weight_length:
+    input:
+        MOLECULAR_WEIGHT_CSV
+    output:
+        MOLECULAR_WEIGHT_BOXPLOT,
+        MOLECULAR_WEIGHT_HISTOGRAM,
+        SEQUENCE_LENGTH_BOXPLOT,
+        SCATTER_PLOT
+    shell:
+        "mkdir -p results/ && python workflow/scripts/plot_molecular_weight_length.py {input} results/molecular_weight_analysis"
