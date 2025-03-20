@@ -38,10 +38,10 @@ csv_final = "results/rubisco_final.csv"
 cluster_plot = "results/rubisco_clusters.png"
 length = "results/length_histogram.png"
 MOLECULAR_WEIGHT_CSV = "results/molecular_weight.csv"
-MOLECULAR_WEIGHT_BOXPLOT = "results/molecular_weight_boxplot.png"
-MOLECULAR_WEIGHT_HISTOGRAM = "results/molecular_weight_histogram.png"
-SEQUENCE_LENGTH_BOXPLOT = "results/sequence_length_boxplot.png"
-SCATTER_PLOT = "results/scatterplot.png"
+MOLECULAR_WEIGHT_BOXPLOT = "results/molecular_weight_analysis_molecular_weight_boxplot.png"
+MOLECULAR_WEIGHT_HISTOGRAM = "results/molecular_weight_analysis_molecular_weight_histogram.png"
+SEQUENCE_LENGTH_BOXPLOT = "results/molecular_weight_analysis_sequence_length_boxplot.png"
+SCATTER_PLOT = "results/molecular_weight_analysis_scatterplot.png"
 
 # Rule to generate final outputs (PCA, K-means, TM-score results, and confidence scores)
 rule all:
@@ -217,3 +217,4 @@ rule plot_molecular_weight_length:
         SCATTER_PLOT
     shell:
         "mkdir -p results/ && python workflow/scripts/plot_molecular_weight_length.py {input} results/molecular_weight_analysis"
+        

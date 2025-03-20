@@ -7,6 +7,16 @@ import os
 def plot_data(csv_file, output_prefix):
     df = pd.read_csv(csv_file)
 
+    # Ensure output directory exists
+    os.makedirs(os.path.dirname(output_prefix), exist_ok=True)
+
+    # Check if required columns exist
+    required_columns = {"Type", "Molecular_Weight", "Sequence_Length"}
+    missing_columns = required_columns - set(df.columns)
+    if missing_columns:
+        print(f"❌ ERROR: Missing columns in input CSV: {missing_columns}")
+        exit(1)
+
     # Boxplot: Molecular Weight
     plt.figure(figsize=(8, 6))
     sns.boxplot(x="Type", y="Molecular_Weight", data=df, palette="Set2")
@@ -15,7 +25,7 @@ def plot_data(csv_file, output_prefix):
     plt.ylabel("Molecular Weight (Da)")
     output_path = f"{output_prefix}_molecular_weight_boxplot.png"
     plt.savefig(output_path)
-    print(f" Saved: {output_path}")
+    print(f"✅ Saved: {output_path}")
     plt.close()
 
     # Histogram: Molecular Weight
@@ -26,7 +36,7 @@ def plot_data(csv_file, output_prefix):
     plt.ylabel("Frequency")
     output_path = f"{output_prefix}_molecular_weight_histogram.png"
     plt.savefig(output_path)
-    print(f" Saved: {output_path}")
+    print(f"✅ Saved: {output_path}")
     plt.close()
 
     # Boxplot: Sequence Length
@@ -37,7 +47,7 @@ def plot_data(csv_file, output_prefix):
     plt.ylabel("Sequence Length (AA)")
     output_path = f"{output_prefix}_sequence_length_boxplot.png"
     plt.savefig(output_path)
-    print(f" Saved: {output_path}")
+    print(f"✅ Saved: {output_path}")
     plt.close()
 
     # Scatter Plot: Molecular Weight vs Length
@@ -49,10 +59,10 @@ def plot_data(csv_file, output_prefix):
     plt.legend(title="Sequence Type")
     output_path = f"{output_prefix}_scatterplot.png"
     plt.savefig(output_path)
-    print(f" Saved: {output_path}")
+    print(f"✅ Saved: {output_path}")
     plt.close()
 
-    # Ensure all output files exist (Fixes Snakemake tracking issues)
+    # Ensure all output files exist (fix Snakemake tracking issue)
     expected_outputs = [
         f"{output_prefix}_molecular_weight_boxplot.png",
         f"{output_prefix}_molecular_weight_histogram.png",
@@ -62,8 +72,9 @@ def plot_data(csv_file, output_prefix):
     
     for output in expected_outputs:
         if not os.path.exists(output):
-            print(f"⚠️ WARNING: {output} was NOT created, touching file to force Snakemake to track it.")
-            open(output, 'a').close()  # Create empty file
+            with open(output, 'w') as f:
+                f.write("Placeholder to ensure Snakemake detects output.\n")
+            print(f"🛠 Created empty file: {output}")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Plot molecular weight and sequence length distributions")
