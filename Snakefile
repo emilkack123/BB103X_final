@@ -125,19 +125,32 @@ rule run_confidence_scores_nat:
     shell:
         "python {confidence_score_script} {input.pdb_folder} {output}"
 
+
+
+rule concat_rubisco:
+    input:
+        "resources/rubisco_sequences/gen.fa",
+        "resources/rubisco_sequences/nat.fa"
+    output:
+        "results/gen+nat.fasta"
+    shell:
+        "cat {input} > {output}"
+
 rule compute_pI:
     input:
-        FASTA_FILE
+        "results/gen+nat.fasta"
     output:
-        PI_CSV
+        "results/pI_results.csv"
     shell:
         "set -e; echo 'Starting compute_pI'; python workflow/scripts/pI.py -i {input} -o {output}; echo 'Finished compute_pI'"
 
+
+
 rule compute_hydrophobicity:
     input:
-        FASTA_FILE
+        "results/gen+nat.fasta"
     output:
-        HYDROPHOBICITY_CSV
+        "results/hydrophobicity_results.csv"
     shell:
         "python workflow/scripts/hydrophobicity.py -i {input} -o {output}"
 
