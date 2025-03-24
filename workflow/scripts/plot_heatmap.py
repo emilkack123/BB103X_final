@@ -11,7 +11,7 @@ def plot_heatmap(input_file, output_file):
     plt.title("Sequence Distance Heatmap")
     plt.tight_layout()
     plt.savefig(output_file)
-    print(f"✅ Heatmap saved to: {output_file}")
+    print(f" Heatmap saved to: {output_file}")
 
 if __name__ == "__main__":
     input_file = sys.argv[1]
