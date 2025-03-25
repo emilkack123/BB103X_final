@@ -1,6 +1,0 @@
-Building DAG of jobs...
-MissingInputException in rule compute_hydrophobicity in file /home/sofia/BB103X_final/Snakefile, line 23:
-Missing input files for rule compute_hydrophobicity:
-    output: results/hydrophobicity_results.csv
-    affected files:
-        resources/gen+nat.fasta
