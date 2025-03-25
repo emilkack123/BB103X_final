@@ -1,0 +1,44 @@
+Building DAG of jobs...
+Using shell: /usr/bin/bash
+Provided cores: 1 (use --cores to define parallelism)
+Rules claiming more threads will be scaled down.
+Job stats:
+job                             count
+----------------------------  -------
+compute_molecular_weight            1
+plot_molecular_weight_length        1
+total                               2
+
+Select jobs to execute...
+
+[Tue Mar 18 18:38:00 2025]
+rule compute_molecular_weight:
+    input: resources/rubisco_sequences/gen.fa, resources/rubisco_sequences/nat.fa
+    output: results/molecular_weight.csv
+    jobid: 1
+    reason: Missing output files: results/molecular_weight.csv
+    resources: tmpdir=/tmp
+
+[Tue Mar 18 18:38:00 2025]
+Finished job 1.
+1 of 2 steps (50%) done
+Select jobs to execute...
+
+[Tue Mar 18 18:38:00 2025]
+rule plot_molecular_weight_length:
+    input: results/molecular_weight.csv
+    output: results/molecular_weight_boxplot.png, results/molecular_weight_histogram.png, results/sequence_length_boxplot.png, results/scatterplot.png
+    jobid: 0
+    reason: Forced execution
+    resources: tmpdir=/tmp
+
+Waiting at most 5 seconds for missing files.
+MissingOutputException in rule plot_molecular_weight_length in file /home/ahmad/BB103X_final/Snakefile, line 20:
+Job 0 completed successfully, but some output files are missing. Missing files after 5 seconds. This might be due to filesystem latency. If that is the case, consider to increase the wait time with --latency-wait:
+results/molecular_weight_boxplot.png
+results/molecular_weight_histogram.png
+results/sequence_length_boxplot.png
+results/scatterplot.png
+Shutting down, this might take some time.
+Exiting because a job execution failed. Look above for error message
+Complete log: .snakemake/log/2025-03-18T183759.777848.snakemake.log

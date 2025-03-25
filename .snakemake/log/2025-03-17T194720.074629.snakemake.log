@@ -1,0 +1,111 @@
+Building DAG of jobs...
+Using shell: /usr/bin/bash
+Provided cores: 1 (use --cores to define parallelism)
+Rules claiming more threads will be scaled down.
+Conda environments: ignored
+Job stats:
+job                    count
+-------------------  -------
+all                        1
+convert_fasta_upper        2
+fasta_to_aln               2
+run_dmpfold                2
+total                      7
+
+Select jobs to execute...
+
+[Mon Mar 17 19:47:20 2025]
+rule convert_fasta_upper:
+    input: resources/rubisco_sequences/gen.fa
+    output: results/gen_upper.fa
+    jobid: 6
+    reason: Updated input files: resources/rubisco_sequences/gen.fa
+    wildcards: sample=gen
+    resources: tmpdir=/tmp
+
+[Mon Mar 17 19:47:20 2025]
+Finished job 6.
+1 of 7 steps (14%) done
+Select jobs to execute...
+
+[Mon Mar 17 19:47:20 2025]
+rule convert_fasta_upper:
+    input: resources/rubisco_sequences/nat.fa
+    output: results/nat_upper.fa
+    jobid: 3
+    reason: Updated input files: resources/rubisco_sequences/nat.fa
+    wildcards: sample=nat
+    resources: tmpdir=/tmp
+
+[Mon Mar 17 19:47:20 2025]
+Finished job 3.
+2 of 7 steps (29%) done
+Select jobs to execute...
+
+[Mon Mar 17 19:47:20 2025]
+rule fasta_to_aln:
+    input: results/nat_upper.fa
+    output: results/nat_aln_file.aln
+    jobid: 2
+    reason: Input files updated by another job: results/nat_upper.fa
+    wildcards: sample=nat
+    resources: tmpdir=/tmp
+
+[Mon Mar 17 19:47:20 2025]
+Finished job 2.
+3 of 7 steps (43%) done
+Select jobs to execute...
+
+[Mon Mar 17 19:47:20 2025]
+rule run_dmpfold:
+    input: results/nat_aln_file.aln
+    output: results/z5_models_natural/nat_model_1.pdb
+    jobid: 1
+    reason: Input files updated by another job: results/nat_aln_file.aln
+    wildcards: model_dir=z5_models_natural, sample=nat
+    resources: tmpdir=/tmp
+
+[Mon Mar 17 19:54:05 2025]
+Finished job 1.
+4 of 7 steps (57%) done
+Select jobs to execute...
+
+[Mon Mar 17 19:54:05 2025]
+rule fasta_to_aln:
+    input: results/gen_upper.fa
+    output: results/gen_aln_file.aln
+    jobid: 5
+    reason: Input files updated by another job: results/gen_upper.fa
+    wildcards: sample=gen
+    resources: tmpdir=/tmp
+
+[Mon Mar 17 19:54:05 2025]
+Finished job 5.
+5 of 7 steps (71%) done
+Select jobs to execute...
+
+[Mon Mar 17 19:54:05 2025]
+rule run_dmpfold:
+    input: results/gen_aln_file.aln
+    output: results/z3_models_gen/gen_model_1.pdb
+    jobid: 4
+    reason: Input files updated by another job: results/gen_aln_file.aln
+    wildcards: model_dir=z3_models_gen, sample=gen
+    resources: tmpdir=/tmp
+
+[Mon Mar 17 20:00:14 2025]
+Finished job 4.
+6 of 7 steps (86%) done
+Select jobs to execute...
+
+[Mon Mar 17 20:00:14 2025]
+localrule all:
+    input: results/z5_models_natural/nat_model_1.pdb, results/z3_models_gen/gen_model_1.pdb
+    jobid: 0
+    reason: Input files updated by another job: results/z5_models_natural/nat_model_1.pdb, results/z3_models_gen/gen_model_1.pdb
+    resources: tmpdir=/tmp
+
+[Mon Mar 17 20:00:14 2025]
+Finished job 0.
+7 of 7 steps (100%) done
+Complete log: .snakemake/log/2025-03-17T194720.074629.snakemake.log

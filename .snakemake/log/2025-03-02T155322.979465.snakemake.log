@@ -1,0 +1,41 @@
+host: freya
+Building DAG of jobs...
+Using shell: /usr/bin/bash
+Provided cores: 1 (use --cores to define parallelism)
+Rules claiming more threads will be scaled down.
+Job stats:
+job          count
+---------  -------
+all              1
+test_rule        1
+total            2
+
+Select jobs to execute...
+Execute 1 jobs...
+
+[Sun Mar  2 15:53:22 2025]
+localrule test_rule:
+    input: resources/raw_data.txt
+    output: results/test_output.txt
+    jobid: 1
+    reason: Forced execution
+    resources: tmpdir=/tmp
+
+cat resources/raw_data.txt > results/test_output.txt
+[Sun Mar  2 15:53:22 2025]
+Finished job 1.
+1 of 2 steps (50%) done
+Select jobs to execute...
+Execute 1 jobs...
+
+[Sun Mar  2 15:53:22 2025]
+localrule all:
+    input: results/test_output.txt
+    jobid: 0
+    reason: Forced execution
+    resources: tmpdir=/tmp
+
+[Sun Mar  2 15:53:22 2025]
+Finished job 0.
+2 of 2 steps (100%) done
+Complete log: .snakemake/log/2025-03-02T155322.979465.snakemake.log

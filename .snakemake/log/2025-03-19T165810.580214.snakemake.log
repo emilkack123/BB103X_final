@@ -1,0 +1,9 @@
+Migrating .snakemake folder to new format...
+Migration complete
+Building DAG of jobs...
+MissingInputException in rule compute_molecular_weight in file /home/ahmad/BB103X_final/Snakefile, line 13:
+Missing input files for rule compute_molecular_weight:
+    output: results/molecular_weight.csv
+    affected files:
+        resources/rubisco_sequences/gen.fa
+        resources/rubisco_sequences/nat.fa
