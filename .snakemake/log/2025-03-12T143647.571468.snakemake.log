@@ -1,0 +1,37 @@
+Building DAG of jobs...
+Using shell: /usr/bin/bash
+Provided cores: 32
+Rules claiming more threads will be scaled down.
+Job stats:
+job                       count
+----------------------  -------
+all                           1
+hydrophobicity_boxplot        1
+total                         2
+
+Select jobs to execute...
+
+[Wed Mar 12 14:36:47 2025]
+rule hydrophobicity_boxplot:
+    input: results/hydrophobicity_results.csv
+    output: results/hydrophobicity_boxplot.png
+    jobid: 2
+    reason: Missing output files: results/hydrophobicity_boxplot.png
+    resources: tmpdir=/tmp
+
+[Wed Mar 12 14:36:48 2025]
+Finished job 2.
+1 of 2 steps (50%) done
+Select jobs to execute...
+
+[Wed Mar 12 14:36:48 2025]
+localrule all:
+    input: results/boxplot.png, results/hydrophobicity_boxplot.png
+    jobid: 0
+    reason: Input files updated by another job: results/hydrophobicity_boxplot.png
+    resources: tmpdir=/tmp
+
+[Wed Mar 12 14:36:48 2025]
+Finished job 0.
+2 of 2 steps (100%) done
+Complete log: .snakemake/log/2025-03-12T143647.571468.snakemake.log

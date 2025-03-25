@@ -1,0 +1,37 @@
+Building DAG of jobs...
+Using shell: /usr/bin/bash
+Provided cores: 32
+Rules claiming more threads will be scaled down.
+Job stats:
+job           count
+----------  -------
+all               1
+boxplot_pI        1
+total             2
+
+Select jobs to execute...
+
+[Wed Mar 12 14:21:40 2025]
+rule boxplot_pI:
+    input: results/pI_results.csv
+    output: boxplot.png
+    jobid: 1
+    reason: Missing output files: boxplot.png
+    resources: tmpdir=/tmp
+
+[Wed Mar 12 14:21:41 2025]
+Finished job 1.
+1 of 2 steps (50%) done
+Select jobs to execute...
+
+[Wed Mar 12 14:21:41 2025]
+localrule all:
+    input: boxplot.png
+    jobid: 0
+    reason: Input files updated by another job: boxplot.png
+    resources: tmpdir=/tmp
+
+[Wed Mar 12 14:21:41 2025]
+Finished job 0.
+2 of 2 steps (100%) done
+Complete log: .snakemake/log/2025-03-12T142140.660386.snakemake.log

@@ -1,0 +1,19 @@
+name: bb103x_final
+channels:
+  - bioconda
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.8  
+  - ipykernel
+  - pandas
+  - numpy
+  - matplotlib
+  - seaborn
+  - scikit-learn
+  - biopython
+  - clustalo
+  - snakemake
+  - pip
+  - pip:
+      - tmscoring  # Optional: Python wrapper for TM-score if available

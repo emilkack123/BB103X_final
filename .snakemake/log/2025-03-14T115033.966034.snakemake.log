@@ -1,0 +1,92 @@
+Building DAG of jobs...
+Using shell: /usr/bin/bash
+Provided cores: 1 (use --cores to define parallelism)
+Rules claiming more threads will be scaled down.
+Job stats:
+job                            count
+---------------------------  -------
+add_closest_column                 1
+add_origin_column                  1
+all                                1
+clean_fasta                        1
+combine_sequences                  1
+fasta_to_csv                       1
+multiple_sequence_alignment        1
+plot_clustering                    1
+total                              8
+
+Select jobs to execute...
+
+[Fri Mar 14 11:50:34 2025]
+rule combine_sequences:
+    input: resources/rubisco_sequences/gen.fa, resources/rubisco_sequences/nat.fa
+    output: results/rubisco.fasta
+    jobid: 8
+    reason: Missing output files: results/rubisco.fasta
+    resources: tmpdir=/tmp
+
+[Fri Mar 14 11:50:34 2025]
+Finished job 8.
+1 of 8 steps (12%) done
+Select jobs to execute...
+
+[Fri Mar 14 11:50:34 2025]
+rule clean_fasta:
+    input: results/rubisco.fasta
+    output: results/rubisco_cleaned.fasta
+    log: results/rubisco_filtering.log
+    jobid: 9
+    reason: Missing output files: results/rubisco_cleaned.fasta, results/rubisco_filtering.log; Input files updated by another job: results/rubisco.fasta
+    resources: tmpdir=/tmp
+
+[Fri Mar 14 11:50:34 2025]
+Finished job 9.
+2 of 8 steps (25%) done
+Select jobs to execute...
+
+[Fri Mar 14 11:50:34 2025]
+rule fasta_to_csv:
+    input: results/rubisco_cleaned.fasta
+    output: results/rubisco.csv
+    jobid: 10
+    reason: Missing output files: results/rubisco.csv; Input files updated by another job: results/rubisco_cleaned.fasta
+    resources: tmpdir=/tmp
+
+[Fri Mar 14 11:50:34 2025]
+Finished job 10.
+3 of 8 steps (38%) done
+Select jobs to execute...
+
+[Fri Mar 14 11:50:34 2025]
+rule add_origin_column:
+    input: results/rubisco.csv
+    output: results/rubisco_updated.csv
+    jobid: 14
+    reason: Missing output files: results/rubisco_updated.csv; Input files updated by another job: results/rubisco.csv
+    resources: tmpdir=/tmp
+
+[Fri Mar 14 11:50:35 2025]
+Finished job 14.
+4 of 8 steps (50%) done
+Select jobs to execute...
+
+[Fri Mar 14 11:50:35 2025]
+rule multiple_sequence_alignment:
+    input: results/rubisco_cleaned.fasta
+    output: results/rubisco_msa.fasta, results/rubisco_dist_mat.tsv
+    jobid: 11
+    reason: Missing output files: results/rubisco_msa.fasta, results/rubisco_dist_mat.tsv; Input files updated by another job: results/rubisco_cleaned.fasta
+    resources: tmpdir=/tmp
+
+[Fri Mar 14 11:50:35 2025]
+Error in rule multiple_sequence_alignment:
+    jobid: 11
+    input: results/rubisco_cleaned.fasta
+    output: results/rubisco_msa.fasta, results/rubisco_dist_mat.tsv
+    shell:
+        clustalo -i results/rubisco_cleaned.fasta -o results/rubisco_msa.fasta --distmat-out=results/rubisco_dist_mat.tsv --full
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+
+Shutting down, this might take some time.
+Exiting because a job execution failed. Look above for error message
+Complete log: .snakemake/log/2025-03-14T115033.966034.snakemake.log
