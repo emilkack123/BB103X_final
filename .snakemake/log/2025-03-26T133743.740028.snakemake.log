@@ -1,0 +1,9 @@
+Building DAG of jobs...
+MissingInputException in rule apply_metrics in file /home/sofia/BB103X_final/Snakefile, line 5:
+Missing input files for rule apply_metrics:
+    output: metrics_output.csv
+    affected files:
+        pI_results.csv
+        hydrophobicity_results.csv
+        molecular_weight.csv
+        tm_score_results.csv

@@ -1,0 +1,37 @@
+Building DAG of jobs...
+Using shell: /usr/bin/bash
+Provided cores: 1 (use --cores to define parallelism)
+Rules claiming more threads will be scaled down.
+Job stats:
+job              count
+-------------  -------
+all                  1
+merge_metrics        1
+total                2
+
+Select jobs to execute...
+
+[Wed Mar 26 14:06:42 2025]
+rule merge_metrics:
+    input: results/pI_results.csv, results/hydrophobicity_results.csv, results/tm_scores/tm_score_results.csv, results/molecular_weight.csv
+    output: merged_metrics.csv
+    jobid: 1
+    reason: Missing output files: merged_metrics.csv
+    resources: tmpdir=/tmp
+
+[Wed Mar 26 14:06:42 2025]
+Finished job 1.
+1 of 2 steps (50%) done
+Select jobs to execute...
+
+[Wed Mar 26 14:06:42 2025]
+localrule all:
+    input: merged_metrics.csv
+    jobid: 0
+    reason: Input files updated by another job: merged_metrics.csv
+    resources: tmpdir=/tmp
+
+[Wed Mar 26 14:06:42 2025]
+Finished job 0.
+2 of 2 steps (100%) done
+Complete log: .snakemake/log/2025-03-26T140641.957129.snakemake.log
