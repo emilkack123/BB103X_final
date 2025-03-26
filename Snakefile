@@ -15,7 +15,7 @@ rule merge_metrics:
         python workflow/scripts/apply_function.py \
             --files {input.pI} {input.hydrophobicity} {input.tm_score} {input.molecular_weight} \
             --keys "ID" "ID" "PDB File" "Sequence_ID" \
-            --data_cols pI Hydrophobicity TM-score Molecular_Weight \
-            --metrics pI_results hydrophobicity_results tm_score_results molecular_weight \
+            --data_cols pI Hydrophobicity TM-score "Sequence_Length,Molecular_Weight" \
+            --metrics pI_results hydrophobicity_results tm_score_results "Sequence_Length,Molecular_Weight" \
             --output {output}
         """

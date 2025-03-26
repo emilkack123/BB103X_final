@@ -15,19 +15,31 @@ def merge_csv_files(files, keys, data_cols, metrics, common_key="ID"):
         key = keys[i]
         df = pd.read_csv(file)
         if key not in df.columns:
-            raise ValueError(f"Column '{key}' not found in {file}")
-        # Use the user-provided data column name for the metric value
-        data_col = data_cols[i]
-        if data_col not in df.columns:
-            raise ValueError(f"Data column '{data_col}' not found in {file}")
-        # Determine the new output column name for the metric
-        metric_name = metrics[i] if metrics else file.split('.')[0]
-        # Keep only the key and data columns, renaming the key to the common key and the data column to metric_name
-        df = df[[key, data_col]].rename(columns={key: common_key, data_col: metric_name})
-        if merged_df is None:
-            merged_df = df
+            raise ValueError(f"Key column '{key}' not found in {file}")
+        # Allow comma-separated list for data columns
+        data_cols_list = [col.strip() for col in data_cols[i].split(',')]
+        for col in data_cols_list:
+            if col not in df.columns:
+                raise ValueError(f"Data column '{col}' not found in {file}")
+        # Process metric names for renaming: allow comma-separated names too
+        if metrics:
+            metric_names = [x.strip() for x in metrics[i].split(',')]
+            if len(metric_names) != len(data_cols_list):
+                raise ValueError(f"In file {file}, number of metric names does not match number of data columns.")
         else:
-            merged_df = pd.merge(merged_df, df, on=common_key, how='outer')
+            metric_names = data_cols_list
+        
+        # Create a dataframe with the key and the desired data columns, and rename them
+        selected_df = df[[key] + data_cols_list].copy()
+        rename_dict = {key: common_key}
+        for orig, new in zip(data_cols_list, metric_names):
+            rename_dict[orig] = new
+        selected_df = selected_df.rename(columns=rename_dict)
+        
+        if merged_df is None:
+            merged_df = selected_df
+        else:
+            merged_df = pd.merge(merged_df, selected_df, on=common_key, how='outer')
     return merged_df
 
 def parse_args():
@@ -39,9 +51,9 @@ def parse_args():
     parser.add_argument('--keys', nargs='+', required=True,
                         help="List of key column names for each file (in the same order as --files).")
     parser.add_argument('--data_cols', nargs='+', required=True,
-                        help="List of metric (data) column names for each file (in the same order as --files).")
+                        help="List of metric (data) column names for each file. Use a comma-separated list for multiple columns.")
     parser.add_argument('--metrics', nargs='+', required=False,
-                        help="List of output column names for each metric. If not provided, file basenames are used.")
+                        help="List of output column names for each metric column. Use a comma-separated list for multiple columns. If not provided, original column names are used.")
     parser.add_argument('--common_key', default="ID",
                         help="Name for the common key column in the merged output (default: 'ID').")
     parser.add_argument('--output', required=True,
