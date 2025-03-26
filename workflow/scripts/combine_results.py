@@ -35,12 +35,12 @@ df_merged['ID'] = df_merged['ID'].str.strip()
 df_filtered = df_merged[~df_merged['ID'].isin(excluded_ids)]
 
 # Read molecular weight data (filtering for Type == "Generated")
-df_mw_filtered = df_mw[df_mw['Type'] == "Generated"][['Sequence_ID', 'Molecular_Weight']]
+df_mw_filtered = df_mw[df_mw['Type'] == "Generated"][['Sequence_ID', 'Sequence_Length', 'Molecular_Weight']]
 
 # Rename 'Sequence_ID' to 'ID' for merging consistency
 df_mw_filtered = df_mw_filtered.rename(columns={'Sequence_ID': 'ID'})
 
-# Merge molecular weight data with the filtered dataset
+# Merge molecular weight and sequence length data with the filtered dataset
 df_final = pd.merge(df_filtered, df_mw_filtered, on='ID', how='left')
 
 # Save the final filtered DataFrame
