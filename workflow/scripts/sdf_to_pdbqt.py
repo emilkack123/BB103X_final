@@ -10,7 +10,7 @@ obConversion.SetInAndOutFormats("sdf", "pdbqt")
 mol = openbabel.OBMol()
 
 # Read the SDF file (replace "input_file.sdf" with your actual SDF file path)
-obConversion.ReadFile(mol, "/home/moa/BB103X_final/resources/co2.sdf") 
+obConversion.ReadFile(mol, "resources/docking/co2.sdf") 
 
 # Add hydrogens to the molecule (if not already present)
 mol.AddHydrogens()
@@ -24,4 +24,4 @@ print(f"Number of residues: {mol.NumResidues()}")
 obConversion.AddOption("h")
 
 # Write the file in PDBQT format
-obConversion.WriteFile(mol, '/home/moa/BB103X_final/results/co2.pdbqt')
+obConversion.WriteFile(mol, 'results/co2.pdbqt')
