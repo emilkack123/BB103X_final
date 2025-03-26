@@ -1,0 +1,45 @@
+import pandas as pd
+import argparse
+
+def merge_data(hydro_file, pi_file, mol_weight_file):
+    """ Merge hydrophobicity, pI, and molecular weight data based on Sequence_ID and Sequence """
+
+    # Load CSV files
+    hydro_df = pd.read_csv(hydro_file)
+    pi_df = pd.read_csv(pi_file)
+    mol_weight_df = pd.read_csv(mol_weight_file)
+
+    # Standardize column names to uppercase for consistency
+    hydro_df.columns = hydro_df.columns.str.upper()
+    pi_df.columns = pi_df.columns.str.upper()
+    mol_weight_df.columns = mol_weight_df.columns.str.upper()
+
+    # Rename Sequence_ID in molecular_weight.csv to ID for consistency
+    mol_weight_df.rename(columns={"SEQUENCE_ID": "ID"}, inplace=True)
+
+    # Merge datasets on ID and Sequence
+    merged_df = pd.merge(hydro_df, pi_df, on=["ID", "SEQUENCE"], how="inner")
+    merged_df = pd.merge(merged_df, mol_weight_df, on=["ID"], how="inner")
+
+    return merged_df
+
+def parse_args():
+    parser = argparse.ArgumentParser(description='Merge hydrophobicity, pI, and molecular weight results.')
+    parser.add_argument('hydro_file', help='Path to the CSV file containing hydrophobicity values')
+    parser.add_argument('pi_file', help='Path to the CSV file containing pI values')
+    parser.add_argument('mol_weight_file', help='Path to the CSV file containing molecular weight values')
+    parser.add_argument('--output_file', default='merged_results.csv', help='Path to save the merged output CSV')
+    return parser.parse_args()
+
+def main():
+    args = parse_args()
+
+    # Merge the data
+    merged_df = merge_data(args.hydro_file, args.pi_file, args.mol_weight_file)
+
+    # Save merged results
+    merged_df.to_csv(args.output_file, index=False)
+    print(f"Merged results saved to {args.output_file}")
+
+if __name__ == "__main__":
+    main()
