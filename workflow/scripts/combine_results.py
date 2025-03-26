@@ -1,11 +1,11 @@
 import pandas as pd
 
 # File paths
-pi_file = "/home/moa/BB103X_final/results/pI_results.csv"
-hydro_file = "/home/moa/BB103X_final/results/hydrophobicity_results.csv"
-mw_file = "/home/moa/BB103X_final/results/molecular_weight.csv"
-fa_file = "/home/moa/BB103X_final/resources/rubisco_sequences/nat.fa"
-output_file = "/home/moa/BB103X_final/results/filtered_results.csv"
+pi_file = "results/pI_results.csv"
+hydro_file = "results/hydrophobicity_results.csv"
+mw_file = "results/molecular_weight.csv"
+fa_file = "resources/rubisco_sequences/nat.fa"
+output_file = "results/filtered_results.csv"
 
 # Function to extract sequence IDs from FASTA file
 def read_fasta_ids(fasta_path):
