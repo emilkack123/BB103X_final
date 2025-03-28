@@ -24,6 +24,10 @@ def merge_data(hydro_file, pi_file, mol_weight_file, tm_score_file):
     merged_df = pd.merge(merged_df, mol_weight_df, on=["ID"], how="inner")
     merged_df = pd.merge(merged_df, tm_score_df, on=["ID"], how="inner")
 
+     # **Fix TM-SCORE column: Remove extra text (anything after space or '(')**
+    merged_df["TM-SCORE"] = merged_df["TM-SCORE"].astype(str).str.split(" ").str[0]
+    merged_df["TM-SCORE"] = pd.to_numeric(merged_df["TM-SCORE"], errors="coerce")  # Convert to float
+
     return merged_df
 
 def parse_args():
