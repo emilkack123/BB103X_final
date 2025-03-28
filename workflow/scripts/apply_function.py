@@ -18,6 +18,7 @@ def merge_data(hydro_file, pi_file, mol_weight_file, tm_score_file):
 
     # Rename "Sequence_ID" to "ID" in molecular weight data for consistency
     mol_weight_df.rename(columns={"SEQUENCE_ID": "ID"}, inplace=True)
+    tm_score_df.rename(columns={"ID_SEQUENCES": "ID"}, inplace=True)
 
     # Merge datasets on ID and Sequence where applicable
     merged_df = pd.merge(hydro_df, pi_df, on=["ID", "SEQUENCE"], how="inner")
