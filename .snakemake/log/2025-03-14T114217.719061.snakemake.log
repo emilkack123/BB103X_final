@@ -1,0 +1,6 @@
+Building DAG of jobs...
+MissingInputException in rule combine_sequences in file /home/ahmad/BB103X_final/Snakefile, line 143:
+Missing input files for rule combine_sequences:
+    output: results/rubisco.fasta
+    affected files:
+        results/rubisco_sequences/nat.fa

@@ -1,0 +1,92 @@
+Building DAG of jobs...
+Using shell: /usr/bin/bash
+Provided cores: 32
+Rules claiming more threads will be scaled down.
+Job stats:
+job                       count
+----------------------  -------
+all                           1
+boxplot_pI                    1
+compute_hydrophobicity        1
+compute_pI                    1
+concat_rubisco                1
+hydrophobicity_boxplot        1
+total                         6
+
+Select jobs to execute...
+
+[Sun Mar 16 16:02:27 2025]
+rule concat_rubisco:
+    input: resources/rubisco_sequences/gen.fa, resources/rubisco_sequences/nat.fa
+    output: results/gen+nat.fasta
+    jobid: 3
+    reason: Missing output files: results/gen+nat.fasta
+    resources: tmpdir=/tmp
+
+[Sun Mar 16 16:02:27 2025]
+Finished job 3.
+1 of 6 steps (17%) done
+Select jobs to execute...
+
+[Sun Mar 16 16:02:27 2025]
+rule compute_pI:
+    input: results/gen+nat.fasta
+    output: results/pI_results.csv
+    jobid: 2
+    reason: Missing output files: results/pI_results.csv; Input files updated by another job: results/gen+nat.fasta; Set of input files has changed since last execution
+    resources: tmpdir=/tmp
+
+
+[Sun Mar 16 16:02:27 2025]
+rule compute_hydrophobicity:
+    input: results/gen+nat.fasta
+    output: results/hydrophobicity_results.csv
+    jobid: 5
+    reason: Input files updated by another job: results/gen+nat.fasta; Set of input files has changed since last execution
+    resources: tmpdir=/tmp
+
+[Sun Mar 16 16:02:28 2025]
+Finished job 2.
+2 of 6 steps (33%) done
+Select jobs to execute...
+
+[Sun Mar 16 16:02:28 2025]
+rule boxplot_pI:
+    input: results/pI_results.csv
+    output: results/boxplot.png
+    jobid: 1
+    reason: Missing output files: results/boxplot.png; Input files updated by another job: results/pI_results.csv
+    resources: tmpdir=/tmp
+
+[Sun Mar 16 16:02:28 2025]
+Finished job 5.
+3 of 6 steps (50%) done
+Select jobs to execute...
+
+[Sun Mar 16 16:02:28 2025]
+rule hydrophobicity_boxplot:
+    input: results/hydrophobicity_results.csv
+    output: results/hydrophobicity_boxplot.png
+    jobid: 4
+    reason: Input files updated by another job: results/hydrophobicity_results.csv
+    resources: tmpdir=/tmp
+
+[Sun Mar 16 16:02:29 2025]
+Finished job 4.
+4 of 6 steps (67%) done
+[Sun Mar 16 16:02:29 2025]
+Finished job 1.
+5 of 6 steps (83%) done
+Select jobs to execute...
+
+[Sun Mar 16 16:02:29 2025]
+localrule all:
+    input: results/boxplot.png, results/hydrophobicity_boxplot.png
+    jobid: 0
+    reason: Input files updated by another job: results/hydrophobicity_boxplot.png, results/boxplot.png
+    resources: tmpdir=/tmp
+
+[Sun Mar 16 16:02:29 2025]
+Finished job 0.
+6 of 6 steps (100%) done
+Complete log: .snakemake/log/2025-03-16T160227.670786.snakemake.log

@@ -1,0 +1,6 @@
+Docking Score (Energy): [-2.046 -2.046  0.     0.     0.     0.     0.     0.   ]
+Minimized Energy: [-2.01 -2.01  0.    0.    0.    0.    0.    0.  ]
+
+Docking completed successfully.
+Top 5 poses have been written to docked_enzyme.pdbqt.
+Minimized pose has been written to minimized.pdbqt.

@@ -1,0 +1,53 @@
+Building DAG of jobs...
+Using shell: /usr/bin/bash
+Provided cores: 1 (use --cores to define parallelism)
+Rules claiming more threads will be scaled down.
+Conda environments: ignored
+Job stats:
+job            count
+-----------  -------
+all                1
+run_dmpfold        2
+total              3
+
+Select jobs to execute...
+
+[Mon Mar 17 19:03:38 2025]
+rule run_dmpfold:
+    input: results/nat_aln_file.aln
+    output: results/z5_models_natural/nat_model_1.pdb
+    jobid: 1
+    reason: Code has changed since last execution
+    wildcards: model_dir=z5_models_natural, sample=nat
+    resources: tmpdir=/tmp
+
+[Mon Mar 17 19:07:03 2025]
+Finished job 1.
+1 of 3 steps (33%) done
+Select jobs to execute...
+
+[Mon Mar 17 19:07:03 2025]
+rule run_dmpfold:
+    input: results/gen_aln_file.aln
+    output: results/z3_models_gen/gen_model_1.pdb
+    jobid: 4
+    reason: Code has changed since last execution
+    wildcards: model_dir=z3_models_gen, sample=gen
+    resources: tmpdir=/tmp
+
+[Mon Mar 17 19:09:42 2025]
+Finished job 4.
+2 of 3 steps (67%) done
+Select jobs to execute...
+
+[Mon Mar 17 19:09:42 2025]
+localrule all:
+    input: results/z5_models_natural/nat_model_1.pdb, results/z3_models_gen/gen_model_1.pdb
+    jobid: 0
+    reason: Input files updated by another job: results/z3_models_gen/gen_model_1.pdb, results/z5_models_natural/nat_model_1.pdb
+    resources: tmpdir=/tmp
+
+[Mon Mar 17 19:09:42 2025]
+Finished job 0.
+3 of 3 steps (100%) done
+Complete log: .snakemake/log/2025-03-17T190337.674015.snakemake.log

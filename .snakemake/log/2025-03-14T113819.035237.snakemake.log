@@ -1,0 +1,37 @@
+Building DAG of jobs...
+Using shell: /usr/bin/bash
+Provided cores: 1 (use --cores to define parallelism)
+Rules claiming more threads will be scaled down.
+Job stats:
+job           count
+----------  -------
+all               1
+boxplot_pI        1
+total             2
+
+Select jobs to execute...
+
+[Fri Mar 14 11:38:19 2025]
+rule boxplot_pI:
+    input: results/pI_results.csv
+    output: results/boxplot.png
+    jobid: 6
+    reason: Missing output files: results/boxplot.png
+    resources: tmpdir=/tmp
+
+[Fri Mar 14 11:38:20 2025]
+Finished job 6.
+1 of 2 steps (50%) done
+Select jobs to execute...
+
+[Fri Mar 14 11:38:20 2025]
+localrule all:
+    input: results/PCA_and_K-mean/pca_plot.png, results/PCA_and_K-mean/kmeans_plot_pca_with_clusters.png, results/tm_scores/tm_score_results.csv, results/confidence_scores/gen_confidence_scores.csv, results/confidence_scores/nat_confidence_scores.csv, results/boxplot.png, results/hydrophobicity_boxplot.png
+    jobid: 0
+    reason: Input files updated by another job: results/boxplot.png
+    resources: tmpdir=/tmp
+
+[Fri Mar 14 11:38:20 2025]
+Finished job 0.
+2 of 2 steps (100%) done
+Complete log: .snakemake/log/2025-03-14T113819.035237.snakemake.log

@@ -1,0 +1,84 @@
+# Define the paths for the input and output files
+input_fasta_1 = "resources/rubisco_sequences/gen.fa"
+input_fasta_2 = "resources/rubisco_sequences/nat.fa"
+pca_output_plot = "results/PCA_and_K-mean/pca_plot.png"
+kmeans_output_plot = "results/PCA_and_K-mean/kmeans_plot_pca_with_clusters.png"
+
+# Path to the new K-means and PCA script
+kmeans_script = "workflow/scripts/k-mean.py"
+pca_output_scree = "results/PCA_and_K-mean/pca_scree_plot.png"
+
+# Define paths for TM-score files (ONLY for generated sequences)
+pdb_folder_gen = "results/gen_models"
+reference_pdb = "results/nat_models/model_natural4.pdb"
+output_csv = "results/tm_scores/tm_score_results.csv"
+
+# Define paths for extracting confidence scores (BOTH generated and natural)
+confidence_score_script = "workflow/scripts/get_confidence_score.py"
+pdb_folder_nat = "results/nat_models"
+
+confidence_output_gen_file = "results/confidence_scores/gen_confidence_scores.csv"
+confidence_output_nat_file = "results/confidence_scores/nat_confidence_scores.csv"
+
+# Rule to generate final outputs (PCA, K-means, TM-score results, and confidence scores)
+rule all:
+    input:
+        pca_output_plot,            # Output from run_pca
+        kmeans_output_plot,         # Output from run_kmeans_pca
+        output_csv,                 # Output from run_tm_score (ONLY for generated sequences)
+        confidence_output_gen_file, # Confidence scores for generated structures
+        confidence_output_nat_file  # Confidence scores for natural structures
+
+# Rule to run the PCA script
+rule run_pca:
+    input:
+        input_fasta_1,
+        input_fasta_2
+    output:
+        pca_output_plot,
+        pca_output_scree
+    shell:
+        "python workflow/scripts/PCA.py {input[0]} {input[1]} {output[0]} {output[1]}"
+
+# Rule to run the K-means clustering and PCA visualization script
+rule run_kmeans_pca:
+    input:
+        input_fasta_1,
+        input_fasta_2
+    output:
+        kmeans_output_plot
+    params:
+        script=kmeans_script
+    shell:
+        "python {params.script} '{input[0]}' '{input[1]}' {output}"
+
+# Rule to run TM-score calculation (ONLY for generated structures)
+rule run_tm_score:
+    input:
+        pdb_folder=pdb_folder_gen,
+        reference_pdb=reference_pdb
+    output:
+        output_csv=output_csv
+    shell:
+        "python workflow/scripts/TM-score.py "
+        "--pdb_folder {input.pdb_folder} "
+        "--reference_pdb {input.reference_pdb} "
+        "--output_csv {output.output_csv}"
+
+# Rule to run the confidence score extraction script for generated structures
+rule run_confidence_scores_gen:
+    input:
+        pdb_folder=pdb_folder_gen
+    output:
+        confidence_output_gen_file
+    shell:
+        "python {confidence_score_script} {input.pdb_folder} {output}"
+
+# Rule to run the confidence score extraction script for natural structures
+rule run_confidence_scores_nat:
+    input:
+        pdb_folder=pdb_folder_nat
+    output:
+        confidence_output_nat_file
+    shell:
+        "python {confidence_score_script} {input.pdb_folder} {output}"

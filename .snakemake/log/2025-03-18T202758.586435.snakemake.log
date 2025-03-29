@@ -1,0 +1,6 @@
+Building DAG of jobs...
+MissingInputException in rule all in file /home/sofia/BB103X_final/Snakefile, line 13:
+Missing input files for rule all:
+    affected files:
+        results/gen_model_1.pdb
+        results/nat_model_1.pdb
