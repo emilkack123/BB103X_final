@@ -1,0 +1,63 @@
+Building DAG of jobs...
+Using shell: /usr/bin/bash
+Provided cores: 4
+Rules claiming more threads will be scaled down.
+Job stats:
+job                          count
+-------------------------  -------
+all                              1
+run_confidence_scores_gen        1
+run_confidence_scores_nat        1
+run_pca                          1
+total                            4
+
+Select jobs to execute...
+
+[Thu Mar 20 12:32:09 2025]
+rule run_pca:
+    input: resources/rubisco_sequences/gen.fa, resources/rubisco_sequences/nat.fa
+    output: results/PCA_and_K-mean/pca_plot.png, results/PCA_and_K-mean/pca_plot_scree.png
+    jobid: 1
+    reason: Code has changed since last execution
+    resources: tmpdir=/tmp
+
+
+[Thu Mar 20 12:32:09 2025]
+rule run_confidence_scores_gen:
+    input: results/gen_models
+    output: results/confidence_scores/gen_confidence_scores.csv
+    jobid: 3
+    reason: Code has changed since last execution
+    resources: tmpdir=/tmp
+
+
+[Thu Mar 20 12:32:09 2025]
+rule run_confidence_scores_nat:
+    input: results/nat_models
+    output: results/confidence_scores/nat_confidence_scores.csv
+    jobid: 4
+    reason: Code has changed since last execution
+    resources: tmpdir=/tmp
+
+[Thu Mar 20 12:32:09 2025]
+Finished job 4.
+1 of 4 steps (25%) done
+[Thu Mar 20 12:32:09 2025]
+Finished job 3.
+2 of 4 steps (50%) done
+[Thu Mar 20 12:32:11 2025]
+Finished job 1.
+3 of 4 steps (75%) done
+Select jobs to execute...
+
+[Thu Mar 20 12:32:11 2025]
+localrule all:
+    input: results/PCA_and_K-mean/pca_plot.png, results/PCA_and_K-mean/pca_plot_scree.png, results/PCA_and_K-mean/kmeans_plot_pca_with_clusters.png, results/tm_scores/tm_score_results.csv, results/confidence_scores/gen_confidence_scores.csv, results/confidence_scores/nat_confidence_scores.csv, results/boxplot.png, results/hydrophobicity_boxplot.png, resources/rubisco_sequences/nat.fa, results/rubisco.fasta, results/rubisco_cleaned.fasta, results/rubisco_filtering.log, results/rubisco.csv, results/length_histogram.png, results/rubisco_msa.fasta, results/rubisco_dist_mat.tsv, results/rubisco_clusters.png
+    jobid: 0
+    reason: Input files updated by another job: results/confidence_scores/gen_confidence_scores.csv, results/PCA_and_K-mean/pca_plot_scree.png, results/confidence_scores/nat_confidence_scores.csv, results/PCA_and_K-mean/pca_plot.png
+    resources: tmpdir=/tmp
+
+[Thu Mar 20 12:32:11 2025]
+Finished job 0.
+4 of 4 steps (100%) done
+Complete log: .snakemake/log/2025-03-20T123209.371375.snakemake.log

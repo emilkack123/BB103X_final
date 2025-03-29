@@ -37,6 +37,11 @@ csv_wNewCol = "results/rubisco_updated.csv"
 csv_final = "results/rubisco_final.csv"
 cluster_plot = "results/rubisco_clusters.png"
 length = "results/length_histogram.png"
+MOLECULAR_WEIGHT_CSV = "results/molecular_weight.csv"
+MOLECULAR_WEIGHT_BOXPLOT = "results/molecular_weight_analysis_molecular_weight_boxplot.png"
+MOLECULAR_WEIGHT_HISTOGRAM = "results/molecular_weight_analysis_molecular_weight_histogram.png"
+SEQUENCE_LENGTH_BOXPLOT = "results/molecular_weight_analysis_sequence_length_boxplot.png"
+SCATTER_PLOT = "results/molecular_weight_analysis_scatterplot.png"
 
 # Rule to generate final outputs (PCA, K-means, TM-score results, and confidence scores)
 rule all:
@@ -57,7 +62,12 @@ rule all:
         length,
         msa,
         dist_mat,
-        cluster_plot
+        cluster_plot,
+        MOLECULAR_WEIGHT_CSV,
+        MOLECULAR_WEIGHT_BOXPLOT,
+        MOLECULAR_WEIGHT_HISTOGRAM,
+        SEQUENCE_LENGTH_BOXPLOT,
+        SCATTER_PLOT,
 
 # Rule to run the PCA script
 rule run_pca:
@@ -115,19 +125,32 @@ rule run_confidence_scores_nat:
     shell:
         "python {confidence_score_script} {input.pdb_folder} {output}"
 
+
+
+rule concat_rubisco:
+    input:
+        "resources/rubisco_sequences/gen.fa",
+        "resources/rubisco_sequences/nat.fa"
+    output:
+        "results/gen+nat.fasta"
+    shell:
+        "cat {input} > {output}"
+
 rule compute_pI:
     input:
-        FASTA_FILE
+        "results/gen+nat.fasta"
     output:
-        PI_CSV
+        "results/pI_results.csv"
     shell:
         "set -e; echo 'Starting compute_pI'; python workflow/scripts/pI.py -i {input} -o {output}; echo 'Finished compute_pI'"
 
+
+
 rule compute_hydrophobicity:
     input:
-        FASTA_FILE
+        "results/gen+nat.fasta"
     output:
-        HYDROPHOBICITY_CSV
+        "results/hydrophobicity_results.csv"
     shell:
         "python workflow/scripts/hydrophobicity.py -i {input} -o {output}"
 
@@ -187,3 +210,24 @@ rule plot_clustering:
     input: dist_mat, csv_final
     output: cluster_plot
     shell: "python workflow/scripts/plot_clustering.py {input[0]} {output} --metadata {input[1]}"
+
+rule compute_molecular_weight:
+    input:
+        gen_seqs,
+        nat_seqs
+    output:
+        MOLECULAR_WEIGHT_CSV
+    shell: "python workflow/scripts/compute_molecular_weight.py {input[0]} {input[1]} {output}"
+
+### Rule to generate molecular weight & sequence length plots ###
+rule plot_molecular_weight_length:
+    input:
+        MOLECULAR_WEIGHT_CSV
+    output:
+        MOLECULAR_WEIGHT_BOXPLOT,
+        MOLECULAR_WEIGHT_HISTOGRAM,
+        SEQUENCE_LENGTH_BOXPLOT,
+        SCATTER_PLOT
+    shell:
+        "mkdir -p results/ && python workflow/scripts/plot_molecular_weight_length.py {input} results/molecular_weight_analysis"
+        
