@@ -10,7 +10,7 @@ kmeans_script = "workflow/scripts/k-mean.py"
 
 # Define paths for TM-score files (ONLY for generated sequences)
 pdb_folder_gen = "results/gen_models"
-reference_pdb = "results/nat_models/model_natural4.pdb"
+reference_pdb = "results/nat_models/model_nat_seq4.pdb"
 tm_score_output_csv = "results/tm_scores/tm_score_results.csv"  # FIXED: Renamed to avoid conflict
 
 # Define paths for extracting confidence scores (BOTH generated and natural)

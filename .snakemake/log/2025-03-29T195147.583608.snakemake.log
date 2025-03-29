@@ -1,0 +1,87 @@
+host: freya
+Building DAG of jobs...
+Using shell: /usr/bin/bash
+Provided cores: 32
+Rules claiming more threads will be scaled down.
+Job stats:
+job                          count
+-------------------------  -------
+all                              1
+run_confidence_scores_gen        1
+run_confidence_scores_nat        1
+run_tm_score                     1
+total                            4
+
+Select jobs to execute...
+Execute 3 jobs...
+
+[Sat Mar 29 19:51:47 2025]
+localrule run_confidence_scores_nat:
+    input: results/nat_models
+    output: results/confidence_scores/nat_confidence_scores.csv
+    jobid: 5
+    reason: Updated input files: results/nat_models
+    resources: tmpdir=/tmp
+
+
+[Sat Mar 29 19:51:47 2025]
+localrule run_confidence_scores_gen:
+    input: results/gen_models
+    output: results/confidence_scores/gen_confidence_scores.csv
+    jobid: 4
+    reason: Updated input files: results/gen_models
+    resources: tmpdir=/tmp
+
+
+[Sat Mar 29 19:51:47 2025]
+localrule run_tm_score:
+    input: results/gen_models, results/nat_models/model_nat_seq4.pdb
+    output: results/tm_scores/tm_score_results.csv
+    jobid: 3
+    reason: Missing output files: results/tm_scores/tm_score_results.csv
+    resources: tmpdir=/tmp
+
+RuleException:
+CalledProcessError in file /home/moa/BB103X_final/Snakefile, line 117:
+Command 'set -euo pipefail;  python workflow/scripts/get_confidence_score.py results/gen_models results/confidence_scores/gen_confidence_scores.csv' returned non-zero exit status 2.
+[Sat Mar 29 19:51:47 2025]
+Error in rule run_confidence_scores_gen:
+    jobid: 4
+    input: results/gen_models
+    output: results/confidence_scores/gen_confidence_scores.csv
+    shell:
+        python workflow/scripts/get_confidence_score.py results/gen_models results/confidence_scores/gen_confidence_scores.csv
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+
+RuleException:
+CalledProcessError in file /home/moa/BB103X_final/Snakefile, line 126:
+Command 'set -euo pipefail;  python workflow/scripts/get_confidence_score.py results/nat_models results/confidence_scores/nat_confidence_scores.csv' returned non-zero exit status 2.
+[Sat Mar 29 19:51:47 2025]
+Error in rule run_confidence_scores_nat:
+    jobid: 5
+    input: results/nat_models
+    output: results/confidence_scores/nat_confidence_scores.csv
+    shell:
+        python workflow/scripts/get_confidence_score.py results/nat_models results/confidence_scores/nat_confidence_scores.csv
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+
+RuleException:
+CalledProcessError in file /home/moa/BB103X_final/Snakefile, line 103:
+Command 'set -euo pipefail;  
+        python workflow/scripts/TM-score.py         --pdb_folder results/gen_models         --reference_pdb results/nat_models/model_nat_seq4.pdb         --output_csv results/tm_scores/tm_score_results.csv' returned non-zero exit status 2.
+[Sat Mar 29 19:51:47 2025]
+Error in rule run_tm_score:
+    jobid: 3
+    input: results/gen_models, results/nat_models/model_nat_seq4.pdb
+    output: results/tm_scores/tm_score_results.csv
+    shell:
+        
+        python workflow/scripts/TM-score.py         --pdb_folder results/gen_models         --reference_pdb results/nat_models/model_nat_seq4.pdb         --output_csv results/tm_scores/tm_score_results.csv
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+
+Shutting down, this might take some time.
+Exiting because a job execution failed. Look above for error message
+Complete log: .snakemake/log/2025-03-29T195147.583608.snakemake.log
+WorkflowError:
+At least one job did not complete successfully.

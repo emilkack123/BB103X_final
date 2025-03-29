@@ -1,0 +1,7 @@
+host: freya
+Building DAG of jobs...
+MissingInputException in rule run_tm_score in file /home/moa/BB103X_final/Snakefile, line 96:
+Missing input files for rule run_tm_score:
+    output: results/tm_scores/tm_score_results.csv
+    affected files:
+        results/nat_models/model_natural4.pdb
