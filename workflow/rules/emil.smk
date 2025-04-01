@@ -10,7 +10,6 @@ output_csv = "results/rubisco.csv"
 csv_wNewCol = "results/rubisco_updated.csv"
 csv_final = "results/rubisco_final.csv"
 cluster_plot = "results/rubisco_clusters.png"
-length = "results/length_histogram.png"
 
 # Rule to generate final outputs (PCA, K-means, TM-score results, and confidence scores)
 rule all:
@@ -20,7 +19,6 @@ rule all:
         cleaned_seqs,
         filtering_log,
         output_csv,
-        length,
         msa,
         dist_mat,
         cluster_plot
@@ -45,11 +43,6 @@ rule add_origin_column:
     input: output_csv
     output: csv_wNewCol  # modifies in place
     shell: "workflow/scripts/add_origin_column.py {input} {output}"
-
-rule length_histogram:
-    input: csv_wNewCol
-    output: length
-    shell: "python workflow/scripts/sequence_histogram.py {input} {output}"
 
 rule multiple_sequence_alignment:
     input: cleaned_seqs
