@@ -21,10 +21,18 @@ rule all:
         score
 
 rule combine_sequences:
-    input: hydrophobicity, pI, weight_length, stability
-    output: final
-    shell: "python workflow/scripts/apply_function.py {input[0]} {input[1]} {input[2]} {input[3]} {input[4]} {input[5]} --output_file final"
-
+    input:
+        hydro="results/hydrophobicity_results.csv",
+        pi="results/pI_results.csv",
+        mol_weight="results/molecular_weight.csv",
+        tm_score="results/tm_scores/tm_score_gen_seq.csv",
+        stability="results/stability.csv"
+    output:
+        "results/final_results.csv"
+    shell:
+        """
+        python workflow/scripts/apply_function.py {input.hydro} {input.pi} {input.mol_weight} {input.tm_score} {input.stability} --output_file {output}
+        """
 # Here change numbers next to a,b,c,d to get wanted results
 rule score_sequences:
     input: final
