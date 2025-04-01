@@ -2,7 +2,7 @@ import pandas as pd
 import argparse
 
 def apply_weighted_sum(input_file, output_file, a, b, c, d, e, f, g, h):
-    """ Apply weighted sum formula and save results """
+    """ Apply weighted sum formula with normalization based on natural sequence averages """
     
     # Load data
     df = pd.read_csv(input_file)
@@ -26,12 +26,19 @@ def apply_weighted_sum(input_file, output_file, a, b, c, d, e, f, g, h):
     # Handle NaN values (replace with 0 to avoid calculation errors)
     df.fillna(0, inplace=True)
 
-    # Compute weighted sum
+    ### **Compute averages of natural sequences**
+    natural_df = df[df["TYPE"].str.lower() == "natural"]  # Filter natural sequences
+    avg_hydro = natural_df["HYDROPHOBICITY"].mean()
+    avg_pi = natural_df["PI"].mean()
+    avg_seq_length = natural_df["SEQUENCE_LENGTH"].mean()
+    avg_mol_weight = natural_df["MOLECULAR_WEIGHT"].mean()
+
+    ### **Compute weighted sum with absolute difference**
     df["WEIGHTED_SUM"] = (
-        a * df["HYDROPHOBICITY"] +
-        b * df["PI"] +
-        c * df["SEQUENCE_LENGTH"] +
-        d * df["MOLECULAR_WEIGHT"] +
+        a * abs(df["HYDROPHOBICITY"] - avg_hydro) + 
+        b * abs(df["PI"] - avg_pi) +
+        c * abs(df["SEQUENCE_LENGTH"] - avg_seq_length) +
+        d * abs(df["MOLECULAR_WEIGHT"] - avg_mol_weight) +
         e * df["TM-SCORE"] +
         f * df["STABILITY"] +
         g * df["AFFINITY"] +
@@ -43,7 +50,7 @@ def apply_weighted_sum(input_file, output_file, a, b, c, d, e, f, g, h):
     print(f"Weighted results saved to {output_file}")
 
 def parse_args():
-    parser = argparse.ArgumentParser(description="Compute weighted sum of properties")
+    parser = argparse.ArgumentParser(description="Compute weighted sum of properties with normalization")
     parser.add_argument("input_file", help="Path to input CSV file")
     parser.add_argument("output_file", help="Path to save the weighted results CSV")
     parser.add_argument("--a", type=float, default=1.0, help="Weight for Hydrophobicity")
