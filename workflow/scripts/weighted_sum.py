@@ -1,7 +1,7 @@
 import pandas as pd
 import argparse
 
-def apply_weighted_sum(input_file, output_file, a, b, c, d, e, f, g, h):
+def apply_weighted_sum(input_file, output_file, a, b, c, d, e, f):
     """ Apply weighted sum formula with normalization based on natural sequence averages """
     
     # Load data
@@ -16,7 +16,7 @@ def apply_weighted_sum(input_file, output_file, a, b, c, d, e, f, g, h):
     # Convert relevant columns to numeric (forcing errors to NaN)
     cols_to_convert = [
         "HYDROPHOBICITY", "PI", "SEQUENCE_LENGTH", "MOLECULAR_WEIGHT", 
-        "TM-SCORE", "STABILITY", "AFFINITY", "SPECIFICITY"
+        "TM-SCORE", "STABILITY"
     ]
     
     for col in cols_to_convert:
@@ -40,9 +40,7 @@ def apply_weighted_sum(input_file, output_file, a, b, c, d, e, f, g, h):
         c * abs(df["SEQUENCE_LENGTH"] - avg_seq_length) +
         d * abs(df["MOLECULAR_WEIGHT"] - avg_mol_weight) +
         e * df["TM-SCORE"] +
-        f * df["STABILITY"] +
-        g * df["AFFINITY"] +
-        h * df["SPECIFICITY"]
+        f * df["STABILITY"]
     )
 
     # Save results
@@ -59,13 +57,11 @@ def parse_args():
     parser.add_argument("--d", type=float, default=1.0, help="Weight for Molecular Weight")
     parser.add_argument("--e", type=float, default=1.0, help="Weight for TM-SCORE")
     parser.add_argument("--f", type=float, default=1.0, help="Weight for Stability")
-    parser.add_argument("--g", type=float, default=1.0, help="Weight for Affinity")
-    parser.add_argument("--h", type=float, default=1.0, help="Weight for Specificity")
     return parser.parse_args()
 
 def main():
     args = parse_args()
-    apply_weighted_sum(args.input_file, args.output_file, args.a, args.b, args.c, args.d, args.e, args.f, args.g, args.h)
+    apply_weighted_sum(args.input_file, args.output_file, args.a, args.b, args.c, args.d, args.e, args.f)
 
 if __name__ == "__main__":
     main()
