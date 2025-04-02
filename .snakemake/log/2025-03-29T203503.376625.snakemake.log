@@ -1,0 +1,40 @@
+host: freya
+Building DAG of jobs...
+Using shell: /usr/bin/bash
+Provided cores: 32
+Rules claiming more threads will be scaled down.
+Job stats:
+job             count
+------------  -------
+all                 1
+run_tm_score        1
+total               2
+
+Select jobs to execute...
+Execute 1 jobs...
+
+[Sat Mar 29 20:35:03 2025]
+localrule run_tm_score:
+    input: results/gen_models, results/nat_models/model_nat_seq4.pdb, resources/rubisco_sequences/gen.fa
+    output: results/tm_scores/tm_score_results.csv
+    jobid: 3
+    reason: Missing output files: results/tm_scores/tm_score_results.csv; Set of input files has changed since last execution; Code has changed since last execution
+    resources: tmpdir=/tmp
+
+[Sat Mar 29 20:35:03 2025]
+Finished job 3.
+1 of 2 steps (50%) done
+Select jobs to execute...
+Execute 1 jobs...
+
+[Sat Mar 29 20:35:03 2025]
+localrule all:
+    input: results/PCA_and_K-mean/pca_plot.png, results/PCA_and_K-mean/pca_plot_scree.png, results/PCA_and_K-mean/kmeans_plot_pca_with_clusters.png, results/tm_scores/tm_score_results.csv, results/confidence_scores/gen_confidence_scores.csv, results/confidence_scores/nat_confidence_scores.csv, results/boxplot.png, results/hydrophobicity_boxplot.png, resources/rubisco_sequences/nat.fa, results/rubisco.fasta, results/rubisco_cleaned.fasta, results/rubisco_filtering.log, results/rubisco.csv, results/length_histogram.png, results/rubisco_msa.fasta, results/rubisco_dist_mat.tsv, results/rubisco_clusters.png, results/molecular_weight.csv, results/molecular_weight_analysis_molecular_weight_boxplot.png, results/molecular_weight_analysis_molecular_weight_histogram.png, results/molecular_weight_analysis_sequence_length_boxplot.png, results/molecular_weight_analysis_scatterplot.png
+    jobid: 0
+    reason: Input files updated by another job: results/tm_scores/tm_score_results.csv
+    resources: tmpdir=/tmp
+
+[Sat Mar 29 20:35:03 2025]
+Finished job 0.
+2 of 2 steps (100%) done
+Complete log: .snakemake/log/2025-03-29T203503.376625.snakemake.log

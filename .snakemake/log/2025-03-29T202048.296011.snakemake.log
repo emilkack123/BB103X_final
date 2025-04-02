@@ -1,0 +1,43 @@
+host: freya
+Building DAG of jobs...
+Using shell: /usr/bin/bash
+Provided cores: 32
+Rules claiming more threads will be scaled down.
+Job stats:
+job             count
+------------  -------
+all                 1
+run_tm_score        1
+total               2
+
+Select jobs to execute...
+Execute 1 jobs...
+
+[Sat Mar 29 20:20:48 2025]
+localrule run_tm_score:
+    input: results/gen_models, results/nat_models/model_nat_seq4.pdb
+    output: results/tm_scores/tm_score_results.csv
+    jobid: 3
+    reason: Missing output files: results/tm_scores/tm_score_results.csv
+    resources: tmpdir=/tmp
+
+RuleException:
+CalledProcessError in file /home/moa/BB103X_final/Snakefile, line 106:
+Command 'set -euo pipefail;  
+        python workflow/scripts/TM-score.py         --pdb_folder results/gen_models         --reference_pdb results/nat_models/model_nat_seq4.pdb         --output_csv results/tm_scores/tm_score_results.csv' returned non-zero exit status 2.
+[Sat Mar 29 20:20:48 2025]
+Error in rule run_tm_score:
+    jobid: 3
+    input: results/gen_models, results/nat_models/model_nat_seq4.pdb
+    output: results/tm_scores/tm_score_results.csv
+    shell:
+        
+        python workflow/scripts/TM-score.py         --pdb_folder results/gen_models         --reference_pdb results/nat_models/model_nat_seq4.pdb         --output_csv results/tm_scores/tm_score_results.csv
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+
+Shutting down, this might take some time.
+Exiting because a job execution failed. Look above for error message
+Complete log: .snakemake/log/2025-03-29T202048.296011.snakemake.log
+WorkflowError:
+At least one job did not complete successfully.

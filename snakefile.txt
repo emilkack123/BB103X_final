@@ -10,7 +10,7 @@ kmeans_script = "workflow/scripts/k-mean.py"
 
 # Define paths for TM-score files (ONLY for generated sequences)
 pdb_folder_gen = "results/gen_models"
-reference_pdb = "results/nat_models/model_nat_seq4.pdb"
+reference_pdb = "results/nat_models/model_natural4.pdb"
 tm_score_output_csv = "results/tm_scores/tm_score_results.csv"  # FIXED: Renamed to avoid conflict
 
 # Define paths for extracting confidence scores (BOTH generated and natural)
@@ -23,9 +23,6 @@ confidence_output_nat_file = "results/confidence_scores/nat_confidence_scores.cs
 FASTA_FILE = "resources/gen+nat.fasta"
 PI_CSV = "results/pI_results.csv"
 HYDROPHOBICITY_CSV = "results/hydrophobicity_results.csv"
-
-# Define the path for the combine_results script
-combine_results_script = "workflow/scripts/combine_results.py"
 
 # Define input and output files for t-sne plot
 gen_seqs = "resources/rubisco_sequences/gen.fa"
@@ -98,18 +95,16 @@ rule run_kmeans_pca:
 # Rule to run TM-score calculation (ONLY for generated structures)
 rule run_tm_score:
     input:
-        pdb_folder="results/gen_models",  # Folder containing the generated PDB files
-        reference_pdb="results/nat_models/model_nat_seq4.pdb",  # Single natural sequence PDB as reference
-        fasta_file="resources/rubisco_sequences/gen.fa"  # FASTA file with generated sequences only
+        pdb_folder=pdb_folder_gen,
+        reference_pdb=reference_pdb
     output:
-        output_csv="results/tm_scores/tm_score_results.csv"  # Output CSV for TM-scores
+        output_csv=tm_score_output_csv  # FIXED: Updated output path
     shell:
         """
-        python workflow/scripts/TM-score_test.py \
+        python workflow/scripts/TM-score.py \
         --pdb_folder {input.pdb_folder} \
         --reference_pdb {input.reference_pdb} \
-        --output_csv {output.output_csv} \
-        --fasta_file {input.fasta_file}  # FASTA file containing only generated sequences
+        --output_csv {output.output_csv}
         """
 
 # Rule to run the confidence score extraction script for generated structures
@@ -236,23 +231,3 @@ rule plot_molecular_weight_length:
     shell:
         "mkdir -p results/ && python workflow/scripts/plot_molecular_weight_length.py {input} results/molecular_weight_analysis"
         
-# Rule to combine results from pI, hydrophobicity, molecular weight, TM-score, and FASTA files
-rule combine_results:
-    input:
-        pi_file="results/pI_results.csv",
-        hydro_file="results/hydrophobicity_results.csv",
-        mw_file="results/molecular_weight.csv",
-        tm_score_file="results/tm_scores/tm_score_gen_seq.csv",
-        fa_file="resources/rubisco_sequences/nat.fa"
-    output:
-        "results/combined_results.csv"
-    shell:
-        """
-        python {combine_results_script} \
-        --pi_file {input.pi_file} \
-        --hydro_file {input.hydro_file} \
-        --mw_file {input.mw_file} \
-        --tm_score_file {input.tm_score_file} \
-        --fa_file {input.fa_file} \
-        --output_file {output}
-        """
