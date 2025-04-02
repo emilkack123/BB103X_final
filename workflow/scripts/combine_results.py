@@ -4,7 +4,8 @@ import pandas as pd
 pi_file = "results/pI_results.csv"
 hydro_file = "results/hydrophobicity_results.csv"
 mw_file = "results/molecular_weight.csv"
-tm_score_file = "results/tm_scores/tm-scores.csv"  # Add TM-score file
+tm_score_file = "results/tm_scores/tm-scores.csv"  # TM-score file
+conf_score_file = "results/confidence_scores.csv"  # Confidence scores file
 fa_file = "resources/rubisco_sequences/nat.fa"
 output_file = "results/combined_results.csv"
 
@@ -26,6 +27,7 @@ df_pi = pd.read_csv(pi_file)
 df_hydro = pd.read_csv(hydro_file)
 df_mw = pd.read_csv(mw_file)
 df_tm = pd.read_csv(tm_score_file)  # Load TM-score file
+df_conf = pd.read_csv(conf_score_file)  # Load confidence scores file
 
 # Clean TM-score data (remove extra text from TM-score values)
 df_tm.rename(columns={'TM_SCORE': 'TM-score'}, inplace=True)
@@ -36,21 +38,26 @@ df_merged = pd.merge(df_pi[['ID', 'pI']], df_hydro[['ID', 'Hydrophobicity']], on
 # Normalize ID format (strip spaces, ensure consistent case)
 df_merged['ID'] = df_merged['ID'].str.strip()
 df_tm['ID'] = df_tm['ID'].str.strip()
+df_conf['ID'] = df_conf['ID'].str.strip()
 
 # Filter out sequences present in nat.fa
 df_filtered = df_merged[~df_merged['ID'].isin(excluded_ids)]
 
 # Read molecular weight data (filtering for Type == "Generated")
 df_mw_filtered = df_mw[df_mw['Type'] == "Generated"][['Sequence_ID', 'Sequence_Length', 'Molecular_Weight']]
-
-# Rename 'Sequence_ID' to 'ID' for merging consistency
-df_mw_filtered = df_mw_filtered.rename(columns={'Sequence_ID': 'ID'})
+df_mw_filtered = df_mw_filtered.rename(columns={'Sequence_ID': 'ID'})  # Rename for merging consistency
 
 # Merge molecular weight and sequence length data with the filtered dataset
 df_final = pd.merge(df_filtered, df_mw_filtered, on='ID', how='left')
 
 # Merge TM-score data based on matching sequence IDs
 df_final = pd.merge(df_final, df_tm, on='ID', how='left')
+
+# Filter confidence scores to include only "GENERATED" sequences
+df_conf_filtered = df_conf[df_conf['TYPE'] == "GENERATED"][['ID', 'STABILITY']]
+
+# Merge confidence scores
+df_final = pd.merge(df_final, df_conf_filtered, on='ID', how='left')
 
 # Save the final filtered DataFrame
 df_final.to_csv(output_file, index=False)
