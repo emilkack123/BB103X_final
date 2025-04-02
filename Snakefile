@@ -31,6 +31,8 @@ FASTA_FILE = "resources/gen+nat.fasta"
 PI_CSV = "results/pI_results.csv"
 HYDROPHOBICITY_CSV = "results/hydrophobicity_results.csv"
 
+SAMPLES = ["results/gen/*.pdb"]  # All generated PDB files 
+
 # Define input and output files for t-sne plot
 gen_seqs = "resources/rubisco_sequences/gen.fa"
 nat_seqs = "resources/rubisco_sequences/nat.fa"
@@ -70,7 +72,9 @@ rule all:
         weight_length,
         stability,
         final,
-        score
+        score,
+        "results/tm_scores/tm-scores.csv"
+
 
 # Rule to run the PCA script
 rule run_pca:
@@ -95,19 +99,28 @@ rule run_kmeans_pca:
     shell:
         "python {params.script} '{input[0]}' '{input[1]}' {output}"
 
-# Rule to run TM-score calculation (ONLY for generated structures)
-rule run_tm_score:
+rule select_best_reference:
     input:
-        pdb_folder=pdb_folder_gen,
-        reference_pdb=reference_pdb
+        confidence_scores="results/confidence_scores.csv",
+        nat_folder=directory("results/nat")
     output:
-        output_csv=tm_score_output_csv  # FIXED: Updated output path
+        "results/tm_scores/best_reference.pdb"
+    run:
+        ref_pdb = get_best_reference(input.confidence_scores, input.nat_folder)
+        shell(f"cp {ref_pdb} {output}")
+
+rule calculate_tm_scores:
+    input:
+        best_reference="results/tm_scores/best_reference.pdb",
+        gen_folder=directory("results/gen")
+    output:
+        "results/tm_scores/tm-scores.csv"
     shell:
         """
-        python workflow/scripts/TM-score.py \
-        --pdb_folder {input.pdb_folder} \
-        --reference_pdb {input.reference_pdb} \
-        --output_csv {output.output_csv}
+        python workflow/scripts/TM-score.py --confidence_scores results/confidence_scores.csv \
+                                            --gen_folder results/gen \
+                                            --nat_folder results/nat \
+                                            --output {output}
         """
 
 # Rule to run the confidence score extraction script for generated structures
@@ -206,10 +219,10 @@ rule combine_sequences_2:
         hydro="results/hydrophobicity_results.csv",
         pi="results/pI_results.csv",
         mol_weight="results/molecular_weight.csv",
-        tm_score="results/tm_scores/tm_score_gen_seq.csv",
+        tm_score="results/tm_scores/tm-scores.csv",
         stability="results/stability.csv"
     output:
-        "results/final_results.csv"
+        "results/combined_results.csv"
     shell:
         """
         python workflow/scripts/apply_function.py {input.hydro} {input.pi} {input.mol_weight} {input.tm_score} {input.stability} --output_file {output}
