@@ -4,9 +4,9 @@ import pandas as pd
 pi_file = "results/pI_results.csv"
 hydro_file = "results/hydrophobicity_results.csv"
 mw_file = "results/molecular_weight.csv"
-tm_score_file = "results/tm_scores/tm_score_gen_seq.csv"  # Add TM-score file
+tm_score_file = "results/tm_scores/tm-scores.csv"  # Add TM-score file
 fa_file = "resources/rubisco_sequences/nat.fa"
-output_file = "results/filtered_results.csv"
+output_file = "results/combined_results.csv"
 
 # Function to extract sequence IDs from FASTA file
 def read_fasta_ids(fasta_path):
@@ -28,14 +28,14 @@ df_mw = pd.read_csv(mw_file)
 df_tm = pd.read_csv(tm_score_file)  # Load TM-score file
 
 # Clean TM-score data (remove extra text from TM-score values)
-df_tm['TM-score'] = df_tm['TM-score'].astype(str).str.split().str[0]  # Extract numerical value
+df_tm.rename(columns={'TM_SCORE': 'TM-score'}, inplace=True)
 
 # Merge pI and Hydrophobicity on 'ID'
 df_merged = pd.merge(df_pi[['ID', 'pI']], df_hydro[['ID', 'Hydrophobicity']], on='ID')
 
 # Normalize ID format (strip spaces, ensure consistent case)
 df_merged['ID'] = df_merged['ID'].str.strip()
-df_tm['Sequence ID'] = df_tm['Sequence ID'].str.strip()  # Ensure consistency in IDs
+df_tm['ID'] = df_tm['ID'].str.strip()
 
 # Filter out sequences present in nat.fa
 df_filtered = df_merged[~df_merged['ID'].isin(excluded_ids)]
@@ -50,7 +50,7 @@ df_mw_filtered = df_mw_filtered.rename(columns={'Sequence_ID': 'ID'})
 df_final = pd.merge(df_filtered, df_mw_filtered, on='ID', how='left')
 
 # Merge TM-score data based on matching sequence IDs
-df_final = pd.merge(df_final, df_tm.rename(columns={'Sequence ID': 'ID'}), on='ID', how='left')
+df_final = pd.merge(df_final, df_tm, on='ID', how='left')
 
 # Save the final filtered DataFrame
 df_final.to_csv(output_file, index=False)

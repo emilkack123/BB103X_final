@@ -70,7 +70,7 @@ def main():
                         help="Folder containing generated PDB files (default: results/gen)")
     parser.add_argument("--nat_folder", default="results/nat", 
                         help="Folder containing natural PDB files (default: results/nat)")
-    parser.add_argument("--output", default="results/tm_scores.csv", 
+    parser.add_argument("--output", default="results/tm-scores.csv", 
                         help="Path to save the output CSV file (default: tm_scores.csv)")
     
     args = parser.parse_args()
