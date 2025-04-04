@@ -153,6 +153,15 @@ rule run_confidence_scores_nat:
     shell:
         "python {confidence_score_script} {input.pdb_folder} {output}"
 
+rule concat_rubisco:
+    input:
+        "resources/rubisco_sequences/gen.fa",
+        "resources/rubisco_sequences/nat.fa"
+    output:
+        "results/gen+nat.fasta"
+    shell:
+        "cat {input} > {output}"
+        
 rule compute_pI:
     input:
         FASTA_FILE
