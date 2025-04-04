@@ -1,9 +1,10 @@
 import pandas as pd
 import argparse
+from sklearn.preprocessing import StandardScaler
 
 def apply_weighted_sum(input_file, output_file, a, b, c, d, e, f):
-    """ Apply weighted sum formula with normalization based on natural sequence averages """
-    
+    """ Apply weighted sum formula with Z-score normalization """
+
     # Load data
     df = pd.read_csv(input_file)
 
@@ -13,32 +14,46 @@ def apply_weighted_sum(input_file, output_file, a, b, c, d, e, f):
     # Print column names for debugging
     print("Normalized Columns in dataset:", df.columns)
 
-    # Convert relevant columns to numeric (forcing errors to NaN)
+    # Define relevant columns
     cols_to_convert = [
         "HYDROPHOBICITY", "PI", "SEQUENCE_LENGTH", "MOLECULAR_WEIGHT", 
         "TM_SCORE", "STABILITY"
     ]
-    
-    for col in cols_to_convert:
-        if col in df.columns:  # Ensure the column exists
-            df[col] = pd.to_numeric(df[col], errors='coerce')  # Convert and set errors as NaN
 
-    # Handle NaN values (replace with 0 to avoid calculation errors)
-    df.fillna(0, inplace=True)
+    # Filter existing columns
+    existing_cols = [col for col in cols_to_convert if col in df.columns]
 
-    ### **Compute averages of natural sequences**
-    natural_df = df[df["TYPE"].str.lower() == "natural"]  # Filter natural sequences
-    avg_hydro = natural_df["HYDROPHOBICITY"].mean()
-    avg_pi = natural_df["PI"].mean()
-    avg_seq_length = natural_df["SEQUENCE_LENGTH"].mean()
-    avg_mol_weight = natural_df["MOLECULAR_WEIGHT"].mean()
+    if not existing_cols:
+        raise ValueError("No relevant numeric columns found in the dataset.")
 
-    ### **Compute weighted sum with absolute difference**
+    # Convert relevant columns to numeric (forcing errors to NaN)
+    df[existing_cols] = df[existing_cols].apply(pd.to_numeric, errors='coerce')
+
+    # Handle NaN values (replace with column mean to avoid calculation errors)
+    df[existing_cols] = df[existing_cols].apply(lambda x: x.fillna(x.mean()))
+
+    # Compute averages of natural sequences (if 'TYPE' column exists)
+    if "TYPE" in df.columns:
+        natural_df = df[df["TYPE"].str.lower() == "natural"]
+        if not natural_df.empty:
+            avg_values = natural_df[existing_cols].mean()
+        else:
+            print("Warning: No 'natural' sequences found. Using global means.")
+            avg_values = df[existing_cols].mean()
+    else:
+        print("Warning: 'TYPE' column missing. Using global means instead.")
+        avg_values = df[existing_cols].mean()
+
+    # Apply Z-score normalization
+    scaler = StandardScaler()
+    df[existing_cols] = scaler.fit_transform(df[existing_cols])
+
+    # Compute weighted sum using normalized values
     df["WEIGHTED_SUM"] = (
-        a * abs(df["HYDROPHOBICITY"] - avg_hydro) + 
-        b * abs(df["PI"] - avg_pi) +
-        c * abs(df["SEQUENCE_LENGTH"] - avg_seq_length) +
-        d * abs(df["MOLECULAR_WEIGHT"] - avg_mol_weight) +
+        a * abs(df["HYDROPHOBICITY"] - avg_values["HYDROPHOBICITY"]) + 
+        b * abs(df["PI"] - avg_values["PI"]) +
+        c * abs(df["SEQUENCE_LENGTH"] - avg_values["SEQUENCE_LENGTH"]) +
+        d * abs(df["MOLECULAR_WEIGHT"] - avg_values["MOLECULAR_WEIGHT"]) +
         e * df["TM_SCORE"] +
         f * df["STABILITY"]
     )
