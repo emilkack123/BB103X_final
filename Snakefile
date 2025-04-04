@@ -47,6 +47,17 @@ csv_final = "results/rubisco_final.csv"
 cluster_plot = "results/rubisco_clusters.png"
 length = "results/length_histogram.png"
 
+# Molecular weight plots
+MOLECULAR_WEIGHT_CSV = "results/molecular_weight.csv"
+MOLECULAR_WEIGHT_BOXPLOT = "results/molecular_weight_boxplot.png"
+MOLECULAR_WEIGHT_HISTOGRAM = "results/molecular_weight_histogram.png"
+SEQUENCE_LENGTH_BOXPLOT = "results/sequence_length_boxplot.png"
+SCATTER_PLOT = "results/scatterplot.png"
+
+# Distance Matrix + Heatmap
+DISTANCE_MATRIX = "results/distmat.tsv"
+HEATMAP_PLOT = "results/heatmap.png"
+
 # Rule to generate final outputs (PCA, K-means, TM-score results, and confidence scores)
 rule all:
     input:
@@ -233,3 +244,28 @@ rule score_sequences:
     input: final
     output: score
     shell: "python workflow/scripts/weighted_sum.py {input} {output} --a -1.2 --b -0.8 --c -0.001 --d -0.001 --e 2.0 --f 6.5"
+
+
+    rule compute_molecular_weight:
+    input: gen=input_fasta_1, nat=input_fasta_2
+    output: MOLECULAR_WEIGHT_CSV
+    shell: "python workflow/scripts/compute_molecular_weight.py {input.gen} {input.nat} {output}"
+
+rule plot_molecular_weight_length:
+    input: MOLECULAR_WEIGHT_CSV
+    output:
+        MOLECULAR_WEIGHT_BOXPLOT,
+        MOLECULAR_WEIGHT_HISTOGRAM,
+        SEQUENCE_LENGTH_BOXPLOT,
+        SCATTER_PLOT
+    shell: "mkdir -p results/ && python workflow/scripts/plot_molecular_weight_length.py {input} results/molecular_weight_analysis"
+
+rule compute_distance_matrix:
+    input: gen=input_fasta_1, nat=input_fasta_2
+    output: DISTANCE_MATRIX
+    shell: "python workflow/scripts/compute_distance_matrix.py {input.gen} {input.nat} {output}"
+
+rule plot_heatmap:
+    input: DISTANCE_MATRIX
+    output: HEATMAP_PLOT
+    shell: "python workflow/scripts/plot_heatmap.py {input} {output}"
