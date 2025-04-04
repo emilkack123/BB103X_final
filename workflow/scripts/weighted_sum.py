@@ -16,7 +16,7 @@ def apply_weighted_sum(input_file, output_file, a, b, c, d, e, f):
     # Convert relevant columns to numeric (forcing errors to NaN)
     cols_to_convert = [
         "HYDROPHOBICITY", "PI", "SEQUENCE_LENGTH", "MOLECULAR_WEIGHT", 
-        "TM-SCORE", "STABILITY"
+        "TM_SCORE", "STABILITY"
     ]
     
     for col in cols_to_convert:
@@ -39,7 +39,7 @@ def apply_weighted_sum(input_file, output_file, a, b, c, d, e, f):
         b * abs(df["PI"] - avg_pi) +
         c * abs(df["SEQUENCE_LENGTH"] - avg_seq_length) +
         d * abs(df["MOLECULAR_WEIGHT"] - avg_mol_weight) +
-        e * df["TM-SCORE"] +
+        e * df["TM_SCORE"] +
         f * df["STABILITY"]
     )
 
@@ -55,7 +55,7 @@ def parse_args():
     parser.add_argument("--b", type=float, default=1.0, help="Weight for pI")
     parser.add_argument("--c", type=float, default=1.0, help="Weight for Sequence Length")
     parser.add_argument("--d", type=float, default=1.0, help="Weight for Molecular Weight")
-    parser.add_argument("--e", type=float, default=1.0, help="Weight for TM-SCORE")
+    parser.add_argument("--e", type=float, default=1.0, help="Weight for TM_SCORE")
     parser.add_argument("--f", type=float, default=1.0, help="Weight for Stability")
     return parser.parse_args()
 

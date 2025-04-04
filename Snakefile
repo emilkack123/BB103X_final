@@ -18,7 +18,7 @@ kmeans_script = "workflow/scripts/k-mean.py"
 # Define paths for TM-score files (ONLY for generated sequences)
 pdb_folder_gen = "results/gen_models"
 reference_pdb = "results/nat_models/model_natural4.pdb"
-tm_score_output_csv = "results/tm_scores/tm_score_results.csv"  # FIXED: Renamed to avoid conflict
+tm_score_output_csv = "results/tm_scores/tm-scores.csv"  # FIXED: Renamed to avoid conflict
 
 # Define paths for extracting confidence scores (BOTH generated and natural)
 confidence_score_script = "workflow/scripts/get_confidence_score.py"
@@ -113,7 +113,7 @@ rule run_kmeans_pca:
 rule select_best_reference:
     input:
         confidence_scores="results/confidence_scores.csv",
-        nat_folder=directory("results/nat")
+        nat_folder="results/nat"
     output:
         "results/tm_scores/best_reference.pdb"
     run:
@@ -123,7 +123,7 @@ rule select_best_reference:
 rule calculate_tm_scores:
     input:
         best_reference="results/tm_scores/best_reference.pdb",
-        gen_folder=directory("results/gen")
+        gen_folder="results/gen"
     output:
         "results/tm_scores/tm-scores.csv"
     shell:
@@ -255,9 +255,9 @@ rule combine_sequences_2:
         pi="results/pI_results.csv",
         mol_weight="results/molecular_weight.csv",
         tm_score="results/tm_scores/tm-scores.csv",
-        stability="results/stability.csv"
+        stability="results/confidence_scores.csv"
     output:
-        "results/combined_results.csv"
+        "results/final_results.csv"
     shell:
         """
         python workflow/scripts/apply_function.py {input.hydro} {input.pi} {input.mol_weight} {input.tm_score} {input.stability} --output_file {output}
