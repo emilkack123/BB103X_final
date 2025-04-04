@@ -69,9 +69,11 @@ BB103X_final/
 
 **Make sure you have [Conda](https://docs.conda.io/en/latest/miniconda.html) installed first.**
 
+
 ### 1. Clone the repository
 
-git clone <OUR REPOSITORY URL> cd BB103X_final
+git clone <[OUR REPOSITORY URL](https://github.com/emilkack123/BB103X_final.git)> cd BB103X_final 
+You can clone the repository into a programming environment such as VS-code
 
 ### 2. Create the main Conda environment
 
@@ -87,6 +89,7 @@ conda activate bb103x_final
 
 #### For structure prediction (OmegaFold)
 conda env create -f workflow/envs/omegafold.yaml
+#Call by: snakemake --use-conda --conda-frontend conda --cores 1 --config seq=gen
 
 #### For plotting t-SNE separately
 conda env create -f workflow/envs/t-SNE_env.yml
@@ -98,6 +101,8 @@ conda env create -f workflow/envs/t-SNE_env.yml
 
 
 ### Run the full pipeline:
+
+snakemake --cores 1
 
 ## Authors
 Muhammad Ahmad
