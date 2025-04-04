@@ -84,7 +84,8 @@ rule all:
         stability,
         final,
         score,
-        "results/tm_scores/tm-scores.csv"
+        "results/tm_scores/tm-scores.csv",
+        "results/ranked_sequences.csv"
 
 
 # Rule to run the PCA script
@@ -268,3 +269,11 @@ rule score_sequences:
     input: final
     output: score
     shell: "python workflow/scripts/weighted_sum.py {input} {output} --a -1.2 --b -0.8 --c -0.001 --d -0.001 --e 2.0 --f 6.5"
+
+rule rank_sequences:
+    input:
+        "results/weighted_results.csv"  # Input weighted results file
+    output:
+        "results/ranked_sequences.csv"  # Output ranked sequences file
+    shell:
+        "python workflow/scripts/ranking_sequences.py {input} {output}"
