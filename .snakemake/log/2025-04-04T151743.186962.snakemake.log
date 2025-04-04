@@ -1,0 +1,8 @@
+The flag 'directory' used in rule select_best_reference is only valid for outputs, not inputs.
+The flag 'directory' used in rule calculate_tm_scores is only valid for outputs, not inputs.
+Building DAG of jobs...
+MissingInputException in rule score_sequences in file /home/emil/BB103X_final/Snakefile, line 243:
+Missing input files for rule score_sequences:
+    output: results/weighted_results.csv
+    affected files:
+        results/final_results.csv

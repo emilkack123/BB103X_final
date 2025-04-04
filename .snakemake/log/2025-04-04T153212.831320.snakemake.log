@@ -1,0 +1,51 @@
+Building DAG of jobs...
+Using shell: /usr/bin/bash
+Provided cores: 4
+Rules claiming more threads will be scaled down.
+Job stats:
+job                  count
+-----------------  -------
+all                      1
+combine_sequences        1
+score_sequences          1
+total                    3
+
+Select jobs to execute...
+
+[Fri Apr  4 15:32:13 2025]
+rule combine_sequences:
+    input: results/hydrophobicity_results.csv, results/pI_results.csv, results/molecular_weight.csv, results/tm_scores/tm_score_gen_seq.csv, results/stability.csv
+    output: results/final_results.csv
+    jobid: 1
+    reason: Updated input files: results/stability.csv
+    resources: tmpdir=/tmp
+
+[Fri Apr  4 15:32:13 2025]
+Finished job 1.
+1 of 3 steps (33%) done
+Select jobs to execute...
+
+[Fri Apr  4 15:32:13 2025]
+rule score_sequences:
+    input: results/final_results.csv
+    output: results/weighted_results.csv
+    jobid: 2
+    reason: Missing output files: results/weighted_results.csv; Input files updated by another job: results/final_results.csv
+    resources: tmpdir=/tmp
+
+[Fri Apr  4 15:32:13 2025]
+Finished job 2.
+2 of 3 steps (67%) done
+Select jobs to execute...
+
+[Fri Apr  4 15:32:13 2025]
+localrule all:
+    input: results/hydrophobicity_results.csv, results/pI_results.csv, results/molecular_weight.csv, results/stability.csv, results/final_results.csv, results/weighted_results.csv
+    jobid: 0
+    reason: Input files updated by another job: results/final_results.csv, results/weighted_results.csv
+    resources: tmpdir=/tmp
+
+[Fri Apr  4 15:32:13 2025]
+Finished job 0.
+3 of 3 steps (100%) done
+Complete log: .snakemake/log/2025-04-04T153212.831320.snakemake.log
