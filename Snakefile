@@ -8,7 +8,7 @@ pca_output_scree = "results/PCA_and_K-mean/pca_plot_scree.png"
 hydrophobicity = "results/hydrophobicity_results.csv"
 pI = "results/pI_results.csv"
 weight_length = "results/molecular_weight.csv"
-stability = "results/stability.csv"
+stability = "results/confidence_scores.csv"
 final = "results/final_results.csv"
 score = "results/weighted_results.csv"
 
@@ -225,28 +225,7 @@ rule plot_clustering:
     output: cluster_plot
     shell: "python workflow/scripts/plot_clustering.py {input[0]} {output} --metadata {input[1]}"
 
-rule combine_sequences_2:
-    input:
-        hydro="results/hydrophobicity_results.csv",
-        pi="results/pI_results.csv",
-        mol_weight="results/molecular_weight.csv",
-        tm_score="results/tm_scores/tm-scores.csv",
-        stability="results/stability.csv"
-    output:
-        "results/combined_results.csv"
-    shell:
-        """
-        python workflow/scripts/apply_function.py {input.hydro} {input.pi} {input.mol_weight} {input.tm_score} {input.stability} --output_file {output}
-        """
-
-# Here change numbers next to a,b,c,d to get wanted results
-rule score_sequences:
-    input: final
-    output: score
-    shell: "python workflow/scripts/weighted_sum.py {input} {output} --a -1.2 --b -0.8 --c -0.001 --d -0.001 --e 2.0 --f 6.5"
-
-
-    rule compute_molecular_weight:
+rule compute_molecular_weight:
     input: gen=input_fasta_1, nat=input_fasta_2
     output: MOLECULAR_WEIGHT_CSV
     shell: "python workflow/scripts/compute_molecular_weight.py {input.gen} {input.nat} {output}"
@@ -269,3 +248,23 @@ rule plot_heatmap:
     input: DISTANCE_MATRIX
     output: HEATMAP_PLOT
     shell: "python workflow/scripts/plot_heatmap.py {input} {output}"
+
+rule combine_sequences_2:
+    input:
+        hydro="results/hydrophobicity_results.csv",
+        pi="results/pI_results.csv",
+        mol_weight="results/molecular_weight.csv",
+        tm_score="results/tm_scores/tm-scores.csv",
+        stability="results/stability.csv"
+    output:
+        "results/combined_results.csv"
+    shell:
+        """
+        python workflow/scripts/apply_function.py {input.hydro} {input.pi} {input.mol_weight} {input.tm_score} {input.stability} --output_file {output}
+        """
+
+# Here change numbers next to a,b,c,d to get wanted results
+rule score_sequences:
+    input: final
+    output: score
+    shell: "python workflow/scripts/weighted_sum.py {input} {output} --a -1.2 --b -0.8 --c -0.001 --d -0.001 --e 2.0 --f 6.5"
