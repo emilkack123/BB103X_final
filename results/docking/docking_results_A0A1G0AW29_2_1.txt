@@ -1,6 +1,6 @@
 Receptor: A0A1G0AW29_2_1.pdbqt
-Docking Score (Energy): [-1.816 -1.816  0.     0.     0.     0.     0.     0.   ]
-Minimized Energy: [-1.785 -1.785  0.     0.     0.     0.     0.     0.   ]
+Docking Score (Energy): [-1.804 -1.804  0.     0.     0.     0.     0.     0.   ]
+Minimized Energy: [-1.795 -1.795  0.     0.     0.     0.     0.     0.   ]
 
 Docking completed successfully.
 Top 5 poses have been written to results/docking/docked_A0A1G0AW29_2_1.pdbqt.

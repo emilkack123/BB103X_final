@@ -84,7 +84,10 @@ rule all:
         "results/confidence_scores.csv",
         "results/tm_scores/tm-scores.csv",
         "results/ranked_sequences.csv",
-        expand("results/converted_pdbqt/{name}.pdbqt", name=BASENAMES)  # Add converted PDBQT files here
+        expand("results/converted_pdbqt/{name}.pdbqt", name=BASENAMES),
+        expand("results/docking/docking_results_{name}.txt", name=BASENAMES),
+        expand("results/docking/minimized_{name}.pdbqt", name=BASENAMES)
+
 
 # Rule to run the PCA script
 rule run_pca:
@@ -226,6 +229,21 @@ rule convert_pdb_to_pdbqt:
     shell:
         """
         python2 {params.script}
+        """
+
+rule docking:
+    input:
+        receptor_folder='results/converted_pdbqt/',  # Folder containing the converted PDBQT files
+        ligand_file='results/docking/co2.pdbqt'      # Constant ligand file
+    output:
+        docking_results="results/docking/docking_results_{name}.txt",  # Docking result with new path
+        minimized_pose="results/docking/minimized_{name}.pdbqt"  # Minimized pose with new path
+    params:
+        script="workflow/scripts/docking_of_Rubisco.py"  # Path to the docking script
+    shell:
+        """
+        # Run the docking script
+        python {params.script} --receptor_folder {input.receptor_folder} --ligand_file {input.ligand_file} --output_folder {output.docking_results}
         """
 
 rule compute_confidence_scores:

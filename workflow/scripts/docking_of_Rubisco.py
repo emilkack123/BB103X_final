@@ -56,8 +56,11 @@ for receptor_file in os.listdir(receptor_folder):
         # Write the minimized pose to file
         v.write_pose(minimized_filename, overwrite=True)
 
+        # Remove the '.pdbqt' extension to create a clean output filename for the text file
+        receptor_base = os.path.splitext(receptor_file)[0]
+
         # Save the results to a text file
-        with open(os.path.join(output_folder, f'docking_results_{receptor_file}.txt'), 'w') as f:
+        with open(os.path.join(output_folder, f'docking_results_{receptor_base}.txt'), 'w') as f:
             # Write the docking score (energy)
             f.write(f'Receptor: {receptor_file}\n')
             f.write(f'Docking Score (Energy): {energy}\n')
