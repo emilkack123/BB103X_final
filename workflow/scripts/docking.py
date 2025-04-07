@@ -12,8 +12,8 @@ bz = 20  # Box size in z direction
 v = Vina(sf_name='vina')
 
 # Set receptor and ligand files
-v.set_receptor('/home/moa/BB103X_final/results/gen_structures/model_1.pdbqt')
-v.set_ligand_from_file('/home/moa/BB103X_final/results/docking/co2.pdbqt')
+v.set_receptor('results/gen/A0A1G0AW29_1_1.pdb')
+v.set_ligand_from_file('results/docking/co2.pdbqt')
 
 # Compute maps for docking
 v.compute_vina_maps(center=[cx, cy, cz], box_size=[bx, by, bz])
@@ -22,7 +22,7 @@ v.compute_vina_maps(center=[cx, cy, cz], box_size=[bx, by, bz])
 v.dock(exhaustiveness=20, n_poses=20)
 
 # Write docked poses to file
-v.write_poses('/home/moa/BB103X_final/results/docking/docked_enzyme.pdbqt', n_poses=5, energy_range=6.0, overwrite=True)
+v.write_poses('results/docking/docked_enzyme.pdbqt', n_poses=5, energy_range=6.0, overwrite=True)
 
 # Get the docking score (energy)
 energy = v.score()
@@ -31,10 +31,10 @@ energy = v.score()
 energy_minimized = v.optimize()
 
 # Write the minimized pose to file
-v.write_pose('/home/moa/BB103X_final/results/docking/minimized.pdbqt', overwrite=True)
+v.write_pose('results/docking/minimized.pdbqt', overwrite=True)
 
 # Save the results to a text file
-with open('/home/moa/BB103X_final/results/docking/docking_results.txt', 'w') as f:
+with open('results/docking/docking_results.txt', 'w') as f:
     # Write the docking score (energy)
     f.write(f'Docking Score (Energy): {energy}\n')
     

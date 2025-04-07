@@ -15,18 +15,7 @@ score = "results/weighted_results.csv"
 # Path to the new K-means and PCA script
 kmeans_script = "workflow/scripts/k-mean.py"
 
-# Define paths for TM-score files (ONLY for generated sequences)
-pdb_folder_gen = "results/gen_models"
-reference_pdb = "results/nat_models/model_natural4.pdb"
-tm_score_output_csv = "results/tm_scores/tm-scores.csv"  # FIXED: Renamed to avoid conflict
-
-# Define paths for extracting confidence scores (BOTH generated and natural)
-confidence_score_script = "workflow/scripts/get_confidence_score.py"
-pdb_folder_nat = "results/nat_models"
-
-confidence_output_gen_file = "results/confidence_scores/gen_confidence_scores.csv"
-confidence_output_nat_file = "results/confidence_scores/nat_confidence_scores.csv"
-
+# Hydrophobicity and PI
 FASTA_FILE = "resources/gen+nat.fasta"
 PI_CSV = "results/pI_results.csv"
 HYDROPHOBICITY_CSV = "results/hydrophobicity_results.csv"
@@ -64,9 +53,6 @@ rule all:
         pca_output_plot,
         pca_output_scree,           
         kmeans_output_plot,        
-        tm_score_output_csv,       # FIXED: Updated to new TM-score file path
-        confidence_output_gen_file,
-        confidence_output_nat_file,
         "results/boxplot.png",
         "results/hydrophobicity_boxplot.png",
         nat_seqs,
@@ -84,6 +70,7 @@ rule all:
         stability,
         final,
         score,
+        "results/confidence_scores.csv",
         "results/tm_scores/tm-scores.csv",
         "results/ranked_sequences.csv"
 
@@ -110,48 +97,6 @@ rule run_kmeans_pca:
         script=kmeans_script
     shell:
         "python {params.script} '{input[0]}' '{input[1]}' {output}"
-
-rule select_best_reference:
-    input:
-        confidence_scores="results/confidence_scores.csv",
-        nat_folder="results/nat"
-    output:
-        "results/tm_scores/best_reference.pdb"
-    run:
-        ref_pdb = get_best_reference(input.confidence_scores, input.nat_folder)
-        shell(f"cp {ref_pdb} {output}")
-
-rule calculate_tm_scores:
-    input:
-        best_reference="results/tm_scores/best_reference.pdb",
-        gen_folder="results/gen"
-    output:
-        "results/tm_scores/tm-scores.csv"
-    shell:
-        """
-        python workflow/scripts/TM-score.py --confidence_scores results/confidence_scores.csv \
-                                            --gen_folder results/gen \
-                                            --nat_folder results/nat \
-                                            --output {output}
-        """
-
-# Rule to run the confidence score extraction script for generated structures
-rule run_confidence_scores_gen:
-    input:
-        pdb_folder=pdb_folder_gen
-    output:
-        confidence_output_gen_file
-    shell:
-        "python {confidence_score_script} {input.pdb_folder} {output}"
-
-# Rule to run the confidence score extraction script for natural structures
-rule run_confidence_scores_nat:
-    input:
-        pdb_folder=pdb_folder_nat
-    output:
-        confidence_output_nat_file
-    shell:
-        "python {confidence_score_script} {input.pdb_folder} {output}"
 
 rule concat_rubisco:
     input:
@@ -259,6 +204,39 @@ rule plot_heatmap:
     output: HEATMAP_PLOT
     shell: "python workflow/scripts/plot_heatmap.py {input} {output}"
 
+rule compute_confidence_scores:
+    input:
+        gen_folder="results/gen",
+        nat_folder="results/nat"
+    output:
+        confidence_scores="results/confidence_scores.csv"
+    params:
+        script="workflow/scripts/compute_confidence_score.py"
+    shell:
+        """
+        python {params.script} \
+            --folders {input.gen_folder} {input.nat_folder} \
+            --output {output.confidence_scores}
+        """
+
+rule tm_score:
+    input:
+        confidence_scores="results/confidence_scores.csv",
+        gen_folder="results/gen",
+        nat_folder="results/nat"
+    output:
+        tm_scores="results/tm_scores/tm-scores.csv"
+    params:
+        script="workflow/scripts/TM-score.py"
+    shell:
+        """
+        python {params.script} \
+            --confidence_scores {input.confidence_scores} \
+            --gen_folder {input.gen_folder} \
+            --nat_folder {input.nat_folder} \
+            --output {output.tm_scores}
+        """
+
 rule combine_sequences_2:
     input:
         hydro="results/hydrophobicity_results.csv",
@@ -272,7 +250,6 @@ rule combine_sequences_2:
         """
         python workflow/scripts/apply_function.py {input.hydro} {input.pi} {input.mol_weight} {input.tm_score} {input.stability} --output_file {output}
         """
-
 # Here change numbers next to a,b,c,d to get wanted results
 rule score_sequences:
     input: final
