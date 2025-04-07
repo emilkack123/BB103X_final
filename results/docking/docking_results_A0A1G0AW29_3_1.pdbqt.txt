@@ -1,0 +1,7 @@
+Receptor: A0A1G0AW29_3_1.pdbqt
+Docking Score (Energy): [-1.758 -1.758  0.     0.     0.     0.     0.     0.   ]
+Minimized Energy: [-1.705 -1.705  0.     0.     0.     0.     0.     0.   ]
+
+Docking completed successfully.
+Top 5 poses have been written to results/docking/docked_A0A1G0AW29_3_1.pdbqt.
+Minimized pose has been written to results/docking/minimized_A0A1G0AW29_3_1.pdbqt.

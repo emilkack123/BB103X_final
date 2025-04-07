@@ -1,0 +1,7 @@
+Receptor: U3U4M7_6_1.pdbqt
+Docking Score (Energy): [-1.995 -1.995  0.     0.     0.     0.     0.     0.   ]
+Minimized Energy: [-1.976 -1.976  0.     0.     0.     0.     0.     0.   ]
+
+Docking completed successfully.
+Top 5 poses have been written to results/docking/docked_U3U4M7_6_1.pdbqt.
+Minimized pose has been written to results/docking/minimized_U3U4M7_6_1.pdbqt.
