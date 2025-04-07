@@ -301,7 +301,7 @@ rule combine_sequences_2:
         pi="results/pI_results.csv",
         mol_weight="results/molecular_weight.csv",
         tm_score="results/tm_scores/tm-scores.csv",
-        stability="results/confidence_scores.csv"
+        stability="results/confidence_scores.csv",
     output:
         "results/final_results.csv"
     shell:
