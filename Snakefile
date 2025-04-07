@@ -47,6 +47,17 @@ SCATTER_PLOT = "results/scatterplot.png"
 DISTANCE_MATRIX = "results/distmat.tsv"
 HEATMAP_PLOT = "results/heatmap.png"
 
+# Define the input and output directories
+input_dir = 'results/gen/'
+output_dir = 'results/converted_pdbqt/'
+
+# Ensure the output directory exists
+if not os.path.exists(output_dir):
+    os.makedirs(output_dir)
+
+# Get the base filenames of all PDB files in the directory
+BASENAMES = glob_wildcards("results/gen/{name}.pdb").name
+
 # Rule to generate final outputs (PCA, K-means, TM-score results, and confidence scores)
 rule all:
     input:
@@ -73,7 +84,7 @@ rule all:
         "results/confidence_scores.csv",
         "results/tm_scores/tm-scores.csv",
         "results/ranked_sequences.csv",
-        expand("converted_pdbqt/{name}.pdbqt", name=BASENAMES) 
+        expand("results/converted_pdbqt/{name}.pdbqt", name=BASENAMES)  # Add converted PDBQT files here
 
 # Rule to run the PCA script
 rule run_pca:
@@ -203,6 +214,19 @@ rule plot_heatmap:
     input: DISTANCE_MATRIX
     output: HEATMAP_PLOT
     shell: "python workflow/scripts/plot_heatmap.py {input} {output}"
+
+# Add a rule to convert PDB to PDBQT using the Python script
+rule convert_pdb_to_pdbqt:
+    input:
+        pdb="results/gen/{name}.pdb"  # Input PDB file
+    output:
+        pdbqt="results/converted_pdbqt/{name}.pdbqt"  # Output PDBQT file
+    params:
+        script="workflow/scripts/convert_pdb_to_pdbqt.py"  # Path to the script
+    shell:
+        """
+        python2 {params.script}
+        """
 
 rule compute_confidence_scores:
     input:
