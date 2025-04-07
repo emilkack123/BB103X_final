@@ -12,7 +12,7 @@ bz = 20  # Box size in z direction
 v = Vina(sf_name='vina')
 
 # Set receptor and ligand files
-v.set_receptor('results/gen/A0A1G0AW29_1_1.pdb')
+v.set_receptor('results/gen/A0A1G0AW29_2_1.pdbqt')
 v.set_ligand_from_file('results/docking/co2.pdbqt')
 
 # Compute maps for docking

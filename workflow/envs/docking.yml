@@ -9,6 +9,7 @@ dependencies:
   - numpy
   - pandas  # Optional, if you plan to manipulate data later
   - openbabel  # Needed for molecular file format handling
+  - autodocktools 
   - pip
   - pip:
       - vina  # Ensure vina is also available via pip if conda version has issues

@@ -72,8 +72,8 @@ rule all:
         score,
         "results/confidence_scores.csv",
         "results/tm_scores/tm-scores.csv",
-        "results/ranked_sequences.csv"
-
+        "results/ranked_sequences.csv",
+        expand("converted_pdbqt/{name}.pdbqt", name=BASENAMES) 
 
 # Rule to run the PCA script
 rule run_pca:
