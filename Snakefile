@@ -84,6 +84,7 @@ rule all:
         "results/confidence_scores.csv",
         "results/tm_scores/tm-scores.csv",
         "results/ranked_sequences.csv",
+        "results/combined_results.csv",  # Add this line
         expand("results/converted_pdbqt/{name}.pdbqt", name=BASENAMES),
         expand("results/docking/docking_results_{name}.txt", name=BASENAMES),
         expand("results/docking/minimized_{name}.pdbqt", name=BASENAMES)
@@ -278,6 +279,21 @@ rule tm_score:
             --nat_folder {input.nat_folder} \
             --output {output.tm_scores}
         """
+
+# Rule to combine results from various data sources into a final CSV
+rule combine_results:
+    input:
+        pi="results/pI_results.csv",
+        hydro="results/hydrophobicity_results.csv",
+        mw="results/molecular_weight.csv",
+        tm_score="results/tm_scores/tm-scores.csv",
+        conf_score="results/confidence_scores.csv",
+        fa="resources/rubisco_sequences/nat.fa",
+        docking_folder="results/docking/"
+    output:
+        "results/combined_results.csv"
+    shell:
+        "python workflow/scripts/combine_results.py"
 
 rule combine_sequences_2:
     input:
