@@ -5,6 +5,34 @@ This project is part of the BB103X bachelor's thesis at KTH, aimed at developing
 The pipeline is designed using Snakemake and built for modular, reproducible, and scalable protein engineering workflows.
 
 
+## Pipeline fuctionalities
+![Pipeline DAG](dag.png)
+
+
+### 1) Preprocessing
+
+- Combine, clean, and convert FASTA sequences.
+
+### 2) Sequence Analysis
+
+- Compute pI, hydrophobicity, molecular weight, and sequence length.
+
+### 3) Perform multiple sequence alignment with Clustal Omega.
+
+- Structural Evaluation
+
+### 4) Predict 3D structures with OmegaFold.
+
+- Calculate TM-scores.
+
+### 5) Visualization
+
+- Generate boxplots, heatmaps, t-SNE, PCA, k-means, and scatter plots.
+
+### 6) Clustering & Ranking
+
+- Rank based on confidence, clustering, and similarity to natural Rubisco.
+
 ## Pipeline structure
 ```bash
 BB103X_final/
@@ -35,35 +63,6 @@ BB103X_final/
 └── .gitignore
 ```
 
-## Pipeline fuctionalities
-![Pipeline DAG](dag.png)
-
-
-1) Preprocessing
-
-- Combine, clean, and convert FASTA sequences.
-
-2) Sequence Analysis
-
-- Compute pI, hydrophobicity, molecular weight, and sequence length.
-
-3) Perform multiple sequence alignment with Clustal Omega.
-
-- Structural Evaluation
-
-4) Predict 3D structures with OmegaFold.
-
-- Calculate TM-scores.
-
-5) Visualization
-
-- Generate boxplots, heatmaps, t-SNE, PCA, k-means, and scatter plots.
-
-6) Clustering & Ranking
-
-- Rank based on confidence, clustering, and similarity to natural Rubisco.
-
-
 
 ## Installation
 
@@ -77,22 +76,22 @@ You can clone the repository into a programming environment such as VS-code
 
 ### 2. Create the main Conda environment
 
-conda env create -f workflow/envs/environment.yml
+``` conda env create -f workflow/envs/environment.yml ```
 
 
 ### 3. Activate the environment
 
-conda activate bb103x_final
+```conda activate bb103x_final```
 
 
 ### 4. (Optional) Set up other environments
 
 #### For structure prediction (OmegaFold)
-conda env create -f workflow/envs/omegafold.yaml
+```conda env create -f workflow/envs/omegafold.yaml```
 #Call by: snakemake --use-conda --conda-frontend conda --cores 1 --config seq=gen
 
 #### For plotting t-SNE separately
-conda env create -f workflow/envs/t-SNE_env.yml
+```conda env create -f workflow/envs/t-SNE_env.yml```
 
 
 
