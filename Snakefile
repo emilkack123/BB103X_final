@@ -224,6 +224,8 @@ rule convert_pdb_to_pdbqt:
         pdb="results/gen/{name}.pdb"  # Input PDB file
     output:
         pdbqt="results/converted_pdbqt/{name}.pdbqt"  # Output PDBQT file
+    conda:
+        "workflow/envs/docking.yml"
     params:
         script="workflow/scripts/convert_pdb_to_pdbqt.py"  # Path to the script
     shell:
@@ -238,6 +240,8 @@ rule docking:
     output:
         docking_results="results/docking/docking_results_{name}.txt",  # Docking result with new path
         minimized_pose="results/docking/minimized_{name}.pdbqt"  # Minimized pose with new path
+    conda:
+        "workflow/envs/docking.yml"
     params:
         script="workflow/scripts/docking_of_Rubisco.py"  # Path to the docking script
     shell:
