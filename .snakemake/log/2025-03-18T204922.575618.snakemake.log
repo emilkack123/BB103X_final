@@ -1,3 +1,0 @@
-WildcardError in file /home/sofia/BB103X_final/Snakefile, line 27:
-No values given for wildcard 'sample'.
-  File "/home/sofia/BB103X_final/Snakefile", line 27, in <module>

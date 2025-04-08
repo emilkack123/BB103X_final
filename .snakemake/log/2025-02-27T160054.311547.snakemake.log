@@ -1,7 +1,0 @@
-Building DAG of jobs...
-Nothing to be done (all requested files are present and up to date).
-<<<<<<<< HEAD:.snakemake/log/2025-02-27T160054.311547.snakemake.log
-Complete log: .snakemake/log/2025-02-27T160054.311547.snakemake.log
-========
-Complete log: .snakemake/log/2025-03-18T190705.224287.snakemake.log
->>>>>>>> 2b3bdd31665d0134b0520376b9db51bbfbfd7df2:.snakemake/log/2025-03-18T190705.224287.snakemake.log

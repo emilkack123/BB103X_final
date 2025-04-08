@@ -1,2 +1,0 @@
-SyntaxError in file /home/sofia/BB103X_final/Snakefile, line 24:
-No rule keywords allowed after run/shell/script/notebook/wrapper/template_engine/cwl in rule compute_pI. (Snakefile, line 24)

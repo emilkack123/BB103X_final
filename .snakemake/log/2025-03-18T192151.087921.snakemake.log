@@ -1,4 +1,0 @@
-Building DAG of jobs...
-WildcardError in rule run_dmpfold in file /home/sofia/BB103X_final/Snakefile, line 28:
-Wildcards in input files cannot be determined from output files:
-'target_dir'
