@@ -9,7 +9,7 @@ hydrophobicity = "results/hydrophobicity_results.csv"
 pI = "results/pI_results.csv"
 weight_length = "results/molecular_weight.csv"
 stability = "results/confidence_scores.csv"
-final = "results/final_results.csv"
+final = "results/final_characteristics.csv"
 score = "results/weighted_results.csv"
 
 # Path to the new K-means and PCA script
@@ -84,7 +84,6 @@ rule all:
         "results/confidence_scores.csv",
         "results/tm_scores/tm-scores.csv",
         "results/ranked_sequences.csv",
-        "results/combined_results.csv",  # Add this line
         expand("results/converted_pdbqt/{name}.pdbqt", name=BASENAMES),
         expand("results/docking/docking_results_{name}.txt", name=BASENAMES),
         expand("results/docking/minimized_{name}.pdbqt", name=BASENAMES)
@@ -281,19 +280,6 @@ rule tm_score:
         """
 
 # Rule to combine results from various data sources into a final CSV
-rule combine_results:
-    input:
-        pi="results/pI_results.csv",
-        hydro="results/hydrophobicity_results.csv",
-        mw="results/molecular_weight.csv",
-        tm_score="results/tm_scores/tm-scores.csv",
-        conf_score="results/confidence_scores.csv",
-        fa="resources/rubisco_sequences/nat.fa",
-        docking_folder="results/docking/"
-    output:
-        "results/combined_results.csv"
-    shell:
-        "python workflow/scripts/combine_results.py"
 
 rule combine_sequences_2:
     input:
@@ -302,17 +288,18 @@ rule combine_sequences_2:
         mol_weight="results/molecular_weight.csv",
         tm_score="results/tm_scores/tm-scores.csv",
         stability="results/confidence_scores.csv",
+        docking_folder="results/docking"
     output:
-        "results/final_results.csv"
+        "results/final_characteristics.csv"
     shell:
         """
-        python workflow/scripts/apply_function.py {input.hydro} {input.pi} {input.mol_weight} {input.tm_score} {input.stability} --output_file {output}
+        python workflow/scripts/combined_final_results.py {input.hydro} {input.pi} {input.mol_weight} {input.tm_score} {input.stability} {input.docking_folder} --output_file {output}
         """
 # Here change numbers next to a,b,c,d to get wanted results
 rule score_sequences:
     input: final
     output: score
-    shell: "python workflow/scripts/weighted_sum.py {input} {output} --a -1.2 --b -0.8 --c -0.001 --d -0.001 --e 2.0 --f 6.5"
+    shell: "python workflow/scripts/weighted_sum.py {input} {output} --a -1.2 --b -0.8 --c -0.001 --d -0.001 --e 2.0 --f 6.5 --g 10"
 
 rule rank_sequences:
     input:

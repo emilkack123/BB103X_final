@@ -2,7 +2,7 @@ import pandas as pd
 import argparse
 from sklearn.preprocessing import StandardScaler
 
-def apply_weighted_sum(input_file, output_file, a, b, c, d, e, f):
+def apply_weighted_sum(input_file, output_file, a, b, c, d, e, f, g):
     """ Apply weighted sum formula with Z-score normalization """
 
     # Load data
@@ -17,7 +17,7 @@ def apply_weighted_sum(input_file, output_file, a, b, c, d, e, f):
     # Define relevant columns
     cols_to_convert = [
         "HYDROPHOBICITY", "PI", "SEQUENCE_LENGTH", "MOLECULAR_WEIGHT", 
-        "TM_SCORE", "STABILITY"
+        "TM_SCORE", "STABILITY" , "AFFINITY"
     ]
 
     # Filter existing columns
@@ -32,6 +32,14 @@ def apply_weighted_sum(input_file, output_file, a, b, c, d, e, f):
     # Handle NaN values (replace with column mean to avoid calculation errors)
     df[existing_cols] = df[existing_cols].apply(lambda x: x.fillna(x.mean()))
 
+    # Apply Z-score normalization
+    scaler = StandardScaler()
+    df[existing_cols] = scaler.fit_transform(df[existing_cols])
+    print(df.head)
+    numeric_cols = df.select_dtypes(include=['int64', 'float64']).columns
+    df[numeric_cols] = df[numeric_cols].abs()
+    print(df.head)
+
     # Compute averages of natural sequences (if 'TYPE' column exists)
     if "TYPE" in df.columns:
         natural_df = df[df["TYPE"].str.lower() == "natural"]
@@ -44,18 +52,17 @@ def apply_weighted_sum(input_file, output_file, a, b, c, d, e, f):
         print("Warning: 'TYPE' column missing. Using global means instead.")
         avg_values = df[existing_cols].mean()
 
-    # Apply Z-score normalization
-    scaler = StandardScaler()
-    df[existing_cols] = scaler.fit_transform(df[existing_cols])
+    
 
     # Compute weighted sum using normalized values
     df["WEIGHTED_SUM"] = (
-        a * abs(df["HYDROPHOBICITY"] - avg_values["HYDROPHOBICITY"]) + 
-        b * abs(df["PI"] - avg_values["PI"]) +
-        c * abs(df["SEQUENCE_LENGTH"] - avg_values["SEQUENCE_LENGTH"]) +
-        d * abs(df["MOLECULAR_WEIGHT"] - avg_values["MOLECULAR_WEIGHT"]) +
+        -a * abs(df["HYDROPHOBICITY"] - avg_values["HYDROPHOBICITY"]) + 
+        -b * abs(df["PI"] - avg_values["PI"]) +
+        -c * abs(df["SEQUENCE_LENGTH"] - avg_values["SEQUENCE_LENGTH"]) +
+        -d * abs(df["MOLECULAR_WEIGHT"] - avg_values["MOLECULAR_WEIGHT"]) +
         e * df["TM_SCORE"] +
-        f * df["STABILITY"]
+        f * df["STABILITY"] +
+        g * df["AFFINITY"]
     )
 
     # Save results
@@ -72,11 +79,12 @@ def parse_args():
     parser.add_argument("--d", type=float, default=1.0, help="Weight for Molecular Weight")
     parser.add_argument("--e", type=float, default=1.0, help="Weight for TM_SCORE")
     parser.add_argument("--f", type=float, default=1.0, help="Weight for Stability")
+    parser.add_argument("--g", type=float, default=1.0, help="Weight for Stability")
     return parser.parse_args()
 
 def main():
     args = parse_args()
-    apply_weighted_sum(args.input_file, args.output_file, args.a, args.b, args.c, args.d, args.e, args.f)
+    apply_weighted_sum(args.input_file, args.output_file, args.a, args.b, args.c, args.d, args.e, args.f, args.g)
 
 if __name__ == "__main__":
     main()

@@ -1,1 +1,15 @@
+# 
 .snakemake/
+# ignore the results for future runs
+.results/
+# Ignore Snakemake lock files
+.snakemake/lock/
+
+# Ignore temporary Snakemake files
+.snakemake/tmp/
+
+# Ignore conda environments created by Snakemake
+.snakemake/conda/
+
+# Ignore Singularity containers (if used)
+.snakemake/singularity/
