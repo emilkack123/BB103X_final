@@ -38,6 +38,9 @@ csv_final = "results/rubisco_final.csv"
 cluster_plot = "results/rubisco_clusters.png"
 length = "results/length_histogram.png"
 
+iupred_raw_output = "results/iupred_output.txt"
+disorder_metrics_csv = "results/disorder_metrics.csv"
+
 # Rule to generate final outputs (PCA, K-means, TM-score results, and confidence scores)
 rule all:
     input:
@@ -187,3 +190,21 @@ rule plot_clustering:
     input: dist_mat, csv_final
     output: cluster_plot
     shell: "python workflow/scripts/plot_clustering.py {input[0]} {output} --metadata {input[1]}"
+
+
+rule run_iupred2a:
+    input:
+        fasta=input_fasta_1
+    output:
+        txt=iupred_raw_output
+    shell:
+        "python external_tools/iupred2a/iupred2a.py {input.fasta} long > {output.txt}"
+
+rule parse_disorder:
+    input:
+        fasta=input_fasta_1,
+        txt=iupred_raw_output
+    output:
+        csv=disorder_metrics_csv
+    shell:
+        "python scripts/parse_disorder_by_length.py {input.fasta} {input.txt} {output.csv}"
