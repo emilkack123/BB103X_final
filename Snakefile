@@ -56,7 +56,8 @@ if not os.path.exists(output_dir):
     os.makedirs(output_dir)
 
 # Get the base filenames of all PDB files in the directory
-BASENAMES = glob_wildcards("results/gen/{name}.pdb").name
+GEN_BASENAMES = glob_wildcards("results/gen/{name}.pdb").name
+NAT_BASENAMES = glob_wildcards("results/nat/{name}.pdb").name
 
 # Rule to generate final outputs (PCA, K-means, TM-score results, and confidence scores)
 rule all:
@@ -84,10 +85,8 @@ rule all:
         "results/confidence_scores.csv",
         "results/tm_scores/tm-scores.csv",
         "results/ranked_sequences.csv",
-        expand("results/converted_pdbqt/{name}.pdbqt", name=BASENAMES),
-        expand("results/docking/docking_results_{name}.txt", name=BASENAMES),
-        expand("results/docking/minimized_{name}.pdbqt", name=BASENAMES)
-
+        expand("results/converted_pdbqt/{name}.pdbqt", name=GEN_BASENAMES),
+        expand("results/converted_pdbqt_natural/{name}.pdbqt", name=NAT_BASENAMES),
 
 # Rule to run the PCA script
 rule run_pca:
@@ -219,36 +218,54 @@ rule plot_heatmap:
     shell: "python workflow/scripts/plot_heatmap.py {input} {output}"
 
 # Add a rule to convert PDB to PDBQT using the Python script
-rule convert_pdb_to_pdbqt:
+rule convert_pdb_to_pdbqt_gen:
     input:
-        pdb="results/gen/{name}.pdb"  # Input PDB file
+        pdb="results/gen/{name}.pdb"
     output:
-        pdbqt="results/converted_pdbqt/{name}.pdbqt"  # Output PDBQT file
-    conda:
-        "workflow/envs/docking.yml"
-    params:
-        script="workflow/scripts/convert_pdb_to_pdbqt.py"  # Path to the script
+        pdbqt="results/converted_pdbqt/{name}.pdbqt"
+    
+    conda: 
+        "workflow/envs/autodock_py2.yml"
+
     shell:
         """
-        python2 {params.script}
+        prepare_receptor4.py -r {input.pdb} -o {output.pdbqt}
+        """
+rule convert_pdb_to_pdbqt_nat:
+    input:
+        pdb="results/nat/{name}.pdb"
+    output:
+        pdbqt="results/converted_pdbqt_natural/{name}.pdbqt"
+
+    conda: 
+        "workflow/envs/autodock_py2.yml"
+
+    shell:
+        """
+        prepare_receptor4.py -r {input.pdb} -o {output.pdbqt}
         """
 
 rule docking:
     input:
-        receptor_folder='results/converted_pdbqt/',  # Folder containing the converted PDBQT files
-        ligand_file='results/docking/co2.pdbqt'      # Constant ligand file
+        receptor_file="results/converted_pdbqt/{name}.pdbqt",
+        ligand_file="results/docking/co2.pdbqt"
     output:
-        docking_results="results/docking/docking_results_{name}.txt",  # Docking result with new path
-        minimized_pose="results/docking/minimized_{name}.pdbqt"  # Minimized pose with new path
+        docked="results/docking/docked_{name}.pdbqt",
+        minimized="results/docking/minimized_{name}.pdbqt",
+        result="results/docking/docking_results_{name}.txt"
     conda:
-        "workflow/envs/docking.yml"
+        "workflow/envs/vina_env.yml"
     params:
-        script="workflow/scripts/docking_of_Rubisco.py"  # Path to the docking script
+        script="workflow/scripts/docking_of_Rubisco.py"
     shell:
         """
-        # Run the docking script
-        python {params.script} --receptor_folder {input.receptor_folder} --ligand_file {input.ligand_file} --output_folder {output.docking_results}
+        python {params.script} --receptor_file {input.receptor_file} \
+                                --ligand_file {input.ligand_file} \
+                                --docked_output {output.docked} \
+                                --minimized_output {output.minimized} \
+                                --result_output {output.result}
         """
+
 
 rule compute_confidence_scores:
     input:
