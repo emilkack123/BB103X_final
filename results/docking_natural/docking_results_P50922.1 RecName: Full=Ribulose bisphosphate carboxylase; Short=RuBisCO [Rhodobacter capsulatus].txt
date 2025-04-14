@@ -1,0 +1,7 @@
+Receptor: P50922.1 RecName: Full=Ribulose bisphosphate carboxylase; Short=RuBisCO [Rhodobacter capsulatus].pdbqt
+Docking Score (Energy): [-2.215 -2.215  0.     0.     0.     0.     0.     0.   ]
+Minimized Energy: [-2.141 -2.141  0.     0.     0.     0.     0.     0.   ]
+
+Docking completed successfully.
+Top 5 poses have been written to results/docking_natural/docked_P50922.1 RecName: Full=Ribulose bisphosphate carboxylase; Short=RuBisCO [Rhodobacter capsulatus].pdbqt.
+Minimized pose has been written to results/docking_natural/minimized_P50922.1 RecName: Full=Ribulose bisphosphate carboxylase; Short=RuBisCO [Rhodobacter capsulatus].pdbqt.

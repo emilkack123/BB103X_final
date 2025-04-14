@@ -1,5 +1,5 @@
 Receptor: Q59462_5_1.pdbqt
-Docking Score (Energy): [-1.882 -1.882  0.     0.     0.     0.     0.     0.   ]
+Docking Score (Energy): [-1.848 -1.848  0.     0.     0.     0.     0.     0.   ]
 Minimized Energy: [-1.848 -1.848  0.     0.     0.     0.     0.     0.   ]
 
 Docking completed successfully.

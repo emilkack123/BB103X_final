@@ -10,13 +10,13 @@ by = 20  # Box size in y direction
 bz = 20  # Box size in z direction 
 
 # Folder containing PDBQT files for receptors
-receptor_folder = 'results/converted_pdbqt'
+receptor_folder = 'results/converted_pdbqt_natural'
 
 # Constant ligand file
 ligand_file = 'results/docking/co2.pdbqt'
 
 # Output folder for docking results
-output_folder = 'results/docking'
+output_folder = 'results/docking_natural'
 
 # Initialize Vina object
 v = Vina(sf_name='vina')

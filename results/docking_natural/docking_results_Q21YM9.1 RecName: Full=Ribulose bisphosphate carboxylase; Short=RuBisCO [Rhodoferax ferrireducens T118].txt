@@ -1,0 +1,7 @@
+Receptor: Q21YM9.1 RecName: Full=Ribulose bisphosphate carboxylase; Short=RuBisCO [Rhodoferax ferrireducens T118].pdbqt
+Docking Score (Energy): [-1.71 -1.71  0.    0.    0.    0.    0.    0.  ]
+Minimized Energy: [-1.696 -1.696  0.     0.     0.     0.     0.     0.   ]
+
+Docking completed successfully.
+Top 5 poses have been written to results/docking_natural/docked_Q21YM9.1 RecName: Full=Ribulose bisphosphate carboxylase; Short=RuBisCO [Rhodoferax ferrireducens T118].pdbqt.
+Minimized pose has been written to results/docking_natural/minimized_Q21YM9.1 RecName: Full=Ribulose bisphosphate carboxylase; Short=RuBisCO [Rhodoferax ferrireducens T118].pdbqt.
