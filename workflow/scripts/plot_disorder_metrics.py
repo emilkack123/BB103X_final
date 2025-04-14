@@ -61,7 +61,7 @@ def main():
     plt.savefig(f"{args.output_dir}/density_disorder.png")
     plt.close()
 
-    print(f"✅ Plots saved to: {args.output_dir}")
+    print(f" Plots saved to: {args.output_dir}")
 
 if __name__ == "__main__":
     main()
