@@ -38,6 +38,7 @@ csv_final = "results/rubisco_final.csv"
 cluster_plot = "results/rubisco_clusters.png"
 length = "results/length_histogram.png"
 
+#IUPRED
 iupred_raw_output = "results/iupred_output.txt"
 disorder_metrics_csv = "results/disorder_metrics.csv"
 
@@ -208,3 +209,14 @@ rule parse_disorder:
         csv=disorder_metrics_csv
     shell:
         "python scripts/parse_disorder_by_length.py {input.fasta} {input.txt} {output.csv}"
+
+        
+rule plot_disorder_metrics:
+    input:
+        csv=disorder_metrics_csv
+    output:
+        dir="results/disorder_plots/hist_percent_disorder.png"
+    params:
+        outdir="results/disorder_plots"
+    shell:
+        "python workflow/scripts/plot_disorder_metrics.py {input.csv} --output_dir {params.outdir}"
