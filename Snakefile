@@ -1,3 +1,5 @@
+import re
+
 # Define the paths for the input and output files
 input_fasta_1 = "resources/rubisco_sequences/gen.fa"
 input_fasta_2 = "resources/rubisco_sequences/nat.fa"
@@ -19,6 +21,21 @@ kmeans_script = "workflow/scripts/k-mean.py"
 FASTA_FILE = "resources/gen+nat.fasta"
 PI_CSV = "results/pI_results.csv"
 HYDROPHOBICITY_CSV = "results/hydrophobicity_results.csv"
+
+def sanitize(name):
+    return re.sub(r'[^A-Za-z0-9_.-]', '_', name)
+
+# Get all actual filenames
+gen_files = glob_wildcards("results/gen/{name}.pdb").name
+nat_files = glob_wildcards("results/nat/{name}.pdb").name
+
+# Map sanitized names to original ones
+GEN_MAP = {sanitize(name): name for name in gen_files}
+NAT_MAP = {sanitize(name): name for name in nat_files}
+
+# Use sanitized names as wildcards
+GEN_BASENAMES = list(GEN_MAP.keys())
+NAT_BASENAMES = list(NAT_MAP.keys())
 
 SAMPLES = ["results/gen/*.pdb"]  # All generated PDB files 
 
@@ -55,10 +72,6 @@ output_dir = 'results/converted_pdbqt/'
 if not os.path.exists(output_dir):
     os.makedirs(output_dir)
 
-# Get the base filenames of all PDB files in the directory
-GEN_BASENAMES = glob_wildcards("results/gen/{name}.pdb").name
-NAT_BASENAMES = glob_wildcards("results/nat/{name}.pdb").name
-
 # Rule to generate final outputs (PCA, K-means, TM-score results, and confidence scores)
 rule all:
     input:
@@ -85,9 +98,13 @@ rule all:
         "results/confidence_scores.csv",
         "results/tm_scores/tm-scores.csv",
         "results/ranked_sequences.csv",
-        expand("results/converted_pdbqt/{name}.pdbqt", name=GEN_BASENAMES),
-        expand("results/converted_pdbqt_natural/{name}.pdbqt", name=NAT_BASENAMES),
-
+        expand("results/converted_pdbqt/{name}.pdbqt", name=GEN_BASENAMES),  # For generated files
+        expand("results/converted_pdbqt_natural/{name}.pdbqt", name=NAT_BASENAMES),  # For natural files
+        expand("results/gen/{name}.pdb", name=GEN_BASENAMES),  # For generated PDBs
+        expand("results/nat/{name}.pdb", name=NAT_BASENAMES),  # For natural PDBs
+        expand("results/docking/docking_results_{name}.txt", name=GEN_BASENAMES),
+        expand("results/docking/docking_results_{name}.txt", name=NAT_BASENAMES)
+        
 # Rule to run the PCA script
 rule run_pca:
     input:
@@ -220,7 +237,7 @@ rule plot_heatmap:
 # Add a rule to convert PDB to PDBQT using the Python script
 rule convert_pdb_to_pdbqt_gen:
     input:
-        pdb="results/gen/{name}.pdb"
+        lambda wildcards: f"results/gen/{GEN_MAP[sanitize(wildcards.name)]}.pdb"
     output:
         pdbqt="results/converted_pdbqt/{name}.pdbqt"
 
@@ -229,11 +246,12 @@ rule convert_pdb_to_pdbqt_gen:
 
     shell:
         """
-        python2 ~/tools/mgltools_x86_64Linux2_1.5.7/MGLToolsPckgs/AutoDockTools/Utilities24/prepare_receptor4.py -r {input.pdb} -o {output.pdbqt}
+        python2 ~/tools/mgltools_x86_64Linux2_1.5.7/MGLToolsPckgs/AutoDockTools/Utilities24/prepare_receptor4.py -r {input} -o {output.pdbqt}
         """
+
 rule convert_pdb_to_pdbqt_nat:
     input:
-        pdb="results/nat/{name}.pdb"
+        lambda wildcards: f"results/nat/{NAT_MAP[wildcards.name]}.pdb" 
     output:
         pdbqt="results/converted_pdbqt_natural/{name}.pdbqt"
 
@@ -242,7 +260,7 @@ rule convert_pdb_to_pdbqt_nat:
 
     shell:
         """
-        python2 ~/tools/mgltools_x86_64Linux2_1.5.7/MGLToolsPckgs/AutoDockTools/Utilities24/prepare_receptor4.py -r {input.pdb} -o {output.pdbqt}
+        python2 ~/tools/mgltools_x86_64Linux2_1.5.7/MGLToolsPckgs/AutoDockTools/Utilities24/prepare_receptor4.py -r {input} -o {output.pdbqt}
         """
 
 rule docking:
