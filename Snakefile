@@ -223,7 +223,7 @@ rule convert_pdb_to_pdbqt_gen:
         pdb="results/gen/{name}.pdb"
     output:
         pdbqt="results/converted_pdbqt/{name}.pdbqt"
-    
+
     conda: 
         "workflow/envs/autodock_py2.yml"
 
