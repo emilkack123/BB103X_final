@@ -229,7 +229,7 @@ rule convert_pdb_to_pdbqt_gen:
 
     shell:
         """
-        prepare_receptor4.py -r {input.pdb} -o {output.pdbqt}
+        python2 ~/tools/mgltools_x86_64Linux2_1.5.7/MGLToolsPckgs/AutoDockTools/Utilities24/prepare_receptor4.py -r {input.pdb} -o {output.pdbqt}
         """
 rule convert_pdb_to_pdbqt_nat:
     input:
@@ -242,7 +242,7 @@ rule convert_pdb_to_pdbqt_nat:
 
     shell:
         """
-        prepare_receptor4.py -r {input.pdb} -o {output.pdbqt}
+        python2 ~/tools/mgltools_x86_64Linux2_1.5.7/MGLToolsPckgs/AutoDockTools/Utilities24/prepare_receptor4.py -r {input.pdb} -o {output.pdbqt}
         """
 
 rule docking:
