@@ -72,7 +72,7 @@ rule all:
         nat_seqs,
         all_seqs,
         cleaned_seqs,
-        "results/nat/.renamed",
+        "results/nat/.nat_renamed",
         filtering_log,
         output_csv,
         length,
