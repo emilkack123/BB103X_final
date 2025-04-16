@@ -327,6 +327,34 @@ rule tm_score:
 
 # Rule to combine results from various data sources into a final CSV
 
+rule run_iupred2a:
+    input:
+        fasta=input_fasta_1
+    output:
+        txt=iupred_raw_output
+    shell:
+        "python external_tools/iupred2a/iupred2a.py {input.fasta} long > {output.txt}"
+
+rule parse_disorder:
+    input:
+        fasta=input_fasta_1,
+        txt=iupred_raw_output
+    output:
+        csv=disorder_metrics_csv
+    shell:
+        "python scripts/parse_disorder_by_length.py {input.fasta} {input.txt} {output.csv}"
+
+        
+rule plot_disorder_metrics:
+    input:
+        csv=disorder_metrics_csv
+    output:
+        dir="results/disorder_plots/hist_percent_disorder.png"
+    params:
+        outdir="results/disorder_plots"
+    shell:
+        "python workflow/scripts/plot_disorder_metrics.py {input.csv} --output_dir {params.outdir}"
+
 rule combine_sequences_2:
     input:
         hydro="results/hydrophobicity_results.csv",
@@ -334,18 +362,19 @@ rule combine_sequences_2:
         mol_weight="results/molecular_weight.csv",
         tm_score="results/tm_scores/tm-scores.csv",
         stability="results/confidence_scores.csv",
+        disorder="results/disorder_metrics.csv"
         docking_folder="results/docking"
     output:
         "results/final_characteristics.csv"
     shell:
         """
-        python workflow/scripts/combined_final_results.py {input.hydro} {input.pi} {input.mol_weight} {input.tm_score} {input.stability} {input.docking_folder} --output_file {output}
+        python workflow/scripts/combined_final_results.py {input.hydro} {input.pi} {input.mol_weight} {input.tm_score} {input.stability} {input.disorder} {input.docking_folder} --output_file {output}
         """
 # Here change numbers next to a,b,c,d to get wanted results
 rule score_sequences:
     input: final
     output: score
-    shell: "python workflow/scripts/weighted_sum.py {input} {output} --a -1.2 --b -0.8 --c -0.001 --d -0.001 --e 2.0 --f 6.5 --g 10"
+    shell: "python workflow/scripts/weighted_sum.py {input} {output} --a -1.2 --b -0.8 --c -0.001 --d -0.001 --e 2.0 --f 6.5 --g 2 --h 2 --j 10"
 
 rule rank_sequences:
     input:
