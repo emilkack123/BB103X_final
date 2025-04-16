@@ -64,6 +64,10 @@ SCATTER_PLOT = "results/scatterplot.png"
 DISTANCE_MATRIX = "results/distmat.tsv"
 HEATMAP_PLOT = "results/heatmap.png"
 
+#Iupred
+iupred_raw_output ="results/iupred_output.txt"
+disorder_metrics_csv = "results/disorder_metrics.csv"
+
 # Define the input and output directories
 input_dir = 'results/gen/'
 output_dir = 'results/converted_pdbqt/'
@@ -103,7 +107,10 @@ rule all:
         expand("results/gen/{name}.pdb", name=GEN_BASENAMES),  # For generated PDBs
         expand("results/nat/{name}.pdb", name=NAT_BASENAMES),  # For natural PDBs
         expand("results/docking/docking_results_{name}.txt", name=GEN_BASENAMES),
-        expand("results/docking/docking_results_{name}.txt", name=NAT_BASENAMES)
+        expand("results/docking/docking_results_{name}.txt", name=NAT_BASENAMES),
+        iupred_raw_output,
+        disorder_metrics_csv,
+        "results/disorder_plots/hist_procent_disorder.png"
         
 # Rule to run the PCA script
 rule run_pca:

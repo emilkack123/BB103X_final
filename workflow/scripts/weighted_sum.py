@@ -2,7 +2,7 @@ import pandas as pd
 import argparse
 from sklearn.preprocessing import StandardScaler
 
-def apply_weighted_sum(input_file, output_file, a, b, c, d, e, f, g):
+def apply_weighted_sum(input_file, output_file, a, b, c, d, e, f, g, h, j):
     """ Apply weighted sum formula with Z-score normalization """
 
     # Load data
@@ -17,7 +17,7 @@ def apply_weighted_sum(input_file, output_file, a, b, c, d, e, f, g):
     # Define relevant columns
     cols_to_convert = [
         "HYDROPHOBICITY", "PI", "SEQUENCE_LENGTH", "MOLECULAR_WEIGHT", 
-        "TM_SCORE", "STABILITY" , "AFFINITY"
+        "TM_SCORE", "STABILITY" , "PERCENT_DISORDER" , "NUM_DISORDER_SEGMENTS" , "AFFINITY" 
     ]
 
     # Filter existing columns
@@ -38,7 +38,6 @@ def apply_weighted_sum(input_file, output_file, a, b, c, d, e, f, g):
     print(df.head)
     numeric_cols = df.select_dtypes(include=['int64', 'float64']).columns
     df[numeric_cols] = df[numeric_cols].abs()
-    print(df.head)
 
     # Compute averages of natural sequences (if 'TYPE' column exists)
     if "TYPE" in df.columns:
@@ -61,8 +60,10 @@ def apply_weighted_sum(input_file, output_file, a, b, c, d, e, f, g):
         -c * abs(df["SEQUENCE_LENGTH"] - avg_values["SEQUENCE_LENGTH"]) +
         -d * abs(df["MOLECULAR_WEIGHT"] - avg_values["MOLECULAR_WEIGHT"]) +
         e * df["TM_SCORE"] +
-        f * df["STABILITY"] +
-        g * df["AFFINITY"]
+        f * df["STABILITY"] -
+        g * df["PERCENT_DISORDER"] -
+        h * df["NUM_DISORDER_SEGMENTS"] +
+        j * df["AFFINITY"]
     )
 
     # Save results
@@ -79,12 +80,14 @@ def parse_args():
     parser.add_argument("--d", type=float, default=1.0, help="Weight for Molecular Weight")
     parser.add_argument("--e", type=float, default=1.0, help="Weight for TM_SCORE")
     parser.add_argument("--f", type=float, default=1.0, help="Weight for Stability")
-    parser.add_argument("--g", type=float, default=1.0, help="Weight for Stability")
+    parser.add_argument("--g", type=float, default=1.0, help="Weight for percent disorder")
+    parser.add_argument("--h", type=float, default=1.0, help="Weight for Num disorder segments")
+    parser.add_argument("--j", type=float, default=1.0, help="Weight for Affinity")
     return parser.parse_args()
 
 def main():
     args = parse_args()
-    apply_weighted_sum(args.input_file, args.output_file, args.a, args.b, args.c, args.d, args.e, args.f, args.g)
+    apply_weighted_sum(args.input_file, args.output_file, args.a, args.b, args.c, args.d, args.e, args.f, args.g, args.h, args.j)
 
 if __name__ == "__main__":
     main()
