@@ -108,8 +108,6 @@ rule all:
         "results/ranked_sequences.csv",
         expand("results/converted_pdbqt/{name}.pdbqt", name=GEN_BASENAMES),  # For generated files
         expand("results/converted_pdbqt_natural/{name}.pdbqt", name=NAT_BASENAMES),  # For natural files
-        expand("results/gen/{name}.pdb", name=GEN_BASENAMES),  # For generated PDBs
-        expand("results/nat/{name}.pdb", name=NAT_BASENAMES),  # For natural PDBs
         expand("results/docking/docking_results_{name}.txt", name=GEN_BASENAMES),
         expand("results/docking/docking_results_{name}.txt", name=NAT_BASENAMES),
         iupred_raw_output,
