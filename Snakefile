@@ -72,7 +72,7 @@ rule all:
         nat_seqs,
         all_seqs,
         cleaned_seqs,
-        "results/nat/.renamed"
+        "results/nat/.renamed",
         filtering_log,
         output_csv,
         length,
@@ -82,25 +82,19 @@ rule all:
         hydrophobicity,
         pI,       
         stability,
-        MOLECULAR_WEIGHT_CSV,
-        MOLECULAR_WEIGHT_BOXPLOT,
-        MOLECULAR_WEIGHT_HISTOGRAM,
-        SEQUENCE_LENGTH_BOXPLOT,
-        SCATTER_PLOT,
         DISTANCE_MATRIX,
         HEATMAP_PLOT,
         "results/confidence_scores.csv",
         "results/tm_scores/tm-scores.csv",
         "results/ranked_sequences.csv",
-        expand("results/converted_pdbqt/{name}.pdbqt", name=GEN_BASENAMES),  # For generated files
-        expand("results/converted_pdbqt_natural/{name}.pdbqt", name=NAT_BASENAMES),  # For natural files
-        expand("results/gen/{name}.pdb", name=GEN_BASENAMES),  # For generated PDBs
-        expand("results/nat/{name}.pdb", name=NAT_BASENAMES),  # For natural PDBs
-        expand("results/docking/docking_results_{name}.txt", name=GEN_BASENAMES),
-        expand("results/docking/docking_results_{name}.txt", name=NAT_BASENAMES),
+        #expand("results/converted_pdbqt/{name}.pdbqt", name=GEN_BASENAMES),  # For generated files
+        #expand("results/converted_pdbqt_natural/{name}.pdbqt", name=NAT_BASENAMES),  # For natural files
+        #expand("results/gen/{name}.pdb", name=GEN_BASENAMES),  # For generated PDBs
+        #expand("results/nat/{name}.pdb", name=NAT_BASENAMES),  # For natural PDBs
+        #expand("results/docking/docking_results_{name}.txt", name=GEN_BASENAMES),
+        #expand("results/docking/docking_results_{name}.txt", name=NAT_BASENAMES),
         iupred_raw_output,
         disorder_metrics_csv,
-        "results/disorder_plots/hist_procent_disorder.png",
         final,
         score
 
@@ -113,6 +107,8 @@ rule run_pca:
     output:
         pca_output_plot,
         pca_output_scree
+    conda:
+        "workflow/envs/environment.yml"
     shell:
         "python workflow/scripts/PCA.py {input[0]} {input[1]} {output[0]}"
 
@@ -123,6 +119,8 @@ rule run_kmeans_pca:
         input_fasta_2
     output:
         kmeans_output_plot
+    conda:
+        "workflow/envs/environment.yml"
     params:
         script=kmeans_script
     shell:
@@ -134,6 +132,8 @@ rule concat_rubisco:
         "resources/rubisco_sequences/nat.fa"
     output:
         "results/gen+nat.fasta"
+    conda:
+        "workflow/envs/environment.yml"
     shell:
         "cat {input} > {output}"
         
@@ -142,6 +142,8 @@ rule compute_pI:
         FASTA_FILE
     output:
         PI_CSV
+    conda:
+        "workflow/envs/environment.yml"
     shell:
         "set -e; echo 'Starting compute_pI'; python workflow/scripts/pI.py -i {input} -o {output}; echo 'Finished compute_pI'"
 
@@ -150,6 +152,8 @@ rule compute_hydrophobicity:
         FASTA_FILE
     output:
         HYDROPHOBICITY_CSV
+    conda:
+        "workflow/envs/environment.yml"
     shell:
         "python workflow/scripts/hydrophobicity.py -i {input} -o {output}"
 
@@ -158,6 +162,8 @@ rule boxplot_pI:
         csv="results/pI_results.csv"
     output:
         png="results/boxplot.png"
+    conda:
+        "workflow/envs/environment.yml"
     shell:
         "python workflow/scripts/boxplot_pI.py --csv {input.csv} --output {output.png}"
 
@@ -166,12 +172,16 @@ rule hydrophobicity_boxplot:
         csv="results/hydrophobicity_results.csv"
     output:
         png="results/hydrophobicity_boxplot.png"
+    conda:
+        "workflow/envs/environment.yml"
     shell:
         "python workflow/scripts/boxplot_hydrophobicity.py --csv {input.csv} --output {output.png}"
 
 rule combine_sequences:
     input: gen_seqs, nat_seqs
     output: all_seqs
+    conda:
+        "workflow/envs/environment.yml"
     shell: "cat {input} > {output}"
 
 rule rename_pdbs:
@@ -179,53 +189,69 @@ rule rename_pdbs:
         folder="results/nat"
     output:
         touch("results/nat/.renamed")  # dummy file to indicate task done
-    script:
-        "rename_files.py"
+    conda:
+        "workflow/envs/environment.yml"
     shell:
         """
-        python {script} {input.folder}
+        python "workflow/scripts/rename_nat.py" {input.folder}
         touch {output}
         """
 
 rule clean_fasta:
     input: all_seqs
     output: cleaned_seqs
+    conda:
+        "workflow/envs/environment.yml"
     log: filtering_log
     shell: "workflow/scripts/clean_fasta.py --to-uppercase {input} {output} > {log}"
 
 rule fasta_to_csv:
     input: cleaned_seqs
     output: output_csv  # FIXED: Ensuring this is unique
+    conda:
+        "workflow/envs/environment.yml"
     shell: "workflow/scripts/fasta_to_csv.py {input} {output}"
 
 rule add_origin_column:
     input: output_csv
     output: csv_wNewCol  # modifies in place
+    conda:
+        "workflow/envs/environment.yml"
     shell: "workflow/scripts/add_origin_column.py {input} {output}"
 
 rule length_histogram:
     input: csv_wNewCol
     output: length
+    conda:
+        "workflow/envs/environment.yml"
     shell: "python workflow/scripts/sequence_histogram.py {input} {output}"
 
 rule multiple_sequence_alignment:
     input: cleaned_seqs
     output: msa, dist_mat
+    conda:
+        "workflow/envs/environment.yml"
     shell: "clustalo -i {input} -o {output[0]} --distmat-out={output[1]} --full"
 
 rule add_closest_column:
     input: dist_mat, csv_wNewCol
     output: csv_final  # modifies in place
+    conda:
+        "workflow/envs/environment.yml"
     shell: "workflow/scripts/add_closest_column.py {input[0]} {input[1]} {output} --sort"
 
 rule plot_clustering:
     input: dist_mat, csv_final
     output: cluster_plot
+    conda:
+        "workflow/envs/environment.yml"
     shell: "python workflow/scripts/plot_clustering.py {input[0]} {output} --metadata {input[1]}"
 
 rule compute_molecular_weight:
     input: gen=input_fasta_1, nat=input_fasta_2
     output: MOLECULAR_WEIGHT_CSV
+    conda:
+        "workflow/envs/environment.yml"
     shell: "python workflow/scripts/compute_molecular_weight.py {input.gen} {input.nat} {output}"
 
 rule plot_molecular_weight_length:
@@ -235,16 +261,22 @@ rule plot_molecular_weight_length:
         MOLECULAR_WEIGHT_HISTOGRAM,
         SEQUENCE_LENGTH_BOXPLOT,
         SCATTER_PLOT
+    conda:
+        "workflow/envs/environment.yml"
     shell: "mkdir -p results/ && python workflow/scripts/plot_molecular_weight_length.py {input} results/molecular_weight_analysis"
 
 rule compute_distance_matrix:
     input: gen=input_fasta_1, nat=input_fasta_2
     output: DISTANCE_MATRIX
+    conda:
+        "workflow/envs/environment.yml"
     shell: "python workflow/scripts/compute_distance_matrix.py {input.gen} {input.nat} {output}"
 
 rule plot_heatmap:
     input: DISTANCE_MATRIX
     output: HEATMAP_PLOT
+    conda:
+        "workflow/envs/environment.yml"
     shell: "python workflow/scripts/plot_heatmap.py {input} {output}"
 
 # Add a rule to convert PDB to PDBQT using the Python script
@@ -304,6 +336,8 @@ rule compute_confidence_scores:
         nat_folder="results/nat"
     output:
         confidence_scores="results/confidence_scores.csv"
+    conda:
+        "workflow/envs/environment.yml"
     params:
         script="workflow/scripts/compute_confidence_score.py"
     shell:
@@ -320,6 +354,8 @@ rule tm_score:
         nat_folder="results/nat"
     output:
         tm_scores="results/tm_scores/tm-scores.csv"
+    conda:
+        "workflow/envs/environment.yml"
     params:
         script="workflow/scripts/TM-score.py"
     shell:
@@ -338,6 +374,8 @@ rule run_iupred2a:
         fasta=input_fasta_1
     output:
         txt=iupred_raw_output
+    conda:
+        "workflow/envs/environment.yml"
     shell:
         "python external_tools/iupred2a/iupred2a.py {input.fasta} long > {output.txt}"
 
@@ -347,8 +385,10 @@ rule parse_disorder:
         txt=iupred_raw_output
     output:
         csv=disorder_metrics_csv
+    conda:
+        "workflow/envs/environment.yml"
     shell:
-        "python scripts/parse_disorder_by_length.py {input.fasta} {input.txt} {output.csv}"
+        "python workflow/scripts/parse_disorder_by_length.py {input.fasta} {input.txt} {output.csv}"
 
         
 rule plot_disorder_metrics:
@@ -356,6 +396,8 @@ rule plot_disorder_metrics:
         csv=disorder_metrics_csv
     output:
         dir="results/disorder_plots/hist_percent_disorder.png"
+    conda:
+        "workflow/envs/environment.yml"
     params:
         outdir="results/disorder_plots"
     shell:
@@ -372,6 +414,8 @@ rule combine_sequences_2:
         docking_folder="results/docking"
     output:
         "results/final_characteristics.csv"
+    conda:
+        "workflow/envs/environment.yml"
     shell:
         """
         python workflow/scripts/combined_final_results.py {input.hydro} {input.pi} {input.mol_weight} {input.tm_score} {input.stability} {input.disorder} {input.docking_folder} --output_file {output}
@@ -380,6 +424,8 @@ rule combine_sequences_2:
 rule score_sequences:
     input: final
     output: score
+    conda:
+        "workflow/envs/environment.yml"
     shell: "python workflow/scripts/weighted_sum.py {input} {output} --a -1.2 --b -0.8 --c -0.001 --d -0.001 --e 2.0 --f 6.5 --g 2 --h 2 --j 10"
 
 rule rank_sequences:
@@ -387,5 +433,7 @@ rule rank_sequences:
         "results/weighted_results.csv"  # Input weighted results file
     output:
         "results/ranked_sequences.csv"  # Output ranked sequences file
+    conda:
+        "workflow/envs/environment.yml"
     shell:
         "python workflow/scripts/ranking_sequences.py {input} {output}"
