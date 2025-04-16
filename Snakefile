@@ -96,7 +96,13 @@ rule all:
         iupred_raw_output,
         disorder_metrics_csv,
         final,
-        score
+        score,
+        "results/gen",  
+        "results/nat"
+
+
+        
+
 
         
 # Rule to run the PCA script
@@ -188,7 +194,7 @@ rule rename_pdbs:
     input:
         folder="results/nat"
     output:
-        touch("results/nat/.renamed")  # dummy file to indicate task done
+        touch("results/nat/.nat_renamed")  # dummy file to indicate task done
     conda:
         "workflow/envs/environment.yml"
     shell:
@@ -437,3 +443,16 @@ rule rank_sequences:
         "workflow/envs/environment.yml"
     shell:
         "python workflow/scripts/ranking_sequences.py {input} {output}"
+
+
+checkpoint run_omegafold:
+    input:
+        "resources/rubisco_sequences/{seq}.fa"
+    output:
+        directory("results/{seq}")
+    conda:
+        "workflow/envs/omegafold.yaml"
+    shell:
+        """
+        omegafold {input} {output}
+        """
