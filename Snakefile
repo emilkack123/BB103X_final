@@ -308,6 +308,8 @@ rule tm_score:
         nat_folder="results/nat"
     output:
         tm_scores="results/tm_scores/tm-scores.csv"
+    conda:
+        "workflow/envs/docking.yml"
     params:
         script="workflow/scripts/TM-score.py"
     shell:
@@ -331,6 +333,8 @@ rule combine_sequences_2:
         docking_folder="results/docking"
     output:
         "results/final_characteristics.csv"
+    conda:
+        "workflow/envs/enviroment.yml"
     shell:
         """
         python workflow/scripts/combined_final_results.py {input.hydro} {input.pi} {input.mol_weight} {input.tm_score} {input.stability} {input.docking_folder} --output_file {output}
@@ -339,6 +343,8 @@ rule combine_sequences_2:
 rule score_sequences:
     input: final
     output: score
+    conda:
+        "workflow/envs/enviroment.yml"
     shell: "python workflow/scripts/weighted_sum.py {input} {output} --a -1.2 --b -0.8 --c -0.001 --d -0.001 --e 2.0 --f 6.5 --g 10"
 
 rule rank_sequences:
@@ -346,5 +352,7 @@ rule rank_sequences:
         "results/weighted_results.csv"  # Input weighted results file
     output:
         "results/ranked_sequences.csv"  # Output ranked sequences file
+    conda:
+        "workflow/envs/enviroment.yml"
     shell:
         "python workflow/scripts/ranking_sequences.py {input} {output}"

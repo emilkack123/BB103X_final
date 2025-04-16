@@ -1,0 +1,98 @@
+Assuming unrestricted shared filesystem usage.
+None
+host: DESKTOP-TQQUSHA
+Building DAG of jobs...
+Using shell: /usr/bin/bash
+Provided cores: 16
+Rules claiming more threads will be scaled down.
+Conda environments: ignored
+Job stats:
+job                    count
+-------------------  -------
+add_closest_column         1
+add_origin_column          1
+all                        1
+combine_sequences_2        1
+fasta_to_csv               1
+length_histogram           1
+plot_clustering            1
+rank_sequences             1
+score_sequences            1
+total                      9
+
+Select jobs to execute...
+Execute 2 jobs...
+[Mon Apr 14 13:30:39 2025]
+localrule fasta_to_csv:
+    input: results/rubisco_cleaned.fasta
+    output: results/rubisco.csv
+    jobid: 7
+    reason: Updated input files: results/rubisco_cleaned.fasta
+    resources: tmpdir=/tmp
+
+[Mon Apr 14 13:30:39 2025]
+localrule combine_sequences_2:
+    input: results/hydrophobicity_results.csv, results/pI_results.csv, results/molecular_weight.csv, results/tm_scores/tm-scores.csv, results/confidence_scores.csv, results/docking
+    output: results/final_characteristics.csv
+    jobid: 15
+    reason: Updated input files: results/molecular_weight.csv
+    resources: tmpdir=/tmp
+
+Waiting for more resources.
+[Mon Apr 14 13:30:40 2025]
+Finished jobid: 15 (Rule: combine_sequences_2)
+1 of 9 steps (11%) done
+Select jobs to execute...
+Execute 1 jobs...
+[Mon Apr 14 13:30:40 2025]
+localrule score_sequences:
+    input: results/final_characteristics.csv
+    output: results/weighted_results.csv
+    jobid: 17
+    reason: Input files updated by another job: results/final_characteristics.csv
+    resources: tmpdir=/tmp
+
+Waiting for more resources.
+[Mon Apr 14 13:30:40 2025]
+Finished jobid: 7 (Rule: fasta_to_csv)
+2 of 9 steps (22%) done
+Select jobs to execute...
+Execute 1 jobs...
+[Mon Apr 14 13:30:40 2025]
+localrule add_origin_column:
+    input: results/rubisco.csv
+    output: results/rubisco_updated.csv
+    jobid: 9
+    reason: Input files updated by another job: results/rubisco.csv
+    resources: tmpdir=/tmp
+
+Waiting for more resources.
+RuleException:
+CalledProcessError in file "/home/emil/BB103X_final/Snakefile", line 306:
+Command 'set -euo pipefail;  python workflow/scripts/weighted_sum.py results/final_characteristics.csv results/weighted_results.csv --a -1.2 --b -0.8 --c -0.001 --d -0.001 --e 2.0 --f 6.5 --g 10' returned non-zero exit status 1.
+[Mon Apr 14 13:30:40 2025]
+Error in rule score_sequences:
+    message: None
+    jobid: 17
+    input: results/final_characteristics.csv
+    output: results/weighted_results.csv
+    shell:
+        python workflow/scripts/weighted_sum.py results/final_characteristics.csv results/weighted_results.csv --a -1.2 --b -0.8 --c -0.001 --d -0.001 --e 2.0 --f 6.5 --g 10
+        (command exited with non-zero exit code)
+[Mon Apr 14 13:30:41 2025]
+Finished jobid: 9 (Rule: add_origin_column)
+3 of 9 steps (33%) done
+Shutting down, this might take some time.
+Exiting because a job execution failed. Look below for error messages
+[Mon Apr 14 13:30:41 2025]
+Error in rule score_sequences:
+    message: None
+    jobid: 17
+    input: results/final_characteristics.csv
+    output: results/weighted_results.csv
+    shell:
+        python workflow/scripts/weighted_sum.py results/final_characteristics.csv results/weighted_results.csv --a -1.2 --b -0.8 --c -0.001 --d -0.001 --e 2.0 --f 6.5 --g 10
+        (command exited with non-zero exit code)
+Complete log(s): /home/emil/BB103X_final/.snakemake/log/2025-04-14T133039.089625.snakemake.log
+WorkflowError:
+At least one job did not complete successfully.
