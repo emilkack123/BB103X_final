@@ -22,21 +22,6 @@ FASTA_FILE = "resources/gen+nat.fasta"
 PI_CSV = "results/pI_results.csv"
 HYDROPHOBICITY_CSV = "results/hydrophobicity_results.csv"
 
-def sanitize(name):
-    return re.sub(r'[^A-Za-z0-9_.-]', '_', name)
-
-# Get all actual filenames
-gen_files = glob_wildcards("results/gen/{name}.pdb").name
-nat_files = glob_wildcards("results/nat/{name}.pdb").name
-
-# Map sanitized names to original ones
-GEN_MAP = {sanitize(name): name for name in gen_files}
-NAT_MAP = {sanitize(name): name for name in nat_files}
-
-# Use sanitized names as wildcards
-GEN_BASENAMES = list(GEN_MAP.keys())
-NAT_BASENAMES = list(NAT_MAP.keys())
-
 SAMPLES = ["results/gen/*.pdb"]  # All generated PDB files 
 
 # Define input and output files for t-sne plot
@@ -87,6 +72,7 @@ rule all:
         nat_seqs,
         all_seqs,
         cleaned_seqs,
+        "results/nat/.renamed"
         filtering_log,
         output_csv,
         length,
@@ -187,6 +173,19 @@ rule combine_sequences:
     input: gen_seqs, nat_seqs
     output: all_seqs
     shell: "cat {input} > {output}"
+
+rule rename_pdbs:
+    input:
+        folder="results/nat"
+    output:
+        touch("results/nat/.renamed")  # dummy file to indicate task done
+    script:
+        "rename_files.py"
+    shell:
+        """
+        python {script} {input.folder}
+        touch {output}
+        """
 
 rule clean_fasta:
     input: all_seqs
