@@ -94,11 +94,15 @@ rule all:
         dist_mat,
         cluster_plot,
         hydrophobicity,
-        pI,
-        weight_length,
+        pI,       
         stability,
-        final,
-        score,
+        MOLECULAR_WEIGHT_CSV,
+        MOLECULAR_WEIGHT_BOXPLOT,
+        MOLECULAR_WEIGHT_HISTOGRAM,
+        SEQUENCE_LENGTH_BOXPLOT,
+        SCATTER_PLOT,
+        DISTANCE_MATRIX,
+        HEATMAP_PLOT,
         "results/confidence_scores.csv",
         "results/tm_scores/tm-scores.csv",
         "results/ranked_sequences.csv",
@@ -110,7 +114,10 @@ rule all:
         expand("results/docking/docking_results_{name}.txt", name=NAT_BASENAMES),
         iupred_raw_output,
         disorder_metrics_csv,
-        "results/disorder_plots/hist_procent_disorder.png"
+        "results/disorder_plots/hist_procent_disorder.png",
+        final,
+        score
+
         
 # Rule to run the PCA script
 rule run_pca:
@@ -362,7 +369,7 @@ rule combine_sequences_2:
         mol_weight="results/molecular_weight.csv",
         tm_score="results/tm_scores/tm-scores.csv",
         stability="results/confidence_scores.csv",
-        disorder="results/disorder_metrics.csv"
+        disorder="results/disorder_metrics.csv",
         docking_folder="results/docking"
     output:
         "results/final_characteristics.csv"
