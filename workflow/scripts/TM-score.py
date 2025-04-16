@@ -1,56 +1,82 @@
 import os
-import csv
+import pandas as pd
+import glob
 import argparse
 
-# Set up argument parsing
-parser = argparse.ArgumentParser(description="Calculate TM-scores for PDB files and save results in CSV")
-parser.add_argument('--pdb_folder', type=str, required=True, help="Path to the directory containing PDB files")
-parser.add_argument('--reference_pdb', type=str, required=True, help="Path to the reference PDB file")
-parser.add_argument('--output_csv', type=str, required=True, help="Path to the output CSV file")
-
-args = parser.parse_args()
-
-# Get PDB files in the specified directory
-pdb_folder = args.pdb_folder
-reference_pdb = args.reference_pdb
-output_csv = args.output_csv
-
-# Specify the full path to the TMscore executable
-tm_score_path = "/home/moa/BB103X_final/TMscore"
-
-# Get a list of all PDB files in the directory
-pdb_files = [f for f in os.listdir(pdb_folder) if f.endswith('.pdb')]
-
-# Open the CSV file for writing the results
-with open(output_csv, 'w', newline='') as csvfile:
-    fieldnames = ['PDB File', 'TM-score']  # Column headers
-    writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-    writer.writeheader()
-
-    # Loop through each PDB file in the folder
+def get_best_reference(confidence_scores_file, nat_folder):
+    """
+    Selects the natural sequence with the highest confidence score from results/confidence_scores.csv
+    and returns its corresponding PDB file path by searching for the sequence name in the title.
+    """
+    df = pd.read_csv(confidence_scores_file)
+    best_seq = df.loc[df['STABILITY'].idxmax(), 'ID']  # Get the sequence name with highest score
+    
+    # Search for a PDB file that contains the sequence name in its filename
+    pdb_files = glob.glob(os.path.join(nat_folder, "*.pdb"))
     for pdb_file in pdb_files:
-        pdb_path = os.path.join(pdb_folder, pdb_file)  # Get full path to PDB file
+        if best_seq in os.path.basename(pdb_file):
+            return pdb_file
+    
+    raise FileNotFoundError(f"No reference PDB file found in {nat_folder} containing {best_seq} in the title.")
+
+def calculate_tm_score(reference_pdb, target_pdb):
+    """
+    Computes the TM-score between the reference PDB file and a target PDB file.
+    Assumes an external TM-score tool (e.g., TM-align) is installed and available in PATH.
+    """
+    tm_align_exec = "./TMalign"  # Change this if necessary
+    output_file = "tm_output.txt"
+    
+    cmd = f'{tm_align_exec} "{target_pdb}" "{reference_pdb}" > {output_file}'
+    os.system(cmd)  # Run TM-align
+    
+    # Extract TM-score from the output file
+    with open(output_file, "r") as file:
+        for line in file:
+            if "TM-score=" in line:
+                return float(line.split()[1])
+    
+    return None  # Return None if TM-score not found
+
+def process_pdb_files(gen_folder, reference_pdb, output_csv):
+    """
+    Computes TM-scores for all generated PDB files against the reference PDB and saves to CSV.
+    """
+    data = {"ID": [], "TM_SCORE": []}
+    pdb_files = glob.glob(os.path.join(gen_folder, "*.pdb"))
+    
+    if not pdb_files:
+        print(f"No PDB files found in {gen_folder}")
+        return
+    
+    for pdb_file in pdb_files:
+        seq_id = os.path.basename(pdb_file).split(".pdb")[0]  # Extract sequence name
+        tm_score = calculate_tm_score(reference_pdb, pdb_file)
         
-        # Run TM-score via command line and capture the output
-        output = os.popen(f"{tm_score_path} {pdb_path} {reference_pdb}").read()
+        if tm_score is not None:
+            data["ID"].append(seq_id)
+            data["TM_SCORE"].append(tm_score)
+    
+    # Save to CSV
+    df = pd.DataFrame(data)
+    df.to_csv(output_csv, index=False)
+    print(f"TM-scores saved to {output_csv}")
 
-        # Debugging: Print the full output of TMscore for inspection
-        print(f"Output for {pdb_file}:\n{output}\n")
+def main():
+    parser = argparse.ArgumentParser(description="Calculate TM-score for generated PDB files.")
+    parser.add_argument("--confidence_scores", default="results/confidence_scores.csv", 
+                        help="CSV file with confidence scores (default: results/confidence_scores.csv)")
+    parser.add_argument("--gen_folder", default="results/gen", 
+                        help="Folder containing generated PDB files (default: results/gen)")
+    parser.add_argument("--nat_folder", default="results/nat", 
+                        help="Folder containing natural PDB files (default: results/nat)")
+    parser.add_argument("--output", default="results/tm-scores.csv", 
+                        help="Path to save the output CSV file (default: tm_scores.csv)")
+    
+    args = parser.parse_args()
+    
+    reference_pdb = get_best_reference(args.confidence_scores, args.nat_folder)
+    process_pdb_files(args.gen_folder, reference_pdb, args.output)
 
-        # Extract the TM-score from the output
-        tm_score = None
-        for line in output.split("\n"):
-            if "TM-score" in line and "normalized" not in line:
-                # Check if the line contains '=' before attempting to split
-                if '=' in line:
-                    tm_score = line.split('=')[1].strip()  # Extract the TM-score value
-                    break  # Stop looping once the TM-score is found
-
-        # If TM-score was found, write it to the CSV file
-        if tm_score:
-            writer.writerow({'PDB File': pdb_file, 'TM-score': tm_score})
-            print(f"TM-score for {pdb_file} written to CSV")
-        else:
-            print(f"TM-score not found for {pdb_file}")
-
-print(f"TM-score results have been written to {output_csv}")
+if __name__ == "__main__":
+    main()
