@@ -87,29 +87,16 @@ rule all:
         "results/confidence_scores.csv",
         "results/tm_scores/tm-scores.csv",
         "results/ranked_sequences.csv",
-<<<<<<< HEAD
         expand("results/converted_pdbqt/{name}.pdbqt", name=GEN_BASENAMES),  # For generated files
         expand("results/converted_pdbqt_natural/{name}.pdbqt", name=NAT_BASENAMES),  # For natural files
         expand("results/docking/docking_results_{name}.txt", name=GEN_BASENAMES),
         expand("results/docking/docking_results_{name}.txt", name=NAT_BASENAMES),
-=======
-        #expand("results/converted_pdbqt/{name}.pdbqt", name=GEN_BASENAMES),  # For generated files
-        #expand("results/converted_pdbqt_natural/{name}.pdbqt", name=NAT_BASENAMES),  # For natural files
-        #expand("results/gen/{name}.pdb", name=GEN_BASENAMES),  # For generated PDBs
-        #expand("results/nat/{name}.pdb", name=NAT_BASENAMES),  # For natural PDBs
-        #expand("results/docking/docking_results_{name}.txt", name=GEN_BASENAMES),
-        #expand("results/docking/docking_results_{name}.txt", name=NAT_BASENAMES),
->>>>>>> d75c8d8c86846ab9a99b4318430d150981cd0492
         iupred_raw_output,
         disorder_metrics_csv,
         final,
         score,
         "results/gen",  
         "results/nat"
-
-
-        
-
 
         
 # Rule to run the PCA script
