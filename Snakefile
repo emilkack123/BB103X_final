@@ -1,4 +1,5 @@
 import re
+import os
 
 # Define the paths for the input and output files
 input_fasta_1 = "resources/rubisco_sequences/gen.fa"
@@ -61,6 +62,9 @@ output_dir = 'results/converted_pdbqt/'
 if not os.path.exists(output_dir):
     os.makedirs(output_dir)
 
+# Get list of PDB filenames without extension from results/gen/
+gen_pdb_names = [f[:-4] for f in os.listdir("results/gen") if f.endswith(".pdb")]
+
 # Rule to generate final outputs (PCA, K-means, TM-score results, and confidence scores)
 rule all:
     input:
@@ -87,16 +91,15 @@ rule all:
         "results/confidence_scores.csv",
         "results/tm_scores/tm-scores.csv",
         "results/ranked_sequences.csv",
-        expand("results/converted_pdbqt/{name}.pdbqt", name=GEN_BASENAMES),  # For generated files
-        expand("results/converted_pdbqt_natural/{name}.pdbqt", name=NAT_BASENAMES),  # For natural files
-        expand("results/docking/docking_results_{name}.txt", name=GEN_BASENAMES),
-        expand("results/docking/docking_results_{name}.txt", name=NAT_BASENAMES),
         iupred_raw_output,
         disorder_metrics_csv,
         final,
         score,
         "results/gen",  
-        "results/nat"
+        "results/nat",
+        "results/converted_pdbqt/{name}.pdbqt",
+        expand("results/converted_pdbqt/{name}.pdbqt", name=gen_pdb_names),
+        expand("results/converted_pdbqt_natural/{name}.pdbqt", name=gen_pdb_names)
 
         
 # Rule to run the PCA script
@@ -282,7 +285,7 @@ rule plot_heatmap:
 # Add a rule to convert PDB to PDBQT using the Python script
 rule convert_pdb_to_pdbqt_gen:
     input:
-        lambda wildcards: f"results/gen/{GEN_MAP[sanitize(wildcards.name)]}.pdb"
+        "results/gen"
     output:
         pdbqt="results/converted_pdbqt/{name}.pdbqt"
 
@@ -296,7 +299,7 @@ rule convert_pdb_to_pdbqt_gen:
 
 rule convert_pdb_to_pdbqt_nat:
     input:
-        lambda wildcards: f"results/nat/{NAT_MAP[wildcards.name]}.pdb" 
+        "results/nat"
     output:
         pdbqt="results/converted_pdbqt_natural/{name}.pdbqt"
 
