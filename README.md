@@ -27,9 +27,13 @@ The pipeline is designed using Snakemake and built for modular, reproducible, an
 
 ### 5) Visualization
 
-- Generate boxplots, heatmaps, t-SNE, PCA, k-means, and scatter plots.
+- Generate boxplots, heatmaps, t-SNE, PCA, k-means, and scatter plots
 
-### 6) Clustering & Ranking
+### 6)Predict stability with IUpred2
+
+- Calculate protein disorder percent and segments
+
+### 7)Clustering & Ranking
 
 - Rank based on confidence, clustering, and similarity to natural Rubisco.
 
@@ -39,7 +43,9 @@ BB103X_final/
 │
 ├── .snakemake/           
 
-├── config/               
+├── config/
+
+├── external tools/IUpred2
 
 ├── resources/            
 
@@ -101,7 +107,7 @@ You can clone the repository into a programming environment such as VS-code
 
 ### Run the full pipeline:
 
-snakemake --cores 1
+snakemake --SDM
 
 ## Authors
 Muhammad Ahmad
