@@ -284,28 +284,26 @@ rule convert_pdb_to_pdbqt_gen:
     output:
         pdbqt="results/converted_pdbqt/{name}.pdbqt"
 
-    conda: 
-        "workflow/envs/autodock_py2.yml"
-
     shell:
         """
-        python2 ~/tools/mgltools_x86_64Linux2_1.5.7/MGLToolsPckgs/AutoDockTools/Utilities24/prepare_receptor4.py -r {input} -o {output.pdbqt}
+        python2 ~/tools/mgltools_x86_64Linux2_1.5.7/MGLToolsPckgs/AutoDockTools/Utilities24/prepare_receptor4.py \
+        -r results/gen/{wildcards.name}.pdb \
+        -o {output.pdbqt}
         """
 
 rule convert_pdb_to_pdbqt_nat:
     input:
-        "results/nat/renamed_files"
+        "results/nat/renamed_files/{name}.pdb"  # Match individual .pdb files
     output:
-        pdbqt="results/converted_pdbqt_natural/{name}.pdbqt"
-
+        pdbqt="results/converted_pdbqt_natural/{name}.pdbqt"  # Output to .pdbqt with the same name
     conda: 
-        "workflow/envs/autodock_py2.yml"
-
+        "workflow/envs/autodock_py2.yml"  # Specify the environment to use
     shell:
         """
-        python2 ~/tools/mgltools_x86_64Linux2_1.5.7/MGLToolsPckgs/AutoDockTools/Utilities24/prepare_receptor4.py -r {input} -o {output.pdbqt}
+        python2 ~/tools/mgltools_x86_64Linux2_1.5.7/MGLToolsPckgs/AutoDockTools/Utilities24/prepare_receptor4.py \
+        -r {input} -o {output.pdbqt}
         """
-
+        
 rule docking:
     input:
         receptor_file="results/converted_pdbqt/{name}.pdbqt",

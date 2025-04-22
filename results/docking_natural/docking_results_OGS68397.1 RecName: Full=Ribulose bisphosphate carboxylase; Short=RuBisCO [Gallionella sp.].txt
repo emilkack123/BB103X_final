@@ -1,6 +1,6 @@
 Receptor: OGS68397.1 RecName: Full=Ribulose bisphosphate carboxylase; Short=RuBisCO [Gallionella sp.].pdbqt
-Docking Score (Energy): [-1.867 -1.867  0.     0.     0.     0.     0.     0.   ]
-Minimized Energy: [-1.827 -1.827  0.     0.     0.     0.     0.     0.   ]
+Docking Score (Energy): [-1.866 -1.866  0.     0.     0.     0.     0.     0.   ]
+Minimized Energy: [-1.831 -1.831  0.     0.     0.     0.     0.     0.   ]
 
 Docking completed successfully.
 Top 5 poses have been written to results/docking_natural/docked_OGS68397.1 RecName: Full=Ribulose bisphosphate carboxylase; Short=RuBisCO [Gallionella sp.].pdbqt.

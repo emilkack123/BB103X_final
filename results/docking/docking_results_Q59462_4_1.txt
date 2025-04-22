@@ -1,7 +1,0 @@
-Receptor: Q59462_4_1.pdbqt
-Docking Score (Energy): [-1.766 -1.766  0.     0.     0.     0.     0.     0.   ]
-Minimized Energy: [-1.743 -1.743  0.     0.     0.     0.     0.     0.   ]
-
-Docking completed successfully.
-Top 5 poses have been written to results/docking/docked_Q59462_4_1.pdbqt.
-Minimized pose has been written to results/docking/minimized_Q59462_4_1.pdbqt.

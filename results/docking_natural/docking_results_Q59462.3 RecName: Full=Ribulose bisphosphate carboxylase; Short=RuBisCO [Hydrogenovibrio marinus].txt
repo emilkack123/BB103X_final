@@ -1,6 +1,6 @@
 Receptor: Q59462.3 RecName: Full=Ribulose bisphosphate carboxylase; Short=RuBisCO [Hydrogenovibrio marinus].pdbqt
-Docking Score (Energy): [-1.696 -1.696  0.     0.     0.     0.     0.     0.   ]
-Minimized Energy: [-1.662 -1.662  0.     0.     0.     0.     0.     0.   ]
+Docking Score (Energy): [-1.693 -1.693  0.     0.     0.     0.     0.     0.   ]
+Minimized Energy: [-1.669 -1.669  0.     0.     0.     0.     0.     0.   ]
 
 Docking completed successfully.
 Top 5 poses have been written to results/docking_natural/docked_Q59462.3 RecName: Full=Ribulose bisphosphate carboxylase; Short=RuBisCO [Hydrogenovibrio marinus].pdbqt.

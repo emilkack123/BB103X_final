@@ -1,6 +1,6 @@
 Receptor: Q9ZHZ4.1 RecName: Full=Ribulose bisphosphate carboxylase; Short=RuBisCO; AltName: Full=Form II RuBisCO [Halothiobacillus neapolitanus c2].pdbqt
-Docking Score (Energy): [-1.568 -1.568  0.     0.     0.     0.     0.     0.   ]
-Minimized Energy: [-1.534 -1.534  0.     0.     0.     0.     0.     0.   ]
+Docking Score (Energy): [-1.569 -1.569  0.     0.     0.     0.     0.     0.   ]
+Minimized Energy: [-1.53 -1.53  0.    0.    0.    0.    0.    0.  ]
 
 Docking completed successfully.
 Top 5 poses have been written to results/docking_natural/docked_Q9ZHZ4.1 RecName: Full=Ribulose bisphosphate carboxylase; Short=RuBisCO; AltName: Full=Form II RuBisCO [Halothiobacillus neapolitanus c2].pdbqt.
