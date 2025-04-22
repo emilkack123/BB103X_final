@@ -1,41 +1,39 @@
 import os
 import argparse
+import csv
+import shutil
 
-# Set up argparse to handle command-line arguments
 def main():
-    # Initialize the argument parser
-    parser = argparse.ArgumentParser(description="Rename files in the folder by shortening the file names.")
-    
-    # Add a required argument for the input folder path
-    parser.add_argument('folder_path', type=str, help="Path to the folder containing the files to rename.")
-    
-    # Parse the arguments
+    parser = argparse.ArgumentParser(description="Copy and rename .pdb files from the folder, saving them in a new directory.")
+    parser.add_argument('folder_path', type=str, help="Path to the folder containing the files to process.")
     args = parser.parse_args()
-    
-    # Folder path from the command-line argument
     folder_path = args.folder_path
-    
-    # Check if the folder exists
+
     if not os.path.isdir(folder_path):
         print(f"Error: The folder '{folder_path}' does not exist.")
         return
 
-    # Iterate over all the files in the directory
-    for filename in os.listdir(folder_path):
-        # Check if the file is a .pdb file
-        if filename.endswith('.pdb'):
-            # Find the index of ' RecName:' in the filename (if it exists)
-            if ' RecName:' in filename:
-                # Extract the part before ' RecName:' and retain the file extension
+    # Create output directory
+    output_dir = os.path.join(folder_path, "renamed_files")
+    os.makedirs(output_dir, exist_ok=True)
+
+    # Prepare the CSV file to log old and new names
+    log_path = os.path.join(output_dir, "renamed_files_log.csv")
+    with open(log_path, mode='w', newline='') as log_file:
+        writer = csv.writer(log_file)
+        writer.writerow(["Original Filename", "New Filename"])  # Header row
+
+        for filename in os.listdir(folder_path):
+            if filename.endswith('.pdb') and ' RecName:' in filename:
                 new_filename = filename.split(' RecName:')[0] + '.pdb'
-                
-                # Create the full path for the current and new filenames
-                current_filepath = os.path.join(folder_path, filename)
-                new_filepath = os.path.join(folder_path, new_filename)
-                
-                # Rename the file
-                os.rename(current_filepath, new_filepath)
-                print(f'Renamed: {filename} -> {new_filename}')
+                source_path = os.path.join(folder_path, filename)
+                destination_path = os.path.join(output_dir, new_filename)
+
+                shutil.copy2(source_path, destination_path)
+                print(f'Copied and renamed: {filename} -> {new_filename}')
+
+                # Write to CSV log
+                writer.writerow([filename, new_filename])
 
 if __name__ == "__main__":
     main()

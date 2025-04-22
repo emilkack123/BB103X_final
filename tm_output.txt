@@ -6,7 +6,7 @@
  *********************************************************************
 
 Name of Chain_1: results/gen/A0A1G0AW29_2_1.pdb (to be superimposed onto Chain_2)
-Name of Chain_2: results/nat/Q60028.3.pdb
+Name of Chain_2: results/nat/Q60028.3 RecName: Full=Ribulose bisphosphate carboxylase; Short=RuBisCO [Thiobacillus denitrificans ATCC 25259].pdb
 Length of Chain_1: 470 residues
 Length of Chain_2: 459 residues
 
@@ -20,4 +20,4 @@ MDQSNRYANLNLKEEDLIKNGRHLLCAYRMRPAKGFGFEEAAAHFAAESSTGTNVEVSTTDDFTRSVDARVYDVDEAAFG
 .:::::::::::::::::::::::::::::::::::::::::::::::::::::.:::::::::::::::::::::::         ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: :: ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::.::::::.::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 MDQSARYADLSLKEEDLIKGGRHILVAYKMKPKSGYGYLEAAAHFAAESSTGTNVEVSTTDDFTKGVDALVYYIDEAS---------EDMRIAYPLELFDRNVTDGRFMLVSFLTLAIGNNQGMGDIEHAKMIDFYVPERCIQMFDGPATDISNLWRILGRPVVNGGYIAGTIIKPKLGLRPEPFAKAAYQFWLGGDFIKNDEPQGNQVFCPLKKVLPLVYDAMKRAQDDTGQAKLFSMNITADDHYEMCARADYALEVFGP-DA-DKLAFLVDGYVGGPGMVTTARRQYPGQYLHYHRAGHGAVTSPSAKRGYTAFVLAKMSRLQGASGIHVGTMGYGKMEGEGDDKIIAYMIERDECQGPVYFQKWYGMKPTTPIISGGMNALRLPGFFENLGHGNVINTAGGGSYGHIDSPAAGAISLRQSYECWKQGADPIEFAKEHKEFARAFESFPKDADKLFPGWREKLGVHK
 
-Total CPU time is  0.28 seconds
+Total CPU time is  0.26 seconds

@@ -76,7 +76,6 @@ rule all:
         nat_seqs,
         all_seqs,
         cleaned_seqs,
-        "results/nat/.nat_renamed",
         filtering_log,
         output_csv,
         length,
@@ -97,9 +96,8 @@ rule all:
         score,
         "results/gen",  
         "results/nat",
-        "results/converted_pdbqt/{name}.pdbqt",
-        expand("results/converted_pdbqt/{name}.pdbqt", name=gen_pdb_names),
-        expand("results/converted_pdbqt_natural/{name}.pdbqt", name=gen_pdb_names)
+        "results/docking/co2.pdbqt",
+        expand("results/docking/docking_results_{name}.txt", name=gen_pdb_names)
 
         
 # Rule to run the PCA script
@@ -187,18 +185,15 @@ rule combine_sequences:
         "workflow/envs/environment.yml"
     shell: "cat {input} > {output}"
 
-rule rename_pdbs:
+rule rename_nat_files:
     input:
         folder="results/nat"
     output:
-        touch("results/nat/.nat_renamed")  # dummy file to indicate task done
+        log="results/nat/renamed_files/renamed_files_log.csv"
     conda:
-        "workflow/envs/environment.yml"
+        "workflow/envs/enviroment.yml"
     shell:
-        """
-        python "workflow/scripts/rename_nat.py" {input.folder}
-        touch {output}
-        """
+        "python workflow/scripts/rename_nat.py {input.folder}"
 
 rule clean_fasta:
     input: all_seqs
@@ -299,7 +294,7 @@ rule convert_pdb_to_pdbqt_gen:
 
 rule convert_pdb_to_pdbqt_nat:
     input:
-        "results/nat"
+        "results/nat/renamed_files"
     output:
         pdbqt="results/converted_pdbqt_natural/{name}.pdbqt"
 
@@ -442,14 +437,4 @@ rule rank_sequences:
         "python workflow/scripts/ranking_sequences.py {input} {output}"
 
 
-checkpoint run_omegafold:
-    input:
-        "resources/rubisco_sequences/{seq}.fa"
-    output:
-        directory("results/{seq}")
-    conda:
-        "workflow/envs/omegafold.yaml"
-    shell:
-        """
-        omegafold {input} {output}
-        """
+
