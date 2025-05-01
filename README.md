@@ -75,12 +75,17 @@ git clone <OUR REPOSITORY URL> cd BB103X_final
 
 ### 2. Create the main Conda environment
 
-conda env create -f workflow/envs/environment.yml
+conda env create -f workflow/envs/snakemake_env.yaml
 
+cd BB103X_final/workflow/envs
+conda env create --name autodock_py2.yml
+## manually dowloading the mgltools
+conda install bioconda::mgltools
+conda deactivate
 
 ### 3. Activate the environment
 
-conda activate bb103x_final
+conda activate snakemake_project
 
 
 ### 4. (Optional) Set up other environments

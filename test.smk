@@ -26,10 +26,9 @@ rule convert_pdb_to_pdbqt_gen:
         pdb="results/gen/{name}.pdb"
     output:
         pdbqt="results/converted_pdbqt/{name}.pdbqt"
-    conda:
-        "workflow/envs/autodock_py2.yml"
     shell:
         """
+        source activate autodock_py2.yml && \
         python2 {prepare_receptor_script} \
         -r {input.pdb} -o {output.pdbqt}
         """
@@ -41,6 +40,7 @@ rule convert_pdb_to_pdbqt_nat:
         pdbqt="results/converted_pdbqt_natural/{name}.pdbqt"
     shell:
         """
+        source activate autodock_py2.yml && \
         python2 {prepare_receptor_script} \
         -r {input} -o {output.pdbqt}
         """
