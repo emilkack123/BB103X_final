@@ -1,7 +1,0 @@
-Receptor: O84917.1 RecName: Full=Ribulose bisphosphate carboxylase; Short=RuBisCO [Thiomonas intermedia K12].pdbqt
-Docking Score (Energy): [-2.01 -2.01  0.    0.    0.    0.    0.    0.  ]
-Minimized Energy: [-1.975 -1.975  0.     0.     0.     0.     0.     0.   ]
-
-Docking completed successfully.
-Top 5 poses have been written to results/docking_natural/docked_O84917.1 RecName: Full=Ribulose bisphosphate carboxylase; Short=RuBisCO [Thiomonas intermedia K12].pdbqt.
-Minimized pose has been written to results/docking_natural/minimized_O84917.1 RecName: Full=Ribulose bisphosphate carboxylase; Short=RuBisCO [Thiomonas intermedia K12].pdbqt.

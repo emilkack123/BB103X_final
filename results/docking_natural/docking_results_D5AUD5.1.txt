@@ -1,0 +1,7 @@
+Receptor: D5AUD5.1.pdbqt
+Docking Score (Energy): [-2.07 -2.07  0.    0.    0.    0.    0.    0.  ]
+Minimized Energy: [-2.069 -2.069  0.     0.     0.     0.     0.     0.   ]
+
+Docking completed successfully.
+Top 5 poses have been written to results/docking_natural/docked_D5AUD5.1.pdbqt.
+Minimized pose has been written to results/docking_natural/minimized_D5AUD5.1.pdbqt.

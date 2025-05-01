@@ -1,0 +1,7 @@
+Receptor: A1VNQ9.1.pdbqt
+Docking Score (Energy): [-2.028 -2.028  0.     0.     0.     0.     0.     0.   ]
+Minimized Energy: [-2.005 -2.005  0.     0.     0.     0.     0.     0.   ]
+
+Docking completed successfully.
+Top 5 poses have been written to results/docking_natural/docked_A1VNQ9.1.pdbqt.
+Minimized pose has been written to results/docking_natural/minimized_A1VNQ9.1.pdbqt.

@@ -1,0 +1,7 @@
+Receptor: OGS68397.1.pdbqt
+Docking Score (Energy): [-1.865 -1.865  0.     0.     0.     0.     0.     0.   ]
+Minimized Energy: [-1.827 -1.827  0.     0.     0.     0.     0.     0.   ]
+
+Docking completed successfully.
+Top 5 poses have been written to results/docking_natural/docked_OGS68397.1.pdbqt.
+Minimized pose has been written to results/docking_natural/minimized_OGS68397.1.pdbqt.

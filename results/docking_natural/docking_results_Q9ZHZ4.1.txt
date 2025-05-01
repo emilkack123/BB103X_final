@@ -1,0 +1,7 @@
+Receptor: Q9ZHZ4.1.pdbqt
+Docking Score (Energy): [-1.614 -1.614  0.     0.     0.     0.     0.     0.   ]
+Minimized Energy: [-1.614 -1.614  0.     0.     0.     0.     0.     0.   ]
+
+Docking completed successfully.
+Top 5 poses have been written to results/docking_natural/docked_Q9ZHZ4.1.pdbqt.
+Minimized pose has been written to results/docking_natural/minimized_Q9ZHZ4.1.pdbqt.

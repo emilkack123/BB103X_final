@@ -1,7 +1,0 @@
-Receptor: A1VNQ9.1 RecName: Full=Ribulose bisphosphate carboxylase; Short=RuBisCO [Polaromonas naphthalenivorans CJ2].pdbqt
-Docking Score (Energy): [-2.029 -2.029  0.     0.     0.     0.     0.     0.   ]
-Minimized Energy: [-2.002 -2.002  0.     0.     0.     0.     0.     0.   ]
-
-Docking completed successfully.
-Top 5 poses have been written to results/docking_natural/docked_A1VNQ9.1 RecName: Full=Ribulose bisphosphate carboxylase; Short=RuBisCO [Polaromonas naphthalenivorans CJ2].pdbqt.
-Minimized pose has been written to results/docking_natural/minimized_A1VNQ9.1 RecName: Full=Ribulose bisphosphate carboxylase; Short=RuBisCO [Polaromonas naphthalenivorans CJ2].pdbqt.
