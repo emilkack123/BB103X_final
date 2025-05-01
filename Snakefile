@@ -1,5 +1,18 @@
 import re
+import glob
 import os
+
+# Define the path to the MGLTools script (edit this if the path changes)
+prepare_receptor_script = "workflow/scripts/prepare_receptor4.py"
+
+# Extract all base names from 'nat' PDBs
+nat_pdb_files = glob.glob("results/nat_renamed/*.pdb")
+names_nat = [os.path.splitext(os.path.basename(f))[0] for f in nat_pdb_files]
+
+# Extract all base names from 'gen' PDBs
+gen_pdb_files = glob.glob("results/gen/*.pdb")
+names_gen = [os.path.splitext(os.path.basename(f))[0] for f in gen_pdb_files]
+
 
 # Define the paths for the input and output files
 input_fasta_1 = "resources/rubisco_sequences/gen.fa"
@@ -87,6 +100,13 @@ rule all:
         stability,
         DISTANCE_MATRIX,
         HEATMAP_PLOT,
+        "results/nat_renamed/renamed_files_log.csv",
+        expand("results/converted_pdbqt_natural/{name}.pdbqt", name=names_nat),
+        expand("results/converted_pdbqt/{name}.pdbqt", name=names_gen),
+        "results/docking/co2.pdbqt",
+        expand("results/docking/docked_{name}.pdbqt", name=names_gen),
+        expand("results/docking/minimized_{name}.pdbqt", name=names_gen),
+        expand("results/docking/docking_results_{name}.txt", name=names_gen),
         "results/confidence_scores.csv",
         "results/tm_scores/tm-scores.csv",
         "results/ranked_sequences.csv",
@@ -189,11 +209,13 @@ rule rename_nat_files:
     input:
         folder="results/nat"
     output:
-        log="results/nat/renamed_files/renamed_files_log.csv"
+        log="results/nat_renamed/renamed_files_log.csv"
     conda:
-        "workflow/envs/enviroment.yml"
+        "workflow/envs/environment.yml"
     shell:
-        "python workflow/scripts/rename_nat.py {input.folder}"
+        """
+        python workflow/scripts/rename_nat.py {input.folder} {output.log}
+        """
 
 rule clean_fasta:
     input: all_seqs
@@ -280,30 +302,28 @@ rule plot_heatmap:
 # Add a rule to convert PDB to PDBQT using the Python script
 rule convert_pdb_to_pdbqt_gen:
     input:
-        "results/gen"
+        pdb="results/gen/{name}.pdb"
     output:
         pdbqt="results/converted_pdbqt/{name}.pdbqt"
-
     shell:
         """
-        python2 ~/tools/mgltools_x86_64Linux2_1.5.7/MGLToolsPckgs/AutoDockTools/Utilities24/prepare_receptor4.py \
-        -r results/gen/{wildcards.name}.pdb \
-        -o {output.pdbqt}
+        source activate autodock_py2.yml && \
+        python2 {prepare_receptor_script} \
+        -r {input.pdb} -o {output.pdbqt}
         """
 
 rule convert_pdb_to_pdbqt_nat:
     input:
-        "results/nat/renamed_files/{name}.pdb"  # Match individual .pdb files
+        "results/nat_renamed/{name}.pdb"
     output:
-        pdbqt="results/converted_pdbqt_natural/{name}.pdbqt"  # Output to .pdbqt with the same name
-    conda: 
-        "workflow/envs/autodock_py2.yml"  # Specify the environment to use
+        pdbqt="results/converted_pdbqt_natural/{name}.pdbqt"
     shell:
         """
-        python2 ~/tools/mgltools_x86_64Linux2_1.5.7/MGLToolsPckgs/AutoDockTools/Utilities24/prepare_receptor4.py \
+        source activate autodock_py2.yml && \
+        python2 {prepare_receptor_script} \
         -r {input} -o {output.pdbqt}
         """
-        
+
 rule docking:
     input:
         receptor_file="results/converted_pdbqt/{name}.pdbqt",
@@ -324,7 +344,6 @@ rule docking:
                                 --minimized_output {output.minimized} \
                                 --result_output {output.result}
         """
-
 
 rule compute_confidence_scores:
     input:
@@ -434,5 +453,15 @@ rule rank_sequences:
     shell:
         "python workflow/scripts/ranking_sequences.py {input} {output}"
 
-
+checkpoint run_omegafold:
+    input:
+        "resources/rubisco_sequences/{seq}.fa"
+    output:
+        directory("results/{seq}")
+    conda:
+        "workflow/envs/omegafold.yaml"
+    shell:
+        """
+        omegafold {input} {output}
+        """
 

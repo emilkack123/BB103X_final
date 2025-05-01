@@ -6,19 +6,21 @@ import shutil
 def main():
     parser = argparse.ArgumentParser(description="Copy and rename .pdb files from the folder, saving them in a new directory.")
     parser.add_argument('folder_path', type=str, help="Path to the folder containing the files to process.")
+    parser.add_argument('log_path', type=str, help="Path to save the CSV log of renamed files.")  # New argument
     args = parser.parse_args()
+
     folder_path = args.folder_path
+    log_path = args.log_path
 
     if not os.path.isdir(folder_path):
         print(f"Error: The folder '{folder_path}' does not exist.")
         return
 
-    # Create output directory
-    output_dir = os.path.join(folder_path, "renamed_files")
+    # Ensure output directory exists
+    output_dir = os.path.dirname(log_path)
     os.makedirs(output_dir, exist_ok=True)
 
-    # Prepare the CSV file to log old and new names
-    log_path = os.path.join(output_dir, "renamed_files_log.csv")
+    # Copy and rename files
     with open(log_path, mode='w', newline='') as log_file:
         writer = csv.writer(log_file)
         writer.writerow(["Original Filename", "New Filename"])  # Header row
@@ -32,7 +34,6 @@ def main():
                 shutil.copy2(source_path, destination_path)
                 print(f'Copied and renamed: {filename} -> {new_filename}')
 
-                # Write to CSV log
                 writer.writerow([filename, new_filename])
 
 if __name__ == "__main__":
