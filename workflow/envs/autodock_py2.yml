@@ -1,11 +1,8 @@
 name: autodock_py2
 channels:
-  - https://conda.anaconda.org/bioconda
-  - https://conda.anaconda.org/conda-forge
+  - bioconda
+  - conda-forge
   - defaults
 dependencies:
   - python=2.7
   - numpy=1.16.6 # should work with python 2.7
-  - pip
-  - pip:
-      #- mgltools==1.5.7 removing this idiot thingy
