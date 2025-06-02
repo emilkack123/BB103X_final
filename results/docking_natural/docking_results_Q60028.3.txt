@@ -1,7 +1,0 @@
-Receptor: Q60028.3.pdbqt
-Docking Score (Energy): [-1.792 -1.792  0.     0.     0.     0.     0.     0.   ]
-Minimized Energy: [-1.739 -1.739  0.     0.     0.     0.     0.     0.   ]
-
-Docking completed successfully.
-Top 5 poses have been written to results/docking_natural/docked_Q60028.3.pdbqt.
-Minimized pose has been written to results/docking_natural/minimized_Q60028.3.pdbqt.

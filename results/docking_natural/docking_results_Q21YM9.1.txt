@@ -1,7 +1,0 @@
-Receptor: Q21YM9.1.pdbqt
-Docking Score (Energy): [-1.744 -1.744  0.     0.     0.     0.     0.     0.   ]
-Minimized Energy: [-1.673 -1.673  0.     0.     0.     0.     0.     0.   ]
-
-Docking completed successfully.
-Top 5 poses have been written to results/docking_natural/docked_Q21YM9.1.pdbqt.
-Minimized pose has been written to results/docking_natural/minimized_Q21YM9.1.pdbqt.

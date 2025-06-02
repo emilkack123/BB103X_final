@@ -1,7 +1,0 @@
-Receptor: P50922.1.pdbqt
-Docking Score (Energy): [-2.216 -2.216  0.     0.     0.     0.     0.     0.   ]
-Minimized Energy: [-2.116 -2.116  0.     0.     0.     0.     0.     0.   ]
-
-Docking completed successfully.
-Top 5 poses have been written to results/docking_natural/docked_P50922.1.pdbqt.
-Minimized pose has been written to results/docking_natural/minimized_P50922.1.pdbqt.

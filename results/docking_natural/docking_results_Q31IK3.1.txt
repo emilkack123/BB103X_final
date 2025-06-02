@@ -1,7 +1,0 @@
-Receptor: Q31IK3.1.pdbqt
-Docking Score (Energy): [-1.896 -1.896  0.     0.     0.     0.     0.     0.   ]
-Minimized Energy: [-1.894 -1.894  0.     0.     0.     0.     0.     0.   ]
-
-Docking completed successfully.
-Top 5 poses have been written to results/docking_natural/docked_Q31IK3.1.pdbqt.
-Minimized pose has been written to results/docking_natural/minimized_Q31IK3.1.pdbqt.
