@@ -160,13 +160,14 @@ rule concat_rubisco:
         
 rule compute_pI:
     input:
-        FASTA_FILE
+        gen_fasta="resources/rubisco_sequences/dragon_radii_updated.fasta",
+        nat_fasta="resources/rubisco_sequences/NaturalRubisco.fasta"
     output:
-        PI_CSV
+        csv="results/pI_results.csv"
     conda:
         "workflow/envs/environment.yml"
     shell:
-        "set -e; echo 'Starting compute_pI'; python workflow/scripts/pI.py -i {input} -o {output}; echo 'Finished compute_pI'"
+        "python workflow/scripts/pI.py {input.gen_fasta} {input.nat_fasta} {output.csv}"
 
 rule compute_hydrophobicity:
     input:
@@ -180,11 +181,11 @@ rule compute_hydrophobicity:
         "python workflow/scripts/hydrophobicity.py {input.gen_fasta} {input.nat_fasta} {output}"
 
 
-rule boxplot_pI:
+rule pI_boxplot:
     input:
         csv="results/pI_results.csv"
     output:
-        png="results/boxplot.png"
+        png="results/pI_boxplot.png"
     conda:
         "workflow/envs/environment.yml"
     shell:

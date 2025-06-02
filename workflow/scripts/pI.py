@@ -1,35 +1,29 @@
 import argparse
-import pandas as pd
 from Bio import SeqIO
-from Bio.SeqUtils import IsoelectricPoint
+from Bio.SeqUtils.ProtParam import ProteinAnalysis
+import pandas as pd
 
-def parse_fasta(fasta_file):
-    """Parses a FASTA file and extracts sequences into a DataFrame."""
-    sequences = []
-    for record in SeqIO.parse(fasta_file, "fasta"):
-        sequences.append({"ID": record.id, "Sequence": str(record.seq)})
-    return pd.DataFrame(sequences)
+def compute_pI(gen_fasta, nat_fasta, output_csv):
+    data = []
 
-def calculate_pI(sequence):
-    """Calculates isoelectric point (pI) of a protein sequence."""
-    try:
-        analyser = IsoelectricPoint.IsoelectricPoint(sequence)
-        return analyser.pi()
-    except:
-        return None  # Handle invalid sequences
+    for fasta_file, label in [(gen_fasta, "Generated"), (nat_fasta, "Natural")]:
+        for record in SeqIO.parse(fasta_file, "fasta"):
+            try:
+                seq = str(record.seq)
+                analysed_seq = ProteinAnalysis(seq)
+                pi = analysed_seq.isoelectric_point()
+                data.append([record.id, pi, label])
+            except Exception as e:
+                print(f"Skipping {record.id} due to error: {e}")
 
-def main():
-    parser = argparse.ArgumentParser(description="Compute isoelectric points (pI) for protein sequences.")
-    parser.add_argument("-i", "--input", required=True, help="Input FASTA file.")
-    parser.add_argument("-o", "--output", required=True, help="Output CSV file.")
-    args = parser.parse_args()
-    
-    df = parse_fasta(args.input)
-    df["pI"] = df["Sequence"].apply(calculate_pI)
-    
-    df.to_csv(args.output, index=False)
-    print("\n✅ Computed pI values saved to:", args.output)
-    print(df.drop(columns=["Sequence"]).head(10))  # Print top 10 rows
+    df = pd.DataFrame(data, columns=["Sequence_ID", "pI", "Type"])
+    df.to_csv(output_csv, index=False)
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser(description="Compute isoelectric points (pI) for protein sequences")
+    parser.add_argument("gen_fasta", help="Path to generated FASTA file")
+    parser.add_argument("nat_fasta", help="Path to natural FASTA file")
+    parser.add_argument("output_csv", help="Path to output CSV file")
+
+    args = parser.parse_args()
+    compute_pI(args.gen_fasta, args.nat_fasta, args.output_csv)
