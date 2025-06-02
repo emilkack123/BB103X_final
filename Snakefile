@@ -53,7 +53,7 @@ cluster_plot = "results/rubisco_clusters.png"
 length = "results/length_histogram.png"
 
 # Molecular weight plots
-MOLECULAR_WEIGHT_CSV = "results/molecular_weight.csv"
+MOLECULAR_WEIGHT_CSV = "results/molecular_weight_results.csv"
 MOLECULAR_WEIGHT_BOXPLOT = "results/molecular_weight_boxplot.png"
 MOLECULAR_WEIGHT_HISTOGRAM = "results/molecular_weight_histogram.png"
 SEQUENCE_LENGTH_BOXPLOT = "results/sequence_length_boxplot.png"
@@ -273,11 +273,15 @@ rule plot_clustering:
     shell: "python workflow/scripts/plot_clustering.py {input[0]} {output} --metadata {input[1]}"
 
 rule compute_molecular_weight:
-    input: gen=input_fasta_1, nat=input_fasta_2
-    output: MOLECULAR_WEIGHT_CSV
+    input:
+        gen_fasta="resources/rubisco_sequences/dragon_radii_updated.fasta",
+        nat_fasta="resources/rubisco_sequences/NaturalRubisco.fasta"
+    output:
+        csv="results/molecular_weight_results.csv"
     conda:
         "workflow/envs/environment.yml"
-    shell: "python workflow/scripts/compute_molecular_weight.py {input.gen} {input.nat} {output}"
+    shell:
+        "python workflow/scripts/compute_molecular_weight.py {input.gen_fasta} {input.nat_fasta} {output.csv}"
 
 rule plot_molecular_weight_length:
     input: MOLECULAR_WEIGHT_CSV
