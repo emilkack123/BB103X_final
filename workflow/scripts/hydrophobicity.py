@@ -1,35 +1,29 @@
 import argparse
-import pandas as pd
 from Bio import SeqIO
+import pandas as pd
 from Bio.SeqUtils.ProtParam import ProteinAnalysis
 
-def parse_fasta(fasta_file):
-    """Parses a FASTA file and extracts sequences into a DataFrame."""
-    sequences = []
-    for record in SeqIO.parse(fasta_file, "fasta"):
-        sequences.append({"ID": record.id, "Sequence": str(record.seq)})
-    return pd.DataFrame(sequences)
+def compute_hydrophobicity(gen_fasta, nat_fasta, output_csv):
+    data = []
 
-def calculate_gravy(sequence):
-    """Calculates the GRAVY hydrophobicity score."""
-    try:
-        analysis = ProteinAnalysis(sequence)
-        return analysis.gravy()
-    except:
-        return None  # Handle errors
+    for file_path, origin in [(gen_fasta, "Generated"), (nat_fasta, "Natural")]:
+        for record in SeqIO.parse(file_path, "fasta"):
+            seq = str(record.seq)
+            if 'X' in seq.upper():
+                print(f"Skipping {record.id} due to unknown amino acids.")
+                continue
+            analysed_seq = ProteinAnalysis(seq)
+            hydrophobicity = analysed_seq.gravy()
+            data.append({"ID": record.id, "Hydrophobicity": hydrophobicity, "Origin": origin})
 
-def main():
-    parser = argparse.ArgumentParser(description="Compute hydrophobicity (GRAVY) for protein sequences.")
-    parser.add_argument("-i", "--input", required=True, help="Input FASTA file.")
-    parser.add_argument("-o", "--output", required=True, help="Output CSV file.")
-    args = parser.parse_args()
-    
-    df = parse_fasta(args.input)
-    df["Hydrophobicity"] = df["Sequence"].apply(calculate_gravy)
-    
-    df.to_csv(args.output, index=False)
-    print("\n✅ Computed Hydrophobicity values saved to:", args.output)
-    print(df.drop(columns=["Sequence"]).head(10))  # Print top 10 rows
+    df = pd.DataFrame(data)
+    df.to_csv(output_csv, index=False)
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("gen_fasta", help="Fasta file with generated sequences")
+    parser.add_argument("nat_fasta", help="Fasta file with natural sequences")
+    parser.add_argument("output_csv", help="Output CSV file")
+    args = parser.parse_args()
+
+    compute_hydrophobicity(args.gen_fasta, args.nat_fasta, args.output_csv)

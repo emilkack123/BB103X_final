@@ -15,8 +15,8 @@ names_gen = [os.path.splitext(os.path.basename(f))[0] for f in gen_pdb_files]
 
 
 # Define the paths for the input and output files
-input_fasta_1 = "resources/rubisco_sequences/gen.fa"
-input_fasta_2 = "resources/rubisco_sequences/nat.fa"
+input_fasta_1 = "resources/rubisco_sequences/dragon_radii_updated.fasta"
+input_fasta_2 = "resources/rubisco_sequences/NaturalRubisco.fasta"
 pca_output_plot = "results/PCA_and_K-mean/pca_plot.png"
 kmeans_output_plot = "results/PCA_and_K-mean/kmeans_plot_pca_with_clusters.png"
 pca_output_scree = "results/PCA_and_K-mean/pca_plot_scree.png"
@@ -32,15 +32,15 @@ score = "results/weighted_results.csv"
 kmeans_script = "workflow/scripts/k-mean.py"
 
 # Hydrophobicity and PI
-FASTA_FILE = "resources/gen+nat.fasta"
+FASTA_FILE = "results/gen+NaturalRubisco.fastasta"
 PI_CSV = "results/pI_results.csv"
 HYDROPHOBICITY_CSV = "results/hydrophobicity_results.csv"
 
 SAMPLES = ["results/gen/*.pdb"]  # All generated PDB files 
 
 # Define input and output files for t-sne plot
-gen_seqs = "resources/rubisco_sequences/gen.fa"
-nat_seqs = "resources/rubisco_sequences/nat.fa"
+gen_seqs = "resources/rubisco_sequences/dragon_radii_updated.fasta"
+nat_seqs = "resources/rubisco_sequences/NaturalRubisco.fasta"
 all_seqs = "results/rubisco.fasta"
 cleaned_seqs = "results/rubisco_cleaned.fasta"
 filtering_log = "results/rubisco_filtering.log"
@@ -149,10 +149,10 @@ rule run_kmeans_pca:
 
 rule concat_rubisco:
     input:
-        "resources/rubisco_sequences/gen.fa",
-        "resources/rubisco_sequences/nat.fa"
+        "resources/rubisco_sequences/dragon_radii_updated.fasta",
+        "resources/rubisco_sequences/NaturalRubisco.fasta"
     output:
-        "results/gen+nat.fasta"
+        "results/gen+NaturalRubisco.fastasta"
     conda:
         "workflow/envs/environment.yml"
     shell:
@@ -170,13 +170,15 @@ rule compute_pI:
 
 rule compute_hydrophobicity:
     input:
-        FASTA_FILE
+        gen_fasta="resources/rubisco_sequences/dragon_radii_updated.fasta",
+        nat_fasta="resources/rubisco_sequences/NaturalRubisco.fasta"
     output:
-        HYDROPHOBICITY_CSV
+        "results/hydrophobicity_results.csv"
     conda:
         "workflow/envs/environment.yml"
     shell:
-        "python workflow/scripts/hydrophobicity.py -i {input} -o {output}"
+        "python workflow/scripts/hydrophobicity.py {input.gen_fasta} {input.nat_fasta} {output}"
+
 
 rule boxplot_pI:
     input:
@@ -242,8 +244,10 @@ rule add_origin_column:
 rule length_histogram:
     input: csv_wNewCol
     output: length
+
     conda:
         "workflow/envs/environment.yml"
+
     shell: "python workflow/scripts/sequence_histogram.py {input} {output}"
 
 rule multiple_sequence_alignment:
