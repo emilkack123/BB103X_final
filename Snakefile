@@ -458,6 +458,8 @@ rule rank_sequences:
         "python workflow/scripts/ranking_sequences.py {input} {output}"
 
 checkpoint run_omegafold:
+    wildcard_constraints:
+        seq="[^.]+"
     input:
         "resources/rubisco_sequences/{seq}.fa"
     output:

@@ -14,7 +14,7 @@ def compute_hydrophobicity(gen_fasta, nat_fasta, output_csv):
                 continue
             analysed_seq = ProteinAnalysis(seq)
             hydrophobicity = analysed_seq.gravy()
-            data.append({"ID": record.id, "Hydrophobicity": hydrophobicity, "Origin": origin})
+            data.append({"ID": record.id, "Hydrophobicity": hydrophobicity, "Type": origin})
 
     df = pd.DataFrame(data)
     df.to_csv(output_csv, index=False)
