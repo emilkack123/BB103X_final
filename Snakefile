@@ -302,11 +302,29 @@ rule compute_distance_matrix:
     shell: "python workflow/scripts/compute_distance_matrix.py {input.gen} {input.nat} {output}"
 
 rule plot_heatmap:
-    input: DISTANCE_MATRIX
-    output: HEATMAP_PLOT
+    input:
+        matrix="results/distmat.tsv"
+    output:
+        heatmap="results/heatmap.png"
     conda:
         "workflow/envs/environment.yml"
-    shell: "python workflow/scripts/plot_heatmap.py {input} {output}"
+    shell:
+        """
+        mkdir -p results
+        python workflow/scripts/plot_heatmap.py {input.matrix} {output.heatmap}
+        """
+rule dendrogram:
+    input:
+        matrix="results/distmat.tsv"
+    output:
+        plot="results/dendrogram.png"
+    conda:
+        "workflow/envs/environment.yml"
+    shell:
+        """
+        mkdir -p results
+        python workflow/scripts/dendrogram.py {input.matrix} {output.plot}
+        """
 
 # Add a rule to convert PDB to PDBQT using the Python script
 rule convert_pdb_to_pdbqt_gen:
