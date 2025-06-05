@@ -12,11 +12,11 @@ names_nat = [os.path.splitext(os.path.basename(f))[0] for f in nat_pdb_files]
 # Extract all base names from 'gen' PDBs
 gen_pdb_files = glob.glob("results/gen/*.pdb")
 names_gen = [os.path.splitext(os.path.basename(f))[0] for f in gen_pdb_files]
-
+FASTA_SAMPLES = ["dragon_radii_updated", "NaturalRubisco_shorten"]
 
 # Define the paths for the input and output files
 input_fasta_1 = "resources/rubisco_sequences/dragon_radii_updated.fasta"
-input_fasta_2 = "resources/rubisco_sequences/NaturalRubisco.fasta"
+input_fasta_2 = "resources/rubisco_sequences/NaturalRubisco_shorten.fasta"
 pca_output_plot = "results/PCA_and_K-mean/pca_plot.png"
 kmeans_output_plot = "results/PCA_and_K-mean/kmeans_plot_pca_with_clusters.png"
 pca_output_scree = "results/PCA_and_K-mean/pca_plot_scree.png"
@@ -32,7 +32,7 @@ score = "results/weighted_results.csv"
 kmeans_script = "workflow/scripts/k-mean.py"
 
 # Hydrophobicity and PI
-FASTA_FILE = "results/gen+NaturalRubisco.fastasta"
+FASTA_FILE = "results/gen+NaturalRubisco_shorten.fastasta"
 PI_CSV = "results/pI_results.csv"
 HYDROPHOBICITY_CSV = "results/hydrophobicity_results.csv"
 
@@ -40,7 +40,7 @@ SAMPLES = ["results/gen/*.pdb"]  # All generated PDB files
 
 # Define input and output files for t-sne plot
 gen_seqs = "resources/rubisco_sequences/dragon_radii_updated.fasta"
-nat_seqs = "resources/rubisco_sequences/NaturalRubisco.fasta"
+nat_seqs = "resources/rubisco_sequences/NaturalRubisco_shorten.fasta"
 all_seqs = "results/rubisco.fasta"
 cleaned_seqs = "results/rubisco_cleaned.fasta"
 filtering_log = "results/rubisco_filtering.log"
@@ -117,8 +117,8 @@ rule all:
         "results/gen",  
         "results/nat",
         "results/docking/co2.pdbqt",
-        expand("results/docking/docking_results_{name}.txt", name=gen_pdb_names)
-
+        expand("results/docking/docking_results_{name}.txt", name=gen_pdb_names),
+        expand("results/{sample}", sample=FASTA_SAMPLES)
         
 # Rule to run the PCA script
 rule run_pca:
@@ -150,9 +150,9 @@ rule run_kmeans_pca:
 rule concat_rubisco:
     input:
         "resources/rubisco_sequences/dragon_radii_updated.fasta",
-        "resources/rubisco_sequences/NaturalRubisco.fasta"
+        "resources/rubisco_sequences/NaturalRubisco_shorten.fasta"
     output:
-        "results/gen+NaturalRubisco.fastasta"
+        "results/gen+NaturalRubisco_shorten.fastasta"
     conda:
         "workflow/envs/environment.yml"
     shell:
@@ -161,7 +161,7 @@ rule concat_rubisco:
 rule compute_pI:
     input:
         gen_fasta="resources/rubisco_sequences/dragon_radii_updated.fasta",
-        nat_fasta="resources/rubisco_sequences/NaturalRubisco.fasta"
+        nat_fasta="resources/rubisco_sequences/NaturalRubisco_shorten.fasta"
     output:
         csv="results/pI_results.csv"
     conda:
@@ -172,7 +172,7 @@ rule compute_pI:
 rule compute_hydrophobicity:
     input:
         gen_fasta="resources/rubisco_sequences/dragon_radii_updated.fasta",
-        nat_fasta="resources/rubisco_sequences/NaturalRubisco.fasta"
+        nat_fasta="resources/rubisco_sequences/NaturalRubisco_shorten.fasta"
     output:
         "results/hydrophobicity_results.csv"
     conda:
@@ -275,7 +275,7 @@ rule plot_clustering:
 rule compute_molecular_weight:
     input:
         gen_fasta="resources/rubisco_sequences/dragon_radii_updated.fasta",
-        nat_fasta="resources/rubisco_sequences/NaturalRubisco.fasta"
+        nat_fasta="resources/rubisco_sequences/NaturalRubisco_shorten.fasta"
     output:
         csv="results/molecular_weight_results.csv"
     conda:
@@ -480,15 +480,25 @@ rule rank_sequences:
     shell:
         "python workflow/scripts/ranking_sequences.py {input} {output}"
 
-checkpoint run_omegafold:
+# ─── Replace the checkpoint with this rule ─────────────────────────────────────────
+rule run_omegafold:
+    """
+    Run OmegaFold on exactly two FASTA files:
+      - resources/rubisco_sequences/dragon_radii_updated.fasta
+      - resources/rubisco_sequences/NaturalRubisco_shorten.fasta
+    Outputs go into:
+      - results/dragon_radii_updated/
+      - results/NaturalRubisco_shorten/
+    """
     input:
-        "resources/rubisco_sequences/{seq}.fa"
+        fasta="resources/rubisco_sequences/{sample}.fasta"
     output:
-        directory("results/{seq}")
+        directory("results/{sample}")
     conda:
         "workflow/envs/omegafold.yaml"
     shell:
         """
-        omegafold {input} {output}
+        mkdir -p results/{wildcards.sample}
+        omegafold {input.fasta} results/{wildcards.sample}
         """
-
+# ─────────────────────────────────────────────────────────────────────────────────

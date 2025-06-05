@@ -13,3 +13,6 @@
 
 # Ignore Singularity containers (if used)
 .snakemake/singularity/
+
+
+results/
