@@ -15,4 +15,5 @@
 .snakemake/singularity/
 
 
-results/
+results/dragon_radii_updated_all_pdb
+results/NaturalRubisco_shorten

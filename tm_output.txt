@@ -5,19 +5,19 @@
  * Please email comments and suggestions to zhanglab@zhanggroup.org   *
  *********************************************************************
 
-Name of Chain_1: results/gen/A0A1G0AW29_2_1.pdb (to be superimposed onto Chain_2)
-Name of Chain_2: results/nat/Q60028.3 RecName: Full=Ribulose bisphosphate carboxylase; Short=RuBisCO [Thiobacillus denitrificans ATCC 25259].pdb
-Length of Chain_1: 470 residues
-Length of Chain_2: 459 residues
+Name of Chain_1: results/dragon_radii_updated_all_pdb/A0A075IPP2_165_2.pdb (to be superimposed onto Chain_2)
+Name of Chain_2: results/NaturalRubisco_shorten/Q8U1P9.1 RecName: Full=Ribulose bisphosphate carboxylase; Short=RuBisCO [Pyrococcus furiosus DSM 3638].pdb
+Length of Chain_1: 399 residues
+Length of Chain_2: 420 residues
 
-Aligned length= 459, RMSD=   1.22, Seq_ID=n_identical/n_aligned= 0.719
-TM-score= 0.95628 (if normalized by length of Chain_1, i.e., LN=470, d0=7.74)
-TM-score= 0.97883 (if normalized by length of Chain_2, i.e., LN=459, d0=7.66)
+Aligned length= 375, RMSD=   1.57, Seq_ID=n_identical/n_aligned= 0.323
+TM-score= 0.90031 (if normalized by length of Chain_1, i.e., LN=399, d0=7.21)
+TM-score= 0.85676 (if normalized by length of Chain_2, i.e., LN=420, d0=7.37)
 (You should use TM-score normalized by length of the reference structure)
 
 (":" denotes residue pairs of d <  5.0 Angstrom, "." denotes other aligned residues)
-MDQSNRYANLNLKEEDLIKNGRHLLCAYRMRPAKGFGFEEAAAHFAAESSTGTNVEVSTTDDFTRSVDARVYDVDEAAFGDDPGDGRGLMKIAYPLELFDRNLTDGTYNISSFLTLVIGNVQGMGDVEGAKLLDFYIPRAFLKRFDGPAFNIADMRRILGRPETDGGPIVGTIIKPKLGLRPKPFADACYDFWLGGDFIKNDEPQGNQPFCPLEERVPLVADAMDRAQDKTGEAKLFSANISADDYNEMLARGEYILSQFKEYNSASHVAFLVDGYVAGPSAVQTARRDFPDQFLHFHRAGHGAMTSPKSKRGYTVLVLAKLSRLAGASGIHTGTMGFGKMEGDEDDRVIAYMLERDECQGPFFRQDWEGMKPTTPIISGGMNPLRLPGFFDNLGHSNVIMTAGGGVFGHRMGPAAGATSLRQAEQAWKQGVDPIEYAKTHKEFARAFESFPKDGDKLFAGWREKLGVHK
-.:::::::::::::::::::::::::::::::::::::::::::::::::::::.:::::::::::::::::::::::         ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: :: ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::.::::::.::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-MDQSARYADLSLKEEDLIKGGRHILVAYKMKPKSGYGYLEAAAHFAAESSTGTNVEVSTTDDFTKGVDALVYYIDEAS---------EDMRIAYPLELFDRNVTDGRFMLVSFLTLAIGNNQGMGDIEHAKMIDFYVPERCIQMFDGPATDISNLWRILGRPVVNGGYIAGTIIKPKLGLRPEPFAKAAYQFWLGGDFIKNDEPQGNQVFCPLKKVLPLVYDAMKRAQDDTGQAKLFSMNITADDHYEMCARADYALEVFGP-DA-DKLAFLVDGYVGGPGMVTTARRQYPGQYLHYHRAGHGAVTSPSAKRGYTAFVLAKMSRLQGASGIHVGTMGYGKMEGEGDDKIIAYMIERDECQGPVYFQKWYGMKPTTPIISGGMNALRLPGFFENLGHGNVINTAGGGSYGHIDSPAAGAISLRQSYECWKQGADPIEFAKEHKEFARAFESFPKDADKLFPGWREKLGVHK
+-----------------MKHVLAVYIMKPG-YGVLETAAHFAAESSTGTNVEVTTTDDFIRGVDARVYDIDEEGGERGELMKIAYPVDLFDRNMLASFLTLIVGNNQGMGDVEYAKLLDFYLPPAFLELFDGPAVNIQDMWKILGRPEVDGGPIVGTIIKPKLGLTPEPFAKAAYQFWL-GGDFIKNDEPQGNQPFSPFKKTIELVADAMDRAQDETGEKKLFSANITADDHAEMLARAEYILEVFGEIGSEKHVAFLVDGYVAGPTAVTTARRNFP--GQFIHYHRAGHGAVTSPKSKRGYSSFVLAKLARLQGASGIHTGTMGYGKMEGEPDDRILAYMLERDECQGPYFHQDWHGMKATTPIISGGMNALRLPGNFDNLGHAVIVTAGGGAFGHKDGPAAGARSLRQAYEAWKAGIL------------------------
+                 ::::::::::::: ::::::::::::::::::::::::::::::::::::::::: ::: ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::   ::::::::::::::::::::::::::::: ::::::::::::::::::::::::::::::::::::::::::::::::: :::::::::::::: :  ::  :  ::::::::::::::::::::::  :::::::::::::::: :.:::::::::::::::::::::::::::::::::.:::::::::::::          :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::                        
+MKVEWYLDFVDLDYTPGRDELIVEYYFEPNGVSPEEAAGRIASESSIGTWTTLWKMPEMAKRSMAKVFYLEK-SGE-GYIAKIAYPLTLFEEGSIVQLLSAIAGNIFGMKALKNLRLLDFHPPYEYLRHFKGPQYGVKGIREFMGVK---ERPLTATVPKPKMGWSVDEYAEIAYELWSGGIDLLKDDENFTSFPFNRFEERVKKLYRIRDIVEAETEERKEYLINITG-SVDVMEKRAELVAN-E--GG--Q--YVMIDIIVTGWSALQYMREVTEDLGLAIHAHRAMHAAFTR-NPKHGITMYAIAKLARMIGVDQIHTGTAVGKMAGDYEEVKRINDFLLSK----------WEHIREVFPVASGGLHPGLMPELIRLFGKDLVIQAGGGVMGHPDGPRAGAKALRDAIDAALEGVDLEEKAKSSPELKKALDKWGYLKPK
 
-Total CPU time is  0.24 seconds
+Total CPU time is  0.15 seconds

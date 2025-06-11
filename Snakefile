@@ -6,13 +6,13 @@ import os
 prepare_receptor_script = "workflow/scripts/prepare_receptor4.py"
 
 # Extract all base names from 'nat' PDBs
-nat_pdb_files = glob.glob("results/nat_renamed/*.pdb")
+nat_pdb_files = glob.glob("results/NaturalRubisco_shorten_renamed/*.pdb")
 names_nat = [os.path.splitext(os.path.basename(f))[0] for f in nat_pdb_files]
 
-# Extract all base names from 'gen' PDBs
-gen_pdb_files = glob.glob("results/gen/*.pdb")
-names_gen = [os.path.splitext(os.path.basename(f))[0] for f in gen_pdb_files]
-FASTA_SAMPLES = ["dragon_radii_updated", "NaturalRubisco_shorten"]
+# Extract all base names from 'dragon_radii_updated_all_pdb' PDBs
+dragon_radii_updated_all_pdb_pdb_files = glob.glob("results/dragon_radii_updated_all_pdb/*.pdb")
+names_dragon_radii_updated_all_pdb = [os.path.splitext(os.path.basename(f))[0] for f in dragon_radii_updated_all_pdb_pdb_files]
+FASTA_SAMPLES = ["dragon_radii_updated"]
 
 # Define the paths for the input and output files
 input_fasta_1 = "resources/rubisco_sequences/dragon_radii_updated.fasta"
@@ -32,14 +32,14 @@ score = "results/weighted_results.csv"
 kmeans_script = "workflow/scripts/k-mean.py"
 
 # Hydrophobicity and PI
-FASTA_FILE = "results/gen+NaturalRubisco_shorten.fastasta"
+FASTA_FILE = "results/dragon_radii_updated_all_pdb+NaturalRubisco_shorten.fastasta"
 PI_CSV = "results/pI_results.csv"
 HYDROPHOBICITY_CSV = "results/hydrophobicity_results.csv"
 
-SAMPLES = ["results/gen/*.pdb"]  # All generated PDB files 
+SAMPLES = ["results/dragon_radii_updated_all_pdb/*.pdb"]  # All dragon_radii_updated_all_pdberated PDB files 
 
 # Define input and output files for t-sne plot
-gen_seqs = "resources/rubisco_sequences/dragon_radii_updated.fasta"
+dragon_radii_updated_all_pdb_seqs = "resources/rubisco_sequences/dragon_radii_updated.fasta"
 nat_seqs = "resources/rubisco_sequences/NaturalRubisco_shorten.fasta"
 all_seqs = "results/rubisco.fasta"
 cleaned_seqs = "results/rubisco_cleaned.fasta"
@@ -68,17 +68,17 @@ iupred_raw_output ="results/iupred_output.txt"
 disorder_metrics_csv = "results/disorder_metrics.csv"
 
 # Define the input and output directories
-input_dir = 'results/gen/'
+input_dir = 'results/dragon_radii_updated_all_pdb/'
 output_dir = 'results/converted_pdbqt/'
 
 # Ensure the output directory exists
 if not os.path.exists(output_dir):
     os.makedirs(output_dir)
 
-# Get list of PDB filenames without extension from results/gen/
-gen_pdb_names = [f[:-4] for f in os.listdir("results/gen") if f.endswith(".pdb")]
+# Get list of PDB filenames without extension from results/dragon_radii_updated_all_pdb/
+dragon_radii_updated_all_pdb_pdb_names = [f[:-4] for f in os.listdir("results/dragon_radii_updated_all_pdb") if f.endswith(".pdb")]
 
-# Rule to generate final outputs (PCA, K-means, TM-score results, and confidence scores)
+# Rule to dragon_radii_updated_all_pdberate final outputs (PCA, K-means, TM-score results, and confidence scores)
 rule all:
     input:
         pca_output_plot,
@@ -102,11 +102,11 @@ rule all:
         HEATMAP_PLOT,
         "results/nat_renamed/renamed_files_log.csv",
         expand("results/converted_pdbqt_natural/{name}.pdbqt", name=names_nat),
-        expand("results/converted_pdbqt/{name}.pdbqt", name=names_gen),
+        expand("results/converted_pdbqt/{name}.pdbqt", name=names_dragon_radii_updated_all_pdb),
         "results/docking/co2.pdbqt",
-        expand("results/docking/docked_{name}.pdbqt", name=names_gen),
-        expand("results/docking/minimized_{name}.pdbqt", name=names_gen),
-        expand("results/docking/docking_results_{name}.txt", name=names_gen),
+        expand("results/docking/docked_{name}.pdbqt", name=names_dragon_radii_updated_all_pdb),
+        expand("results/docking/minimized_{name}.pdbqt", name=names_dragon_radii_updated_all_pdb),
+        expand("results/docking/docking_results_{name}.txt", name=names_dragon_radii_updated_all_pdb),
         "results/confidence_scores.csv",
         "results/tm_scores/tm-scores.csv",
         "results/ranked_sequences.csv",
@@ -114,10 +114,10 @@ rule all:
         disorder_metrics_csv,
         final,
         score,
-        "results/gen",  
-        "results/nat",
+        "results/dragon_radii_updated_all_pdb",  
+        "results/NaturalRubisco_shorten",
         "results/docking/co2.pdbqt",
-        expand("results/docking/docking_results_{name}.txt", name=gen_pdb_names),
+        expand("results/docking/docking_results_{name}.txt", name=dragon_radii_updated_all_pdb_pdb_names),
         expand("results/{sample}", sample=FASTA_SAMPLES)
         
 # Rule to run the PCA script
@@ -152,7 +152,7 @@ rule concat_rubisco:
         "resources/rubisco_sequences/dragon_radii_updated.fasta",
         "resources/rubisco_sequences/NaturalRubisco_shorten.fasta"
     output:
-        "results/gen+NaturalRubisco_shorten.fastasta"
+        "results/dragon_radii_updated_all_pdb+NaturalRubisco_shorten.fastasta"
     conda:
         "workflow/envs/environment.yml"
     shell:
@@ -160,25 +160,25 @@ rule concat_rubisco:
         
 rule compute_pI:
     input:
-        gen_fasta="resources/rubisco_sequences/dragon_radii_updated.fasta",
+        dragon_radii_updated_all_pdb_fasta="resources/rubisco_sequences/dragon_radii_updated.fasta",
         nat_fasta="resources/rubisco_sequences/NaturalRubisco_shorten.fasta"
     output:
         csv="results/pI_results.csv"
     conda:
         "workflow/envs/environment.yml"
     shell:
-        "python workflow/scripts/pI.py {input.gen_fasta} {input.nat_fasta} {output.csv}"
+        "python workflow/scripts/pI.py {input.dragon_radii_updated_all_pdb_fasta} {input.nat_fasta} {output.csv}"
 
 rule compute_hydrophobicity:
     input:
-        gen_fasta="resources/rubisco_sequences/dragon_radii_updated.fasta",
+        dragon_radii_updated_all_pdb_fasta="resources/rubisco_sequences/dragon_radii_updated.fasta",
         nat_fasta="resources/rubisco_sequences/NaturalRubisco_shorten.fasta"
     output:
         "results/hydrophobicity_results.csv"
     conda:
         "workflow/envs/environment.yml"
     shell:
-        "python workflow/scripts/hydrophobicity.py {input.gen_fasta} {input.nat_fasta} {output}"
+        "python workflow/scripts/hydrophobicity.py {input.dragon_radii_updated_all_pdb_fasta} {input.nat_fasta} {output}"
 
 
 rule pI_boxplot:
@@ -202,7 +202,7 @@ rule hydrophobicity_boxplot:
         "python workflow/scripts/boxplot_hydrophobicity.py --csv {input.csv} --output {output.png}"
 
 rule combine_sequences:
-    input: gen_seqs, nat_seqs
+    input: dragon_radii_updated_all_pdb_seqs, nat_seqs
     output: all_seqs
     conda:
         "workflow/envs/environment.yml"
@@ -210,7 +210,7 @@ rule combine_sequences:
 
 rule rename_nat_files:
     input:
-        folder="results/nat"
+        folder="results/NaturalRubisco_shorten"
     output:
         log="results/nat_renamed/renamed_files_log.csv"
     conda:
@@ -274,14 +274,14 @@ rule plot_clustering:
 
 rule compute_molecular_weight:
     input:
-        gen_fasta="resources/rubisco_sequences/dragon_radii_updated.fasta",
+        dragon_radii_updated_all_pdb_fasta="resources/rubisco_sequences/dragon_radii_updated.fasta",
         nat_fasta="resources/rubisco_sequences/NaturalRubisco_shorten.fasta"
     output:
         csv="results/molecular_weight_results.csv"
     conda:
         "workflow/envs/environment.yml"
     shell:
-        "python workflow/scripts/compute_molecular_weight.py {input.gen_fasta} {input.nat_fasta} {output.csv}"
+        "python workflow/scripts/compute_molecular_weight.py {input.dragon_radii_updated_all_pdb_fasta} {input.nat_fasta} {output.csv}"
 
 rule plot_molecular_weight_length:
     input: MOLECULAR_WEIGHT_CSV
@@ -295,11 +295,11 @@ rule plot_molecular_weight_length:
     shell: "mkdir -p results/ && python workflow/scripts/plot_molecular_weight_length.py {input} results/molecular_weight_analysis"
 
 rule compute_distance_matrix:
-    input: gen=input_fasta_1, nat=input_fasta_2
+    input: dragon_radii_updated_all_pdb=input_fasta_1, nat=input_fasta_2
     output: DISTANCE_MATRIX
     conda:
         "workflow/envs/environment.yml"
-    shell: "python workflow/scripts/compute_distance_matrix.py {input.gen} {input.nat} {output}"
+    shell: "python workflow/scripts/compute_distance_matrix.py {input.dragon_radii_updated_all_pdb} {input.nat} {output}"
 
 rule plot_heatmap:
     input:
@@ -327,29 +327,31 @@ rule dendrogram:
         """
 
 # Add a rule to convert PDB to PDBQT using the Python script
-rule convert_pdb_to_pdbqt_gen:
+rule convert_pdb_to_pdbqt_dragon_radii_updated_all_pdb:
     input:
-        pdb="results/gen/{name}.pdb"
+        pdb="results/dragon_radii_updated_all_pdb/{name}.pdb"
     output:
         pdbqt="results/converted_pdbqt/{name}.pdbqt"
     shell:
         """
-        source activate autodock_py2.yml && \
-        python2 {prepare_receptor_script} \
-        -r {input.pdb} -o {output.pdbqt}
+        mkdir -p $(dirname {output.pdbqt}) && \
+        python {prepare_receptor_script} -r {input.pdb} -o {output.pdbqt}
         """
+
+
 
 rule convert_pdb_to_pdbqt_nat:
     input:
-        "results/nat_renamed/{name}.pdb"
+        "results/NaturalRubisco_shorten_renamed/{name}.pdb"
     output:
         pdbqt="results/converted_pdbqt_natural/{name}.pdbqt"
     shell:
         """
-        source activate autodock_py2.yml && \
-        python2 {prepare_receptor_script} \
-        -r {input} -o {output.pdbqt}
+        mkdir -p $(dirname {output.pdbqt}) && \
+        python {prepare_receptor_script} -r {input.pdb} -o {output.pdbqt}
         """
+
+
 
 rule docking:
     input:
@@ -374,8 +376,8 @@ rule docking:
 
 rule compute_confidence_scores:
     input:
-        gen_folder="results/gen",
-        nat_folder="results/nat"
+        dragon_radii_updated_all_pdb_folder="results/dragon_radii_updated_all_pdb",
+        nat_folder="results/NaturalRubisco_shorten"
     output:
         confidence_scores="results/confidence_scores.csv"
     conda:
@@ -385,15 +387,15 @@ rule compute_confidence_scores:
     shell:
         """
         python {params.script} \
-            --folders {input.gen_folder} {input.nat_folder} \
+            --folders {input.dragon_radii_updated_all_pdb_folder} {input.nat_folder} \
             --output {output.confidence_scores}
         """
 
 rule tm_score:
     input:
         confidence_scores="results/confidence_scores.csv",
-        gen_folder="results/gen",
-        nat_folder="results/nat"
+        gen_folder="results/dragon_radii_updated_all_pdb",
+        nat_folder="results/NaturalRubisco_shorten"
     output:
         tm_scores="results/tm_scores/tm-scores.csv"
     conda:
@@ -409,28 +411,29 @@ rule tm_score:
             --output {output.tm_scores}
         """
 
+
 # Rule to combine results from various data sources into a final CSV
 
 rule run_iupred2a:
     input:
-        fasta=input_fasta_1
+        "results/gen+NaturalRubisco.fasta"
     output:
         txt=iupred_raw_output
     conda:
         "workflow/envs/environment.yml"
     shell:
-        "python external_tools/iupred2a/iupred2a.py {input.fasta} long > {output.txt}"
+        "python external_tools/iupred2a/iupred2a.py {input} long > {output.txt}"
 
 rule parse_disorder:
     input:
-        fasta=input_fasta_1,
+        "results/gen+NaturalRubisco.fasta",
         txt=iupred_raw_output
     output:
         csv=disorder_metrics_csv
     conda:
         "workflow/envs/environment.yml"
     shell:
-        "python workflow/scripts/parse_disorder_by_length.py {input.fasta} {input.txt} {output.csv}"
+        "python workflow/scripts/parse_disorder_by_length.py {input} {output.csv}"
 
         
 rule plot_disorder_metrics:
@@ -480,25 +483,4 @@ rule rank_sequences:
     shell:
         "python workflow/scripts/ranking_sequences.py {input} {output}"
 
-# ─── Replace the checkpoint with this rule ─────────────────────────────────────────
-rule run_omegafold:
-    """
-    Run OmegaFold on exactly two FASTA files:
-      - resources/rubisco_sequences/dragon_radii_updated.fasta
-      - resources/rubisco_sequences/NaturalRubisco_shorten.fasta
-    Outputs go into:
-      - results/dragon_radii_updated/
-      - results/NaturalRubisco_shorten/
-    """
-    input:
-        fasta="resources/rubisco_sequences/{sample}.fasta"
-    output:
-        directory("results/{sample}")
-    conda:
-        "workflow/envs/omegafold.yaml"
-    shell:
-        """
-        mkdir -p results/{wildcards.sample}
-        omegafold {input.fasta} results/{wildcards.sample}
-        """
-# ─────────────────────────────────────────────────────────────────────────────────
+
